@@ -1,5 +1,7 @@
+import Layout from "./layouts/Layout";
+
 function App() {
-  return <div>Gameshop</div>;
+  return <Layout></Layout>;
 }
 
 export default App;
