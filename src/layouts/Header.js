@@ -12,8 +12,9 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import ComputerIcon from "@mui/icons-material/Computer";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
-const pages = ["Shop", "About Us", "Contact Us"];
+const pages = ["Shop", "About", "Contact"];
 const settings = ["Dashboard", "Profile", "Logout"];
 
 function Header() {
@@ -39,24 +40,23 @@ function Header() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <ComputerIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            Gameshop
-          </Typography>
-
+          <Link to="/" style={{ color: "white", textDecoration: "none" }}>
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              Gameshop
+            </Typography>
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -87,9 +87,15 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <Link
+                  to={page}
+                  style={{ color: "black", textDecoration: "none" }}
+                  key={page}
+                >
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
@@ -120,13 +126,18 @@ function Header() {
             }}
           >
             {pages.map((page) => (
-              <Button
+              <Link
+                to={page}
+                style={{ color: "white", textDecoration: "none" }}
                 key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, mr: 5, color: "white", display: "block" }}
               >
-                {page}
-              </Button>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, mr: 5, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              </Link>
             ))}
           </Box>
 
