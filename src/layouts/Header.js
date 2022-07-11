@@ -15,7 +15,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const pages = ["Shop", "About", "Contact"];
-const settings = ["Dashboard", "Profile", "Logout"];
+const settings = ["Dashboard", "Profile", "Register", "Login", "Logout"];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);

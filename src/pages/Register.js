@@ -61,7 +61,7 @@ const Register = () => {
 
   let navigate = useNavigate();
 
-  const emailRef = useRef();
+  const usernameRef = useRef();
 
   const [username, setUsername] = useState("");
   const [validUsername, setValidUsername] = useState(false);
@@ -83,7 +83,7 @@ const Register = () => {
   const classes = useStyles();
 
   useEffect(() => {
-    emailRef.current.focus();
+    usernameRef.current.focus();
   }, []);
 
   useEffect(() => {
@@ -146,6 +146,8 @@ const Register = () => {
     setName("");
     setPassword("");
     setEmailErrMsg("");
+    setPwdErrMsg("");
+    setUsernameErrMsg("");
 
     //? Za kasnije kad Matija zavrsi
     //   apiCall
@@ -186,6 +188,7 @@ const Register = () => {
             margin="normal"
             required
             fullWidth
+            ref={usernameRef}
             id="username"
             label="Username"
             name="username"
@@ -237,7 +240,6 @@ const Register = () => {
             id="email"
             label="Email"
             name="email"
-            ref={emailRef}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             // onChange={handleChange}
