@@ -5,12 +5,6 @@
 }
 
 @font-face {
-  font-family: Plaguard;
-  /* font-weight: bold; */
-  src: url("assets/fonts/Plaguard.otf") format("opentype");
-}
-
-@font-face {
   font-family: VerminVibesV;
   /* font-weight: bold; */
   src: url("assets/fonts/VerminVibesV.ttf") format("truetype");
