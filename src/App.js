@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { pink, purple } from "@mui/material/colors";
 import { AuthContextProvider } from "./contexts/AuthContext";
+import Product from "./pages/Product";
 
 const theme = createTheme({
   palette: {
@@ -34,6 +35,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/product/:name" element={<Product />} />
             </Routes>
           </Layout>
         </BrowserRouter>
