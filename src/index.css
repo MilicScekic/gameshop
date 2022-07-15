@@ -1,5 +1,40 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: Plaguard;
+  /* font-weight: bold; */
+  src: url("assets/fonts/Plaguard.otf") format("opentype");
+}
+
+@font-face {
+  font-family: VerminVibesV;
+  /* font-weight: bold; */
+  src: url("assets/fonts/VerminVibesV.ttf") format("truetype");
+}
+
+:root {
+  --clr-gradient: rgb(255, 183, 142)
+    linear-gradient(
+      90deg,
+      rgba(255, 183, 142, 1) 0%,
+      rgba(149, 201, 234, 1) 35%,
+      rgba(222, 224, 244, 1) 100%
+    );
+}
+
+.topBar {
+  background: var(--clr-gradient);
+  height: 5rem;
+}
+
+.bottomBar a button:hover {
+  background: var(--clr-gradient);
+}
+
+.active {
+  background: var(--clr-gradient);
 }
