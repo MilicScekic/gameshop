@@ -20,12 +20,20 @@
     );
 }
 
+body {
+  background-color: #f3f5f3;
+}
+
 .topBar {
   background: var(--clr-gradient);
   height: 5rem;
 }
 
 .bottomBar a button:hover {
+  background: var(--clr-gradient);
+}
+
+.bottomBar Button:hover {
   background: var(--clr-gradient);
 }
 

@@ -21,6 +21,8 @@ import SportsEsportsTwoToneIcon from "@mui/icons-material/SportsEsportsTwoTone";
 import NightlifeTwoToneIcon from "@mui/icons-material/NightlifeTwoTone";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Grid from "@mui/material/Grid";
+import KeyboardArrowDownTwoToneIcon from "@mui/icons-material/KeyboardArrowDownTwoTone";
 
 const pages = [
   "Consoles",
@@ -50,6 +52,12 @@ function Header() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(!open);
   };
 
   return (
@@ -210,16 +218,74 @@ function Header() {
         position="static"
         style={{ backgroundColor: "black" }}
       >
-        <Container>
-          <Toolbar disableGutters>
-            <Box
-              sx={{
-                flexGrow: 1,
-                justifyContent: "center",
-                display: { xs: "none", md: "flex" },
-              }}
+        <Container maxWidth="xl">
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              padding: 0,
+            }}
+          >
+            <Grid
+              item
+              xs={4}
+              sx={{ display: "flex", alignItems: "center", padding: 0 }}
             >
-              {/* {pages.map((page) => (
+              <Box sx={{ alignItems: "center" }}>
+                <Button
+                  variant="contained"
+                  onClick={handleOpen}
+                  sx={{
+                    width: "300px",
+                    my: 2,
+                    mr: 5,
+                    color: "black",
+                    display: "block",
+                    background: "white",
+                    borderRadius: "0.2rem",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span style={{ fontWeight: "bold" }}>Categories</span>
+                    <KeyboardArrowDownTwoToneIcon
+                      sx={{
+                        color: "black",
+                      }}
+                    />
+                  </div>
+                </Button>
+                <Box>
+                  {open && (
+                    <ul>
+                      <li>Kat 1</li>
+                      <li>Kat 1</li>
+                      <li>Kat 1</li>
+                      <li>Kat 1</li>
+                      <li>Kat 1</li>
+                      <li>Kat 1</li>
+                    </ul>
+                  )}
+                </Box>
+              </Box>
+            </Grid>
+
+            <Grid item xs={8}>
+              <Toolbar disableGutters>
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                    justifyContent: "center",
+                    display: { xs: "none", md: "flex" },
+                  }}
+                >
+                  {/* {pages.map((page) => (
                 <Link
                   to={page}
                   style={{ color: "white", textDecoration: "none" }}
@@ -239,124 +305,126 @@ function Header() {
                   </Button>
                 </Link>
               ))} */}
-              <Link to={"/"} style={{ textDecoration: "none" }} key={666}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    mr: 5,
-                    color: "black",
-                    display: "block",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <div style={{ display: "flex" }}>
-                    <ComputerTwoToneIcon
+                  <Link to={"/"} style={{ textDecoration: "none" }}>
+                    <Button
+                      onClick={handleCloseNavMenu}
                       sx={{
+                        my: 2,
+                        mr: 5,
                         color: "black",
-                        marginRight: "5px",
+                        display: "block",
+                        background: "white",
+                        borderRadius: "1.3rem",
                       }}
-                    />
-                    Computers
-                  </div>
-                </Button>
-              </Link>
+                    >
+                      <div style={{ display: "flex" }}>
+                        <ComputerTwoToneIcon
+                          sx={{
+                            color: "black",
+                            marginRight: "5px",
+                          }}
+                        />
+                        Computers
+                      </div>
+                    </Button>
+                  </Link>
 
-              <Link to={"/"} style={{ textDecoration: "none" }} key={666}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    mr: 5,
-                    color: "black",
-                    display: "block",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <div style={{ display: "flex" }}>
-                    <GamepadTwoToneIcon
+                  <Link to={"/"} style={{ textDecoration: "none" }}>
+                    <Button
+                      onClick={handleCloseNavMenu}
                       sx={{
+                        my: 2,
+                        mr: 5,
                         color: "black",
-                        marginRight: "5px",
+                        display: "block",
+                        background: "white",
+                        borderRadius: "1.3rem",
                       }}
-                    />
-                    Consoles
-                  </div>
-                </Button>
-              </Link>
-              <Link to={"/"} style={{ textDecoration: "none" }} key={666}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    mr: 5,
-                    color: "black",
-                    display: "block",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <div style={{ display: "flex" }}>
-                    <HeadsetTwoToneIcon
+                    >
+                      <div style={{ display: "flex" }}>
+                        <GamepadTwoToneIcon
+                          sx={{
+                            color: "black",
+                            marginRight: "5px",
+                          }}
+                        />
+                        Consoles
+                      </div>
+                    </Button>
+                  </Link>
+                  <Link to={"/"} style={{ textDecoration: "none" }}>
+                    <Button
+                      onClick={handleCloseNavMenu}
                       sx={{
+                        my: 2,
+                        mr: 5,
                         color: "black",
-                        marginRight: "5px",
+                        display: "block",
+                        background: "white",
+                        borderRadius: "1.3rem",
                       }}
-                    />
-                    Headphones
-                  </div>
-                </Button>
-              </Link>
-              <Link to={"/"} style={{ textDecoration: "none" }} key={666}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    mr: 5,
-                    color: "black",
-                    display: "block",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <div style={{ display: "flex" }}>
-                    <SportsEsportsTwoToneIcon
+                    >
+                      <div style={{ display: "flex" }}>
+                        <HeadsetTwoToneIcon
+                          sx={{
+                            color: "black",
+                            marginRight: "5px",
+                          }}
+                        />
+                        Headphones
+                      </div>
+                    </Button>
+                  </Link>
+                  <Link to={"/"} style={{ textDecoration: "none" }}>
+                    <Button
+                      onClick={handleCloseNavMenu}
                       sx={{
+                        my: 2,
+                        mr: 5,
                         color: "black",
-                        marginRight: "5px",
+                        display: "block",
+                        background: "white",
+                        borderRadius: "1.3rem",
                       }}
-                    />
-                    Games
-                  </div>
-                </Button>
-              </Link>
-              <Link to={"/"} style={{ textDecoration: "none" }} key={666}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    mr: 5,
-                    color: "black",
-                    display: "block",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <div style={{ display: "flex" }}>
-                    <NightlifeTwoToneIcon
+                    >
+                      <div style={{ display: "flex" }}>
+                        <SportsEsportsTwoToneIcon
+                          sx={{
+                            color: "black",
+                            marginRight: "5px",
+                          }}
+                        />
+                        Games
+                      </div>
+                    </Button>
+                  </Link>
+                  <Link to={"/"} style={{ textDecoration: "none" }}>
+                    <Button
+                      onClick={handleCloseNavMenu}
                       sx={{
+                        my: 2,
+                        mr: 5,
                         color: "black",
-                        marginRight: "5px",
+                        display: "block",
+                        background: "white",
+                        borderRadius: "1.3rem",
                       }}
-                    />
-                    Lifestyle
-                  </div>
-                </Button>
-              </Link>
-            </Box>
-          </Toolbar>
+                    >
+                      <div style={{ display: "flex" }}>
+                        <NightlifeTwoToneIcon
+                          sx={{
+                            color: "black",
+                            marginRight: "5px",
+                          }}
+                        />
+                        Lifestyle
+                      </div>
+                    </Button>
+                  </Link>
+                </Box>
+              </Toolbar>
+            </Grid>
+          </Grid>
         </Container>
       </AppBar>
     </>

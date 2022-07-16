@@ -1,3 +1,4 @@
+import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Slider from "../components/Slider";
@@ -44,55 +45,57 @@ function Home() {
   ];
 
   return (
-    <Box
-      columnGap={1}
-      rowGap={0.4}
-      maxWidth="xl"
-      sx={{
-        margin: "0 auto",
+    <Container maxWidth="xl">
+      <Box
+        columnGap={1}
+        rowGap={0.4}
+        maxWidth="xl"
+        sx={{
+          margin: "0 auto",
 
-        display: "grid",
-        gridTemplateColumns: {
-          xs: "repeat(4, 1fr)",
-          md: "repeat(3, 1fr)",
-        },
-        gridTemplateRows: "auto",
-        gridTemplateAreas: {
-          xs: `"slider slider slider slider"
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "repeat(4, 1fr)",
+            md: "repeat(3, 1fr)",
+          },
+          gridTemplateRows: "auto",
+          gridTemplateAreas: {
+            xs: `"slider slider slider slider"
  `,
-          md: `"slider slider product1"
+            md: `"slider slider product1"
           "slider slider product2"
           `,
-        },
-      }}
-    >
-      <Grid item xs={12} md={7} gridArea={"slider"}>
-        <Slider games={placeholderData} />
-      </Grid>
-      {placeholderData2.map((game) => {
-        return (
-          <Grid
-            key={game.name}
-            gridArea={game.area}
-            item
-            xs={6}
-            md={5}
-            sx={{
-              display: {
-                xs: "none",
-                md: "block",
-              },
-            }}
-          >
-            <SliderCard
-              name={game.name}
-              description={game.description}
-              image={game.image}
-            />
-          </Grid>
-        );
-      })}
-    </Box>
+          },
+        }}
+      >
+        <Grid item xs={12} md={7} gridArea={"slider"}>
+          <Slider games={placeholderData} />
+        </Grid>
+        {placeholderData2.map((game) => {
+          return (
+            <Grid
+              key={game.name}
+              gridArea={game.area}
+              item
+              xs={6}
+              md={5}
+              sx={{
+                display: {
+                  xs: "none",
+                  md: "block",
+                },
+              }}
+            >
+              <SliderCard
+                name={game.name}
+                description={game.description}
+                image={game.image}
+              />
+            </Grid>
+          );
+        })}
+      </Box>
+    </Container>
   );
 }
 
