@@ -106,9 +106,6 @@ const Cart = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} md={2} className={classes.gridItem}>
                   <Link to={`/products/${product.id}`}>
-                    {/* <Link
-            to={isAuthenticated ? `/products/${productId}` : `/products/${_id}`}
-          > */}
                     <div className={classes.img}>
                       <img
                         className={classes.image}
