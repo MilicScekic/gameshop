@@ -16,7 +16,8 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
-import { useNavigate, Link as LinkTo } from "react-router-dom";
+import { Navigate, Link as LinkTo } from "react-router-dom";
+import { apiCall } from "../services/api";
 
 function Copyright() {
   return (
@@ -58,8 +59,6 @@ const EMAIL_REGEX =
 
 const Register = () => {
   const { authTokens, setTokens } = useContext(AuthContext);
-
-  let navigate = useNavigate();
 
   const usernameRef = useRef();
 
@@ -150,21 +149,26 @@ const Register = () => {
     setUsernameErrMsg("");
 
     //? Za kasnije kad Matija zavrsi
-    //   apiCall
-    //     .post("/login", formFields)
-    //     .then((result) => {
-    //       let { jwt } = result.data;
-    //       console.log(jwt);
-    //       setTokens(jwt);
-    //     })
-    //     .catch((e) => {
-    //       console.log(e);
-    //     });
+    apiCall
+      .post("/auth/local/register", {
+        username: username,
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        console.log(res.data);
+        console.log(res.data.user);
+        // let { jwt } = res.data;
+        // setTokens(jwt);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
-  //   if (authTokens) {
-  //     return <Navigate to="/" />;
-  //   }
+  if (authTokens) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">

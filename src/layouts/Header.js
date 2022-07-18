@@ -1,9 +1,9 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
@@ -19,10 +19,14 @@ import ComputerTwoToneIcon from "@mui/icons-material/ComputerTwoTone";
 import HeadsetTwoToneIcon from "@mui/icons-material/HeadsetTwoTone";
 import SportsEsportsTwoToneIcon from "@mui/icons-material/SportsEsportsTwoTone";
 import NightlifeTwoToneIcon from "@mui/icons-material/NightlifeTwoTone";
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import KeyboardArrowDownTwoToneIcon from "@mui/icons-material/KeyboardArrowDownTwoTone";
+import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
+import { AuthContext } from "../contexts/AuthContext";
+import { CartContext } from "../contexts/CartContext";
+import Cart from "../pages/Cart";
 
 const pages = [
   "Consoles",
@@ -59,6 +63,9 @@ function Header() {
   const handleOpen = () => {
     setOpen(!open);
   };
+
+  const { authTokens } = useContext(AuthContext);
+  const { cart } = useContext(CartContext);
 
   return (
     <>
@@ -175,37 +182,63 @@ function Header() {
 
             <div>
               <Box sx={{ flexGrow: 0 }}>
+                <Link
+                  to={!authTokens && "/login"}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button sx={{ color: "black" }}>
+                    <h4>{!authTokens && "Login"}</h4>
+                  </Button>
+                </Link>
+                <Link
+                  to={!authTokens && "/register"}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button sx={{ color: "black" }}>
+                    <h4>{!authTokens && "Register"}</h4>
+                  </Button>
+                </Link>
+
                 <Link to="/cart">
                   <IconButton>
-                    <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
+                    <Badge
+                      color="secondary"
+                      badgeContent={cart.length > 0 ? cart.length : 0}
+                    >
+                      <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
+                    </Badge>
                   </IconButton>
                 </Link>
 
-                <IconButton onClick={handleOpenUserMenu}>
-                  <PersonTwoToneIcon sx={{ color: "black" }} />
-                </IconButton>
-                <Menu
-                  sx={{ mt: "45px" }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
+                {authTokens && (
+                  <>
+                    <IconButton onClick={handleOpenUserMenu}>
+                      <PersonTwoToneIcon sx={{ color: "black" }} />
+                    </IconButton>
+                    <Menu
+                      sx={{ mt: "45px" }}
+                      id="menu-appbar"
+                      anchorEl={anchorElUser}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={Boolean(anchorElUser)}
+                      onClose={handleCloseUserMenu}
+                    >
+                      {settings.map((setting) => (
+                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                          <Typography textAlign="center">{setting}</Typography>
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </>
+                )}
               </Box>
             </div>
           </Toolbar>
