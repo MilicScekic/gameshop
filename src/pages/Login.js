@@ -16,7 +16,8 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate, Link as LinkTo } from "react-router-dom";
+import { apiCall } from "../services/api";
 
 function Copyright() {
   return (
@@ -124,21 +125,24 @@ const Login = () => {
     setPassword("");
 
     //? Za kasnije kad Matija zavrsi
-    //   apiCall
-    //     .post("/login", formFields)
-    //     .then((result) => {
-    //       let { jwt } = result.data;
-    //       console.log(jwt);
-    //       setTokens(jwt);
-    //     })
-    //     .catch((e) => {
-    //       console.log(e);
-    //     });
+    apiCall
+      .post("/auth/local", {
+        identifier: email,
+        password: password,
+      })
+      .then((result) => {
+        let { jwt } = result.data;
+        console.log(jwt);
+        setTokens(jwt);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
-  //   if (authTokens) {
-  //     return <Navigate to="/" />;
-  //   }
+  if (authTokens) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -203,9 +207,9 @@ const Login = () => {
               </Link>
             </Grid>
             <Grid item>
-              <Link to="#" variant="body2">
+              <LinkTo to="/register" variant="body2">
                 {"Don't have an account? Sign Up"}
-              </Link>
+              </LinkTo>
             </Grid>
           </Grid>
         </form>
