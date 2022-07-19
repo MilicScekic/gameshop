@@ -3,7 +3,7 @@ import {
   cartReducer,
   productReducer,
   initialState,
-} from "../reducers/shopReducer";
+} from "../store/reducers/shopReducer";
 
 export const CartContext = createContext(initialState);
 
@@ -35,6 +35,22 @@ export const CartContextProvider = ({ children }) => {
   };
 
   //* Actions (Products)
+  // const getProducts = (targetUrl) => async (dispatch) => {
+  //   dispatch(showSpinner());
+
+  //   try {
+  //     const res = await axios.get(targetUrl);
+  //     res.data.products.length == 0
+  //       ? dispatch({ type: STOP_PAGINATION })
+  //       : dispatch({ type: GET_PRODUCTS, payload: res.data });
+
+  //     dispatch(hideSpinner());
+  //   } catch ({ response }) {
+  //     dispatch(hideSpinner());
+  //     dispatch(setAlert(response.data.message, "error"));
+  //   }
+  // };
+
   const sortByPriceAsc = () => {
     productDispatch({ type: "SORT_BY_PRICE", payload: "lowToHigh" });
   };
@@ -68,7 +84,7 @@ export const CartContextProvider = ({ children }) => {
       value={{
         products: state.products,
         cart: state.cart,
-        addToCart,
+        // addToCart,
         removeFromCart,
         changeCartQty,
         //
@@ -85,6 +101,7 @@ export const CartContextProvider = ({ children }) => {
         clearFilters,
         searchProducts,
 
+        // getProducts,
         //
         // productDispatch, //? za drugi nacin
       }}
