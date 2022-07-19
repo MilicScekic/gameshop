@@ -16,7 +16,7 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
-import { useNavigate, Navigate, Link as LinkTo } from "react-router-dom";
+import { Redirect, Link as LinkTo } from "react-router-dom";
 import { apiCall } from "../services/api";
 
 function Copyright() {
@@ -58,8 +58,6 @@ const EMAIL_REGEX =
 
 const Login = () => {
   const { authTokens, setTokens } = useContext(AuthContext);
-
-  let navigate = useNavigate();
 
   const emailRef = useRef();
 
@@ -141,7 +139,7 @@ const Login = () => {
   };
 
   if (authTokens) {
-    return <Navigate to="/" />;
+    return <Redirect to="/" />;
   }
 
   return (

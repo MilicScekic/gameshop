@@ -16,7 +16,7 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
-import { Navigate, Link as LinkTo } from "react-router-dom";
+import { Redirect, Link as LinkTo } from "react-router-dom";
 import { apiCall } from "../services/api";
 
 function Copyright() {
@@ -167,7 +167,7 @@ const Register = () => {
   };
 
   if (authTokens) {
-    return <Navigate to="/" />;
+    return <Redirect to="/" />;
   }
 
   return (
