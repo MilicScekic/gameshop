@@ -147,7 +147,7 @@ function Header() {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {pages.map((page) => (
+                {/* {pages.map((page) => (
                   <Link
                     to={page}
                     style={{ color: "black", textDecoration: "none" }}
@@ -157,7 +157,7 @@ function Header() {
                       <Typography textAlign="center">{page}</Typography>
                     </MenuItem>
                   </Link>
-                ))}
+                ))} */}
               </Menu>
             </Box>
             <ComputerIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -177,23 +177,20 @@ function Header() {
                 textDecoration: "none",
               }}
             >
-              Gameshop
+              <Link to="/products">Gameshop</Link>
             </Typography>
 
             <div>
               <Box sx={{ flexGrow: 0 }}>
-                <Link
-                  to={!authTokens && "/login"}
-                  style={{ textDecoration: "none" }}
-                >
-                  <Button sx={{ color: "black" }}>
+                <Button sx={{ color: "black" }}>
+                  <Link
+                    to={!authTokens && "/login"}
+                    style={{ textDecoration: "none" }}
+                  >
                     <h4>{!authTokens && "Login"}</h4>
-                  </Button>
-                </Link>
-                <Link
-                  to={!authTokens && "/register"}
-                  style={{ textDecoration: "none" }}
-                >
+                  </Link>
+                </Button>
+                <Link to={"/register"} style={{ textDecoration: "none" }}>
                   <Button sx={{ color: "black" }}>
                     <h4>{!authTokens && "Register"}</h4>
                   </Button>
@@ -338,9 +335,11 @@ function Header() {
                   </Button>
                 </Link>
               ))} */}
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
+                  <Link
+                    to="/products"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
                     <Button
-                      onClick={handleCloseNavMenu}
                       sx={{
                         my: 2,
                         mr: 5,
@@ -357,12 +356,17 @@ function Header() {
                             marginRight: "5px",
                           }}
                         />
-                        Computers
+                        Products
                       </div>
                     </Button>
                   </Link>
 
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
+                  <Link
+                    to={
+                      "/products?category=consoles&sortBy=price&maxPrice=1000"
+                    }
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
                       onClick={handleCloseNavMenu}
                       sx={{
@@ -385,7 +389,13 @@ function Header() {
                       </div>
                     </Button>
                   </Link>
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
+
+                  <Link
+                    to={
+                      "/products?category=headphones&sortBy=price&maxPrice=1000"
+                    }
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
                       onClick={handleCloseNavMenu}
                       sx={{
@@ -408,9 +418,12 @@ function Header() {
                       </div>
                     </Button>
                   </Link>
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
+
+                  <Link
+                    to={"/products?category=games&sortBy=price&maxPrice=1000"}
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
-                      onClick={handleCloseNavMenu}
                       sx={{
                         my: 2,
                         mr: 5,
@@ -431,9 +444,14 @@ function Header() {
                       </div>
                     </Button>
                   </Link>
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
+
+                  <Link
+                    to={
+                      "/products?category=lifestyle&sortBy=price&maxPrice=1000"
+                    }
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
-                      onClick={handleCloseNavMenu}
                       sx={{
                         my: 2,
                         mr: 5,
