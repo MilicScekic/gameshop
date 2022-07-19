@@ -20,7 +20,10 @@ const productsReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case ADD_TO_CART:
       //? ovaj nacin destrukturira objekat da bi umetnuo jos i qty attribut
-      return { ...state, cart: [...state.cart, { ...payload, qty: 1 }] };
+      return {
+        ...state,
+        cart: [...state.cart, { ...payload, qty: 1 }],
+      };
 
     case GET_PRODUCTS:
       return {

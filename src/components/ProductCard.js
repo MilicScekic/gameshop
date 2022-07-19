@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { addToCart } from "../store/actions/products";
+// import { addOnCart } from "../store/actions/products";
 
 import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
@@ -40,10 +40,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductCard = ({ product: { _id, name, imgSrc, specs, price } }) => {
+const ProductCard = ({
+  product: { _id, name, imgSrc, specs, price },
+  // addOnCart,
+}) => {
   const classes = useStyles();
 
-  const { cart } = useContext(CartContext);
+  const { addToCart, cart } = useContext(CartContext);
+  let addedProduct = cart.some((p) => p._id === _id);
 
   return (
     <Grid item xs={12} md={6} lg={4}>
@@ -71,9 +75,9 @@ const ProductCard = ({ product: { _id, name, imgSrc, specs, price } }) => {
           <Typography variant="h5">{price.toLocaleString()} &euro;</Typography>
 
           <IconButton
-            disabled={cart.some((item) => item.productId === _id)}
-            onClick={() => addToCart(_id)}
-            // onClick={() => addToUserCart(_id)}
+            disabled={addedProduct}
+            // onClick={() => addOnCart({ _id, name, imgSrc, specs, price })} //! Ne radi
+            onClick={() => addToCart({ _id, name, imgSrc, specs, price })} //* Radi
           >
             <AddShoppingCartIcon />
           </IconButton>
@@ -83,16 +87,15 @@ const ProductCard = ({ product: { _id, name, imgSrc, specs, price } }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  products: state.products.products, //! Ovo mu treba da bi citao state iz reducera (products)
-  // isAuthenticated: state.auth.isAuthenticated,
-  // user: state.user.user,
-  // guest: state.user.guest,
-});
+// const mapStateToProps = (state) => ({
+//   products: state.products.products, //! Ovo mu treba da bi citao state iz reducera (products)
+//   // isAuthenticated: state.auth.isAuthenticated,
+//   // user: state.user.user,
+//   // guest: state.user.guest,
+// });
 
-// export default ProductCard;
+export default ProductCard;
 
 //! Ovo sluzi kao ono kod contexta, da mu prenese ove akcije(funkcije iz actions)
 //! zajedno sa ovom komponentom, kako bi mogao da ih izvrsava
-//? Posto sam u CartContext vec stavio svoju addToCart funkciju, necu za sad da diram nista
-export default connect(mapStateToProps, { addToCart })(ProductCard);
+// export default connect(mapStateToProps, { addOnCart })(ProductCard);

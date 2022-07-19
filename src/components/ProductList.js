@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 
 import { ResponsiveContainer } from "../utils/Responsive";
 import ProductCard from "./ProductCard";
+import { addOnCart } from "../store/actions/products";
 // import SkeletonSpinner from "../components/SkeletonSpinner";
 
 const useStyles = makeStyles((theme) => ({

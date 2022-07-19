@@ -10,9 +10,9 @@ import {
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
 
-export const addToCart = (id) => (dispatch) => {
+export const addOnCart = (product) => (dispatch) => {
   try {
-    dispatch({ type: ADD_TO_CART, payload: id });
+    dispatch({ type: ADD_TO_CART, payload: product });
     dispatch(setAlert("Added to cart", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message, "error"));

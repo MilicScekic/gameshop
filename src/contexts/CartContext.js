@@ -84,7 +84,7 @@ export const CartContextProvider = ({ children }) => {
       value={{
         products: state.products,
         cart: state.cart,
-        // addToCart,
+        addToCart,
         removeFromCart,
         changeCartQty,
         //
