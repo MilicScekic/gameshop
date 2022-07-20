@@ -44,14 +44,9 @@ const ProductCard = ({
   user,
   guest,
 }) => {
-  //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(guest.cart));
-  }, [guest]);
-
   const classes = useStyles();
 
-  const { authTokens, addToCart } = useContext(CartContext); //? addToCart za guest za sad
+  const { authTokens } = useContext(CartContext);
 
   return (
     <Grid item xs={12} md={6} lg={4}>

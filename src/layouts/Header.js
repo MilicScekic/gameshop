@@ -18,7 +18,7 @@ import ComputerTwoToneIcon from "@mui/icons-material/ComputerTwoTone";
 import HeadsetTwoToneIcon from "@mui/icons-material/HeadsetTwoTone";
 import SportsEsportsTwoToneIcon from "@mui/icons-material/SportsEsportsTwoTone";
 import NightlifeTwoToneIcon from "@mui/icons-material/NightlifeTwoTone";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import KeyboardArrowDownTwoToneIcon from "@mui/icons-material/KeyboardArrowDownTwoTone";
@@ -57,6 +57,13 @@ function Header({ user, guest }) {
 
   //? Vise necu koristiti ovu korpu
   // const { cart } = useContext(CartContext);
+
+  //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
+  //* Ovo mora biti najvisi nivo
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(guest.cart));
+    // localStorage.removeItem("cart", guest.cart);
+  }, [guest.cart]);
 
   const { authTokens } = useContext(AuthContext);
 
