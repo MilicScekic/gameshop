@@ -35,22 +35,6 @@ export const CartContextProvider = ({ children }) => {
   };
 
   //* Actions (Products)
-  // const getProducts = (targetUrl) => async (dispatch) => {
-  //   dispatch(showSpinner());
-
-  //   try {
-  //     const res = await axios.get(targetUrl);
-  //     res.data.products.length == 0
-  //       ? dispatch({ type: STOP_PAGINATION })
-  //       : dispatch({ type: GET_PRODUCTS, payload: res.data });
-
-  //     dispatch(hideSpinner());
-  //   } catch ({ response }) {
-  //     dispatch(hideSpinner());
-  //     dispatch(setAlert(response.data.message, "error"));
-  //   }
-  // };
-
   const sortByPriceAsc = () => {
     productDispatch({ type: "SORT_BY_PRICE", payload: "lowToHigh" });
   };
@@ -100,8 +84,6 @@ export const CartContextProvider = ({ children }) => {
         filterByRating,
         clearFilters,
         searchProducts,
-
-        // getProducts,
         //
         // productDispatch, //? za drugi nacin
       }}

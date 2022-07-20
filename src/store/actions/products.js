@@ -5,19 +5,9 @@ import {
   GET_CURRENT_PRODUCT,
   CLEAR_CURRENT_PRODUCT,
   ADD_NEW_REVIEW,
-  ADD_TO_CART,
 } from "./types";
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
-
-export const addOnCart = (product) => (dispatch) => {
-  try {
-    dispatch({ type: ADD_TO_CART, payload: product });
-    dispatch(setAlert("Added to cart", "success"));
-  } catch ({ response }) {
-    dispatch(setAlert(response.data.message, "error"));
-  }
-};
 
 export const clearProducts = () => (dispatch) => {
   dispatch({ type: CLEAR_PRODUCTS });

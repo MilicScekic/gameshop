@@ -7,7 +7,6 @@ import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import ComputerIcon from "@mui/icons-material/Computer";
@@ -25,21 +24,13 @@ import Grid from "@mui/material/Grid";
 import KeyboardArrowDownTwoToneIcon from "@mui/icons-material/KeyboardArrowDownTwoTone";
 import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
 import { AuthContext } from "../contexts/AuthContext";
-import { CartContext } from "../contexts/CartContext";
+//import { CartContext } from "../contexts/CartContext"; //? Ne koristi se vise ova korpa
 import Cart from "../pages/Cart";
+import { connect } from "react-redux";
 
-const pages = [
-  "Consoles",
-  "Computers",
-  "Gamepads",
-  "Coolers",
-  "Headphones",
-  "Games",
-  "Lifestyle",
-];
 const settings = ["Dashboard", "Profile", "Register", "Login", "Logout"];
 
-function Header() {
+function Header({ user, guest }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -64,8 +55,16 @@ function Header() {
     setOpen(!open);
   };
 
+  //? Vise necu koristiti ovu korpu
+  // const { cart } = useContext(CartContext);
+
   const { authTokens } = useContext(AuthContext);
-  const { cart } = useContext(CartContext);
+
+  const cart = authTokens ? user.cart : guest.cart;
+
+  //? Mozda je ova funkcija sigurnija... Ali za sad sve radi uz pomoc length-a
+  // const calculateSum = (arr) =>
+  //   arr.reduce((acc, { quantity }) => acc + quantity, 0);
 
   return (
     <>
@@ -147,7 +146,7 @@ function Header() {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {/* {pages.map((page) => (
+                {/* {settings.map((page) => (
                   <Link
                     to={page}
                     style={{ color: "black", textDecoration: "none" }}
@@ -182,14 +181,14 @@ function Header() {
 
             <div>
               <Box sx={{ flexGrow: 0 }}>
-                <Button sx={{ color: "black" }}>
-                  <Link
-                    to={!authTokens && "/login"}
-                    style={{ textDecoration: "none" }}
-                  >
+                <Link
+                  to={!authTokens && "/login"}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button sx={{ color: "black" }}>
                     <h4>{!authTokens && "Login"}</h4>
-                  </Link>
-                </Button>
+                  </Button>
+                </Link>
                 <Link to={"/register"} style={{ textDecoration: "none" }}>
                   <Button sx={{ color: "black" }}>
                     <h4>{!authTokens && "Register"}</h4>
@@ -230,7 +229,11 @@ function Header() {
                     >
                       {settings.map((setting) => (
                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                          <Typography textAlign="center">{setting}</Typography>
+                          <Link to={setting}>
+                            <Typography textAlign="center">
+                              {setting}
+                            </Typography>
+                          </Link>
                         </MenuItem>
                       ))}
                     </Menu>
@@ -315,26 +318,26 @@ function Header() {
                     display: { xs: "none", md: "flex" },
                   }}
                 >
-                  {/* {pages.map((page) => (
-                <Link
-                  to={page}
-                  style={{ color: "white", textDecoration: "none" }}
-                  key={page}
-                >
-                  <Button
-                    onClick={handleCloseNavMenu}
-                    sx={{
-                      my: 2,
-                      mr: 5,
-                      color: "white",
-                      display: "block",
-                      background: "#333",
-                    }}
-                  >
-                    {page}
-                  </Button>
-                </Link>
-              ))} */}
+                  {/* {settings.map((page) => (
+                    <Link
+                      to={page}
+                      style={{ color: "white", textDecoration: "none" }}
+                      key={page}
+                    >
+                      <Button
+                        onClick={handleCloseNavMenu}
+                        sx={{
+                          my: 2,
+                          mr: 5,
+                          color: "white",
+                          display: "block",
+                          background: "#333",
+                        }}
+                      >
+                        {page}
+                      </Button>
+                    </Link>
+                  ))} */}
                   <Link
                     to="/products"
                     style={{ textDecoration: "none", color: "black" }}
@@ -482,4 +485,9 @@ function Header() {
   );
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+  user: state.user.user,
+  guest: state.user.guest,
+});
+
+export default connect(mapStateToProps)(Header);

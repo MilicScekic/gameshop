@@ -1,14 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-
-// import { addOnCart } from "../store/actions/products";
-
+import { addToGuestCart, addToUserCart } from "../store/actions/user";
 import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { CartContext } from "../contexts/CartContext";
@@ -42,12 +39,19 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductCard = ({
   product: { _id, name, imgSrc, specs, price },
-  // addOnCart,
+  addToGuestCart,
+  addToUserCart,
+  user,
+  guest,
 }) => {
+  //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(guest.cart));
+  }, [guest]);
+
   const classes = useStyles();
 
-  const { addToCart, cart } = useContext(CartContext);
-  let addedProduct = cart.some((p) => p._id === _id);
+  const { authTokens, addToCart } = useContext(CartContext); //? addToCart za guest za sad
 
   return (
     <Grid item xs={12} md={6} lg={4}>
@@ -73,29 +77,36 @@ const ProductCard = ({
 
         <div className={classes.flex}>
           <Typography variant="h5">{price.toLocaleString()} &euro;</Typography>
-
-          <IconButton
-            disabled={addedProduct}
-            // onClick={() => addOnCart({ _id, name, imgSrc, specs, price })} //! Ne radi
-            onClick={() => addToCart({ _id, name, imgSrc, specs, price })} //* Radi
-          >
-            <AddShoppingCartIcon />
-          </IconButton>
+          {user && authTokens ? (
+            <IconButton
+              // disabled={user.cart.some((item) => item.productId === _id)}
+              onClick={() => addToUserCart(_id)}
+            >
+              <AddShoppingCartIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              disabled={guest.cart.some((item) => item._id === _id)}
+              onClick={() =>
+                addToGuestCart({ _id, name, imgSrc, specs, price })
+              }
+              // onClick={() => addToCart(_id)} //? Iskoristicu ovaj za guest
+            >
+              <AddShoppingCartIcon />
+            </IconButton>
+          )}
         </div>
       </Paper>
     </Grid>
   );
 };
 
-// const mapStateToProps = (state) => ({
-//   products: state.products.products, //! Ovo mu treba da bi citao state iz reducera (products)
-//   // isAuthenticated: state.auth.isAuthenticated,
-//   // user: state.user.user,
-//   // guest: state.user.guest,
-// });
+const mapStateToProps = (state) => ({
+  products: state.products.products, //! Ovo mu treba da bi citao state iz reducera (products)
+  user: state.user.user,
+  guest: state.user.guest,
+});
 
-export default ProductCard;
-
-//! Ovo sluzi kao ono kod contexta, da mu prenese ove akcije(funkcije iz actions)
-//! zajedno sa ovom komponentom, kako bi mogao da ih izvrsava
-// export default connect(mapStateToProps, { addOnCart })(ProductCard);
+export default connect(mapStateToProps, { addToGuestCart, addToUserCart })(
+  ProductCard
+);

@@ -1,13 +1,8 @@
 import { useEffect, useState, useContext } from "react";
-import { AiFillDelete } from "react-icons/ai";
+import { connect } from "react-redux";
 import { makeStyles } from "@mui/styles";
-import { CartContext } from "../contexts/CartContext";
+// import { CartContext } from "../contexts/CartContext"; //? Ovo vise necu koristiti.
 import { Link } from "react-router-dom";
-import Rating from "../components/Rating";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -24,7 +19,9 @@ import {
   Headline,
   Subheadline,
 } from "../utils/Responsive";
-//import CartItem from "../components/CartItem"; //! ne radi changeCartQty
+import CartItem from "../components/CartItem";
+import { AuthContext } from "../contexts/AuthContext";
+import { getUserProfile } from "../store/actions/user";
 
 const useStyles = makeStyles((theme) => ({
   headline: {
@@ -82,17 +79,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cart = () => {
-  const { cart, removeFromCart, changeCartQty } = useContext(CartContext);
+const Cart = ({ user, guest, getUserProfile }) => {
+  //? Ovo vise necu koristiti. Od sad ide samo guest korpa.
+  // const { removeFromCart, changeCartQty } = useContext(CartContext);
 
-  const [total, setTotal] = useState(0);
+  //? Ovo koristim za autorizaciju
+  const { authTokens } = useContext(AuthContext);
 
   useEffect(() => {
-    //Generisanje cijena spram kolicini artikla tj. kolicini proizvoda u korpi
-    setTotal(
-      cart.reduce((acc, curr) => acc + Number(curr.price) * curr.qty, 0)
-    );
-  }, [cart]);
+    if (authTokens) getUserProfile();
+  }, []);
+
+  const calculateTotal = (arr) => {
+    return arr
+      .reduce((acc, { quantity, price }) => acc + quantity * price, 0)
+      .toLocaleString();
+  };
+
+  const calculateSum = (arr) =>
+    arr.reduce((acc, { quantity }) => acc + quantity, 0);
+
+  const userCartPresent = authTokens && user !== null && user.cart.length > 0;
+  const guestCartPresent = guest.cart.length > 0;
 
   const classes = useStyles();
 
@@ -100,94 +108,63 @@ const Cart = () => {
     <section style={{ background: "#f8f8f8", minHeight: "calc(100vh - 60px)" }}>
       <ResponsiveContainer>
         <Headline className={classes.headline}>
-          <h5 style={{ marginBottom: "2rem" }}>Your cart ({cart.length})</h5>
-          {cart.map((product) => (
-            <Paper className={classes.paper} key={product.id}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={2} className={classes.gridItem}>
-                  <Link to={`/products/${product.id}`}>
-                    <div className={classes.img}>
-                      <img
-                        className={classes.image}
-                        src={product.image}
-                        alt={product.image}
-                      />
-                    </div>
-                  </Link>
-                </Grid>
-                <Grid item xs={12} md={4} className={classes.gridItem}>
-                  <div style={{ marginTop: 20 }}>
-                    <Link
-                      to={`/products/${product.id}`}
-                      className={classes.link}
-                    >
-                      <Subheadline center>{product.name}</Subheadline>
-                    </Link>
-                    <Typography variant="body1" style={{ textAlign: "center" }}>
-                      {product.price} &euro;
-                    </Typography>
-                  </div>
-                </Grid>
-
-                <Grid item xs={12} md={4} className={classes.gridItem}>
-                  <div>
-                    <Subheadline bold>Quantity</Subheadline>
-                    <div className={classes.flex}>
-                      <FormControl fullWidth>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          label="Quantity"
-                          value={product.qty}
-                          onChange={(e) =>
-                            changeCartQty(product.id, e.target.value)
-                          }
-                        >
-                          {/* Onoliko koliko je na lageru dozvoli i kolicinu za porucivanje */}
-                          {[...Array(product.inStock).keys()].map((x) => (
-                            <MenuItem key={x + 1} value={x + 1}>
-                              {x + 1}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </div>
-                  </div>
-                </Grid>
-
-                <Grid item xs={12} md={2} className={classes.gridItem}>
-                  <Tooltip placement="top" title="Delete from cart">
-                    <IconButton onClick={() => removeFromCart(product.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              </Grid>
-            </Paper>
-          ))}
+          Your cart{" "}
+          {authTokens && user !== null && user.cart.length > 0
+            ? `(${calculateSum(user.cart)})`
+            : !authTokens && guest.cart.length > 0
+            ? `(${calculateSum(guest.cart)})`
+            : null}
         </Headline>
-        {cart.length === 0 && (
+        {!authTokens && guest.cart.length == 0 && (
           <div className={classes.centered}>
             <SadEmojiIcon className={classes.emoji} />
             <Subheadline>You have no cart items</Subheadline>
           </div>
         )}
+        {!authTokens &&
+          guest.cart.map((item) => <CartItem key={item._id} item={item} />)}
+        {authTokens && user !== null && user.cart.length == 0 && (
+          <div className={classes.centered}>
+            <SadEmojiIcon className={classes.emoji} />
+            <Subheadline>You have no cart items</Subheadline>
+          </div>
+        )}
+        {authTokens &&
+          user !== null &&
+          user.cart.map((item) => (
+            <CartItem key={item._id} item={item} quantity={item.quantity} />
+          ))}
 
-        <div className={classes.centered}>
-          <Divider className={classes.divider} />
-          <Subheadline gutterBottom>
-            Total price:{" "}
-            <span style={{ fontWeight: "bold" }}>{total} &euro;</span>
-          </Subheadline>
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <Button color="success" variant="contained">
+        {(userCartPresent || guestCartPresent) && (
+          <div className={classes.centered}>
+            <Divider className={classes.divider} />
+            <Subheadline gutterBottom>
+              Total price:{" "}
+              <span style={{ fontWeight: "bold" }}>
+                {authTokens && user !== null
+                  ? calculateTotal(user.cart)
+                  : calculateTotal(guest.cart)}{" "}
+                CZK
+              </span>
+            </Subheadline>
+            <Button
+              component={Link}
+              to="/checkout"
+              color="primary"
+              variant="contained"
+            >
               Proceed to checkout
             </Button>
-          </Link>
-        </div>
+          </div>
+        )}
       </ResponsiveContainer>
     </section>
   );
 };
 
-export default Cart;
+const mapStateToProps = (state) => ({
+  user: state.user.user,
+  guest: state.user.guest,
+});
+
+export default connect(mapStateToProps, { getUserProfile })(Cart);

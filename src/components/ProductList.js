@@ -4,11 +4,9 @@ import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-
 import { ResponsiveContainer } from "../utils/Responsive";
 import ProductCard from "./ProductCard";
-import { addOnCart } from "../store/actions/products";
-// import SkeletonSpinner from "../components/SkeletonSpinner";
+import SkeletonSpinner from "../components/SkeletonSpinner";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -22,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// this component will accept the query param and re-render itself
-// based on the change of queryparams
+// Ova komponenta ce prihvatiti query parametar i rerendovace se sama od sebe
+// Bazirano na promjeni query parametra
 const ProductList = ({
   products,
   loading,
@@ -61,7 +59,7 @@ const ProductList = ({
               this criteria
             </Typography>
           )}
-          {/* {loading && <SkeletonSpinner />} */}
+          {loading && <SkeletonSpinner />}
         </div>
       </ResponsiveContainer>
     </section>
