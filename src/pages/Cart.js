@@ -144,7 +144,7 @@ const Cart = ({ user, guest, getUserProfile }) => {
                 {authTokens && user !== null
                   ? calculateTotal(user.cart)
                   : calculateTotal(guest.cart)}{" "}
-                CZK
+                &euro;
               </span>
             </Subheadline>
             <Button
