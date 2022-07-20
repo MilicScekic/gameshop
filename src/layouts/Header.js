@@ -62,9 +62,8 @@ function Header({ user, guest }) {
 
   const cart = authTokens ? user.cart : guest.cart;
 
-  //? Mozda je ova funkcija sigurnija... Ali za sad sve radi uz pomoc length-a
-  // const calculateSum = (arr) =>
-  //   arr.reduce((acc, { quantity }) => acc + quantity, 0);
+  const calculateSum = (arr) =>
+    arr.reduce((acc, { quantity }) => acc + quantity, 0);
 
   return (
     <>
@@ -199,7 +198,7 @@ function Header({ user, guest }) {
                   <IconButton>
                     <Badge
                       color="secondary"
-                      badgeContent={cart.length > 0 ? cart.length : 0}
+                      badgeContent={cart.length > 0 ? calculateSum(cart) : 0}
                     >
                       <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
                     </Badge>
