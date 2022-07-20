@@ -1,19 +1,5 @@
-import { faker } from "@faker-js/faker";
-
-const fakerProducts = [...Array(20)].map(() => ({
-  id: faker.datatype.uuid(),
-  name: faker.commerce.productName(),
-  price: faker.commerce.price(),
-  image: faker.image.technics(),
-  inStock: faker.helpers.arrayElement([0, 3, 5, 6, 7]),
-  fastDelivery: faker.datatype.boolean(),
-  ratings: faker.helpers.arrayElement([1, 2, 3, 4, 5]),
-}));
-
 export const initialState = {
-  products: localStorage.getItem("products")
-    ? JSON.parse(localStorage.getItem("products"))
-    : fakerProducts,
+  products: [],
   cart: localStorage.getItem("cart")
     ? JSON.parse(localStorage.getItem("cart"))
     : [],
@@ -73,7 +59,7 @@ export const productReducer = (state, action) => {
 
     case "CLEAR_FILTERS":
       return {
-        products: fakerProducts,
+        products: initialState.products,
         byStock: false,
         byFastDelivery: false,
         byRating: 0,

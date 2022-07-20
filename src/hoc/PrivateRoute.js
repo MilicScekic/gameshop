@@ -1,9 +1,28 @@
 import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 
-export const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ component: Component, ...rest }) => {
   const { authTokens } = useContext(AuthContext);
 
-  return authTokens ? children : <Navigate to="/login" />;
+  return (
+    <Route
+      {...rest}
+      component={(props) =>
+        authTokens ? <Component {...props} /> : <Redirect to="/login" />
+      }
+    />
+  );
 };
+
+export default PrivateRoute;
+
+// import React, { useContext } from "react";
+// import { Redirect } from "react-router-dom";
+// import { AuthContext } from "../contexts/AuthContext";
+
+// export const PrivateRoute = ({ children }) => {
+//   const { authTokens } = useContext(AuthContext);
+
+//   return authTokens ? children : <Redirect to="/login" />;
+// };

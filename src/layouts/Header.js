@@ -7,7 +7,6 @@ import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import ComputerIcon from "@mui/icons-material/Computer";
@@ -19,27 +18,19 @@ import ComputerTwoToneIcon from "@mui/icons-material/ComputerTwoTone";
 import HeadsetTwoToneIcon from "@mui/icons-material/HeadsetTwoTone";
 import SportsEsportsTwoToneIcon from "@mui/icons-material/SportsEsportsTwoTone";
 import NightlifeTwoToneIcon from "@mui/icons-material/NightlifeTwoTone";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import KeyboardArrowDownTwoToneIcon from "@mui/icons-material/KeyboardArrowDownTwoTone";
 import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
 import { AuthContext } from "../contexts/AuthContext";
-import { CartContext } from "../contexts/CartContext";
+//import { CartContext } from "../contexts/CartContext"; //? Ne koristi se vise ova korpa
 import Cart from "../pages/Cart";
+import { connect } from "react-redux";
 
-const pages = [
-  "Consoles",
-  "Computers",
-  "Gamepads",
-  "Coolers",
-  "Headphones",
-  "Games",
-  "Lifestyle",
-];
 const settings = ["Dashboard", "Profile", "Register", "Login", "Logout"];
 
-function Header() {
+function Header({ user, guest }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -64,8 +55,22 @@ function Header() {
     setOpen(!open);
   };
 
+  //? Vise necu koristiti ovu korpu
+  // const { cart } = useContext(CartContext);
+
+  //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
+  //* Ovo mora biti najvisi nivo
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(guest.cart));
+    // localStorage.removeItem("cart", guest.cart);
+  }, [guest.cart]);
+
   const { authTokens } = useContext(AuthContext);
-  const { cart } = useContext(CartContext);
+
+  const cart = authTokens ? user.cart : guest.cart;
+
+  const calculateSum = (arr) =>
+    arr.reduce((acc, { quantity }) => acc + quantity, 0);
 
   return (
     <>
@@ -147,7 +152,7 @@ function Header() {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {pages.map((page) => (
+                {/* {settings.map((page) => (
                   <Link
                     to={page}
                     style={{ color: "black", textDecoration: "none" }}
@@ -157,7 +162,7 @@ function Header() {
                       <Typography textAlign="center">{page}</Typography>
                     </MenuItem>
                   </Link>
-                ))}
+                ))} */}
               </Menu>
             </Box>
             <ComputerIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -177,7 +182,7 @@ function Header() {
                 textDecoration: "none",
               }}
             >
-              Gameshop
+              <Link to="/products">Gameshop</Link>
             </Typography>
 
             <div>
@@ -190,10 +195,7 @@ function Header() {
                     <h4>{!authTokens && "Login"}</h4>
                   </Button>
                 </Link>
-                <Link
-                  to={!authTokens && "/register"}
-                  style={{ textDecoration: "none" }}
-                >
+                <Link to={"/register"} style={{ textDecoration: "none" }}>
                   <Button sx={{ color: "black" }}>
                     <h4>{!authTokens && "Register"}</h4>
                   </Button>
@@ -203,7 +205,7 @@ function Header() {
                   <IconButton>
                     <Badge
                       color="secondary"
-                      badgeContent={cart.length > 0 ? cart.length : 0}
+                      badgeContent={cart.length > 0 ? calculateSum(cart) : 0}
                     >
                       <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
                     </Badge>
@@ -233,7 +235,11 @@ function Header() {
                     >
                       {settings.map((setting) => (
                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                          <Typography textAlign="center">{setting}</Typography>
+                          <Link to={setting}>
+                            <Typography textAlign="center">
+                              {setting}
+                            </Typography>
+                          </Link>
                         </MenuItem>
                       ))}
                     </Menu>
@@ -318,29 +324,31 @@ function Header() {
                     display: { xs: "none", md: "flex" },
                   }}
                 >
-                  {/* {pages.map((page) => (
-                <Link
-                  to={page}
-                  style={{ color: "white", textDecoration: "none" }}
-                  key={page}
-                >
-                  <Button
-                    onClick={handleCloseNavMenu}
-                    sx={{
-                      my: 2,
-                      mr: 5,
-                      color: "white",
-                      display: "block",
-                      background: "#333",
-                    }}
+                  {/* {settings.map((page) => (
+                    <Link
+                      to={page}
+                      style={{ color: "white", textDecoration: "none" }}
+                      key={page}
+                    >
+                      <Button
+                        onClick={handleCloseNavMenu}
+                        sx={{
+                          my: 2,
+                          mr: 5,
+                          color: "white",
+                          display: "block",
+                          background: "#333",
+                        }}
+                      >
+                        {page}
+                      </Button>
+                    </Link>
+                  ))} */}
+                  <Link
+                    to="/products"
+                    style={{ textDecoration: "none", color: "black" }}
                   >
-                    {page}
-                  </Button>
-                </Link>
-              ))} */}
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
                     <Button
-                      onClick={handleCloseNavMenu}
                       sx={{
                         my: 2,
                         mr: 5,
@@ -357,12 +365,17 @@ function Header() {
                             marginRight: "5px",
                           }}
                         />
-                        Computers
+                        Products
                       </div>
                     </Button>
                   </Link>
 
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
+                  <Link
+                    to={
+                      "/products?category=consoles&sortBy=price&maxPrice=1000"
+                    }
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
                       onClick={handleCloseNavMenu}
                       sx={{
@@ -385,7 +398,13 @@ function Header() {
                       </div>
                     </Button>
                   </Link>
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
+
+                  <Link
+                    to={
+                      "/products?category=headphones&sortBy=price&maxPrice=1000"
+                    }
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
                       onClick={handleCloseNavMenu}
                       sx={{
@@ -408,9 +427,12 @@ function Header() {
                       </div>
                     </Button>
                   </Link>
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
+
+                  <Link
+                    to={"/products?category=games&sortBy=price&maxPrice=1000"}
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
-                      onClick={handleCloseNavMenu}
                       sx={{
                         my: 2,
                         mr: 5,
@@ -431,9 +453,14 @@ function Header() {
                       </div>
                     </Button>
                   </Link>
-                  <Link to={"/"} style={{ textDecoration: "none" }}>
+
+                  <Link
+                    to={
+                      "/products?category=lifestyle&sortBy=price&maxPrice=1000"
+                    }
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
-                      onClick={handleCloseNavMenu}
                       sx={{
                         my: 2,
                         mr: 5,
@@ -464,4 +491,9 @@ function Header() {
   );
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+  user: state.user.user,
+  guest: state.user.guest,
+});
+
+export default connect(mapStateToProps)(Header);

@@ -3,7 +3,7 @@ import {
   cartReducer,
   productReducer,
   initialState,
-} from "../reducers/shopReducer";
+} from "../store/reducers/shopReducer";
 
 export const CartContext = createContext(initialState);
 
@@ -84,7 +84,6 @@ export const CartContextProvider = ({ children }) => {
         filterByRating,
         clearFilters,
         searchProducts,
-
         //
         // productDispatch, //? za drugi nacin
       }}
