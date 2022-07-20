@@ -62,7 +62,6 @@ function Header({ user, guest }) {
   //* Ovo mora biti najvisi nivo
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(guest.cart));
-    // localStorage.removeItem("cart", guest.cart);
   }, [guest.cart]);
 
   const { authTokens } = useContext(AuthContext);
