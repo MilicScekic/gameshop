@@ -8,7 +8,7 @@ import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { CartContext } from "../contexts/CartContext";
+import { AuthContext } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,7 +46,7 @@ const ProductCard = ({
 }) => {
   const classes = useStyles();
 
-  const { authTokens } = useContext(CartContext);
+  const { authTokens } = useContext(AuthContext);
 
   return (
     <Grid item xs={12} md={6} lg={4}>

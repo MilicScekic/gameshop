@@ -18,7 +18,7 @@ const AlertBox = ({ alerts }) => {
       <Snackbar
         key={id}
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={handleClose}
       >
         <Alert variant="filled" severity={type}>

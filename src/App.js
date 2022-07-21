@@ -16,7 +16,7 @@ import Cart from "./pages/Cart";
 import Products from "./pages/Products";
 import { LastLocationProvider } from "react-router-last-location";
 import { connect } from "react-redux";
-import { CartContextProvider } from "./contexts/CartContext";
+// import { CartContextProvider } from "./contexts/CartContext";
 
 const theme = createTheme({
   palette: {
@@ -32,31 +32,31 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CartContextProvider>
-        <AuthContextProvider>
-          <Router>
-            <LastLocationProvider>
-              <Layout>
-                <Switch>
-                  <Route exact path="/" component={Home} />
-                  <Route exact path="/shop" component={Shop} />
-                  <Route exact path="/cart" component={Cart} />
-                  <Route exact path="/about" component={About} />
-                  <Route path="/contact" component={Contact} />
+      {/* <CartContextProvider> */}
+      <AuthContextProvider>
+        <Router>
+          <LastLocationProvider>
+            <Layout>
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/shop" component={Shop} />
+                <Route exact path="/cart" component={Cart} />
+                <Route exact path="/about" component={About} />
+                <Route path="/contact" component={Contact} />
 
-                  <Route exact path="/login" component={Login} />
-                  <Route exact path="/register" component={Register} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/register" component={Register} />
 
-                  {/* <PrivateRoute exact path="/admin" component={Dashboard} /> */}
+                {/* <PrivateRoute exact path="/admin" component={Dashboard} /> */}
 
-                  <Route exact path="/products" component={Products} />
-                  <Route exact path="/product/:name" component={Product} />
-                </Switch>
-              </Layout>
-            </LastLocationProvider>
-          </Router>
-        </AuthContextProvider>
-      </CartContextProvider>
+                <Route exact path="/products" component={Products} />
+                <Route exact path="/product/:name" component={Product} />
+              </Switch>
+            </Layout>
+          </LastLocationProvider>
+        </Router>
+      </AuthContextProvider>
+      {/* </CartContextProvider> */}
     </ThemeProvider>
   );
 }
