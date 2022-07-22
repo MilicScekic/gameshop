@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
+import FavoriteIcon from "@mui/icons-material/FavoriteTwoTone";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
@@ -65,8 +66,6 @@ function Header({ user, guest }) {
   }, [guest.cart]);
 
   const { authTokens } = useContext(AuthContext);
-
-  const cart = authTokens ? user.cart : guest.cart;
 
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
@@ -200,19 +199,44 @@ function Header({ user, guest }) {
                   </Button>
                 </Link>
 
-                <Link to="/cart">
-                  <IconButton>
+                <IconButton
+                  style={{ color: "#fff" }}
+                  component={Link}
+                  to="/cart"
+                >
+                  {user !== null ? (
                     <Badge
                       color="secondary"
-                      badgeContent={cart.length > 0 ? calculateSum(cart) : 0}
+                      badgeContent={calculateSum(user.cart)}
                     >
                       <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
                     </Badge>
-                  </IconButton>
-                </Link>
+                  ) : (
+                    <Badge
+                      color="secondary"
+                      badgeContent={calculateSum(guest.cart)}
+                    >
+                      <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
+                    </Badge>
+                  )}
+                </IconButton>
 
                 {authTokens && (
                   <>
+                    <IconButton
+                      style={{ color: "#000" }}
+                      component={Link}
+                      to="/favorites"
+                    >
+                      <Badge
+                        color="secondary"
+                        badgeContent={0}
+                        // badgeContent={user.favorites.length}
+                      >
+                        <FavoriteIcon />
+                      </Badge>
+                    </IconButton>
+
                     <IconButton onClick={handleOpenUserMenu}>
                       <PersonTwoToneIcon sx={{ color: "black" }} />
                     </IconButton>
