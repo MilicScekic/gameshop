@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Layout from "./layouts/Layout";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -16,6 +16,8 @@ import Cart from "./pages/Cart";
 import Products from "./pages/Products";
 import { LastLocationProvider } from "react-router-last-location";
 import { connect } from "react-redux";
+import Favorites from "./pages/Favorites";
+import { autoSigninUser } from "./store/actions/auth";
 // import { CartContextProvider } from "./contexts/CartContext";
 
 const theme = createTheme({
@@ -29,7 +31,11 @@ const theme = createTheme({
   },
 });
 
-function App() {
+function App({ autoSigninUser }) {
+  // useEffect(() => {
+  //   if (localStorage.token) autoSigninUser();
+  // }, []);
+
   return (
     <ThemeProvider theme={theme}>
       {/* <CartContextProvider> */}
@@ -41,6 +47,7 @@ function App() {
                 <Route exact path="/" component={Home} />
                 <Route exact path="/shop" component={Shop} />
                 <Route exact path="/cart" component={Cart} />
+                <Route exact path="/favorites" component={Favorites} />
                 <Route exact path="/about" component={About} />
                 <Route path="/contact" component={Contact} />
 
@@ -61,5 +68,4 @@ function App() {
   );
 }
 
-// export default App;
-export default connect(null)(App);
+export default connect(null, { autoSigninUser })(App);

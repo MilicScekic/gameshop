@@ -21,9 +21,14 @@ import axios from "axios";
 
 export const getUserProfile = () => async (dispatch) => {
   try {
-    const res = await axios.get("/api/me");
+    //* Ovdje je cilj da se popuni user objekat/state u reducer(user)
+    //const res = await axios.get("/api/me"); //? Daj mi podatke o prijavljenom korisniku
+    const res = await axios.post("http://localhost:1337/api/auth/local", {
+      identifier: "ana@ana.com",
+      password: "Sinisa!1",
+    });
     dispatch({ type: CLEAN_GUEST });
-    dispatch({ type: GET_PROFILE, payload: res.data });
+    dispatch({ type: GET_PROFILE, payload: res.data.user }); //?  user: { korisnik }
   } catch ({ response }) {
     dispatch(setAlert(response.data.message, "error"));
   }
@@ -82,8 +87,9 @@ export const removeFromUserCart = (id) => async (dispatch) => {
 
 export const addToUserFavorites = (id) => async (dispatch) => {
   try {
-    const res = await axios.post(`/api/me/fav/${id}`);
-    dispatch({ type: ADD_TO_USER_FAVS, payload: res.data.favorites });
+    // const res = await axios.post(`/api/me/fav/${id}`);
+    dispatch({ type: ADD_TO_USER_FAVS, payload: id });
+    // dispatch({ type: ADD_TO_USER_FAVS, payload: res.data.favorites });
     dispatch(setAlert("Added to favorites", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message, "error"));
