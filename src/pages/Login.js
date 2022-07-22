@@ -5,6 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import CircularProgress from "@mui/material/CircularProgress";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -18,6 +19,8 @@ import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 import { Redirect, Link as LinkTo } from "react-router-dom";
 import { apiCall } from "../services/api";
+import { loginUser } from "../store/actions/auth";
+import { connect } from "react-redux";
 
 function Copyright() {
   return (
@@ -56,7 +59,7 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{7,24}$/;
 const EMAIL_REGEX =
   /^[a-z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1}([a-z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1})*[a-z0-9]@[a-z0-9][-\.]{0,1}([a-z][-\.]{0,1})*[a-z0-9]\.[a-z0-9]{1,}([\.\-]{0,1}[a-z]){0,}[a-z0-9]{0,}$/;
 
-const Login = () => {
+const Login = ({ isAuthenticated, loading, loginUser }) => {
   const { authTokens, setTokens } = useContext(AuthContext);
 
   const emailRef = useRef();
@@ -122,23 +125,28 @@ const Login = () => {
     setEmail("");
     setPassword("");
 
-    //? Za kasnije kad Matija zavrsi
-    apiCall
-      .post("/auth/local", {
-        identifier: email,
-        password: password,
-      })
-      .then((result) => {
-        let { jwt } = result.data;
-        console.log(jwt);
-        setTokens(jwt);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    //? Za login
+    loginUser({
+      identifier: email,
+      password: password,
+    });
+
+    // apiCall
+    //   .post("/auth/local", {
+    //     identifier: email,
+    //     password: password,
+    //   })
+    //   .then((result) => {
+    //     let { jwt } = result.data;
+    //     console.log(jwt);
+    //     setTokens(jwt);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
   };
 
-  if (authTokens) {
+  if (isAuthenticated || authTokens) {
     return <Redirect to="/" />;
   }
 
@@ -210,6 +218,10 @@ const Login = () => {
               </LinkTo>
             </Grid>
           </Grid>
+
+          {loading && (
+            <CircularProgress style={{ display: "block", margin: "0 auto" }} />
+          )}
         </form>
       </div>
       <Box mt={8}>
@@ -219,4 +231,9 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  loading: state.visual.loading,
+});
+
+export default connect(mapStateToProps, { loginUser })(Login);
