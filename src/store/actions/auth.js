@@ -32,8 +32,13 @@ export const loginUser = (formData) => async (dispatch) => {
       "http://localhost:1337/api/auth/local",
       formData
     );
+
+    //? moze i ovako
+    // let { jwt } = res.data;
     dispatch({ type: AUTH_SUCCESS, payload: res.data.jwt });
-    dispatch(autoSigninUser());
+
+    console.log(res.data.jwt);
+    dispatch(autoSigninUser(formData)); //! Ovaj tip funkcije ne bi trebao da ima parametar
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch({ type: AUTH_FAIL });
@@ -42,21 +47,20 @@ export const loginUser = (formData) => async (dispatch) => {
   }
 };
 
-export const autoSigninUser = () => async (dispatch) => {
+export const autoSigninUser = (formData) => async (dispatch) => {
   if (localStorage.token) setAxiosToken(localStorage.token);
 
   try {
-    // const res = await axios.get("http://localhost:1337/api/auth/local");
+    //* PRIMJER za testiranje (Strapi sam uzeo kao test)
+    const res = await axios.post(
+      `http://localhost:1337/api/auth/local/`,
+      formData
+    );
 
-    //* PRIMJER za testiranje
-    //? Ovdje treba da dodje API (GET) koji kupi podatke prijavljenog korisnika
-    const res = await axios.post("http://localhost:1337/api/auth/local", {
-      identifier: "ana@ana.com",
-      password: "Sinisa!1",
-    });
+    console.log(res.data);
 
     dispatch({ type: AUTO_SIGNIN_SUCCESS, payload: res.data.user });
-    dispatch(getUserProfile()); //? Pokupi podatke
+    dispatch(getUserProfile(formData)); //? Pokupi podatke prema tokenu
     dispatch(setAlert("Logged in successfully", "success"));
   } catch (err) {
     dispatch({ type: AUTO_SIGNIN_FAIL });
@@ -68,6 +72,12 @@ export const logout = () => (dispatch) => {
   dispatch({ type: CLEAN_USER });
   dispatch({ type: LOGOUT });
   dispatch(setAlert("Logged out successfully", "success"));
+};
+
+export const logoutWithTimer = (timer) => (dispatch) => {
+  setTimeout(() => {
+    dispatch(logout());
+  }, timer);
 };
 
 export const deleteAccount = (history) => async (dispatch) => {
