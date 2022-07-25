@@ -72,7 +72,7 @@ const userReducer = (state = initialState, { type, payload }) => {
       };
     case REMOVE_FROM_USER_CART:
       const newUserCart = state.user.cart.filter(
-        (item) => item.productId !== payload
+        (item) => item._id !== payload
       );
       return {
         ...state,
