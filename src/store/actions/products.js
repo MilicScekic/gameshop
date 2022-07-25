@@ -25,7 +25,7 @@ export const getProducts = (targetUrl) => async (dispatch) => {
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch(hideSpinner());
-    dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert(response.data.message && response.data.message, "error"));
   }
 };
 
@@ -34,7 +34,7 @@ export const getCurrentProduct = (id) => async (dispatch) => {
     const res = await axios.get(`/api/products/${id}`);
     dispatch({ type: GET_CURRENT_PRODUCT, payload: res.data });
   } catch ({ response }) {
-    dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert(response.data.message && response.data.message, "error"));
   }
 };
 
@@ -48,6 +48,6 @@ export const postNewReview = (formData, productId) => async (dispatch) => {
     dispatch({ type: ADD_NEW_REVIEW, payload: res.data.reviews });
     dispatch(setAlert("Review posted", "success"));
   } catch ({ response }) {
-    dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert(response.data.message && response.data.message, "error"));
   }
 };
