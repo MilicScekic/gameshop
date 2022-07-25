@@ -31,7 +31,7 @@ import { connect } from "react-redux";
 
 const settings = ["Dashboard", "Profile", "Register", "Login", "Logout"];
 
-function Header({ user, guest }) {
+function Header({ isAuthenticated, user, guest, logout }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -65,7 +65,7 @@ function Header({ user, guest }) {
     localStorage.setItem("cart", JSON.stringify(guest.cart));
   }, [guest.cart]);
 
-  const { authTokens } = useContext(AuthContext);
+  // const { authTokens } = useContext(AuthContext);
 
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
@@ -186,16 +186,16 @@ function Header({ user, guest }) {
             <div>
               <Box sx={{ flexGrow: 0 }}>
                 <Link
-                  to={!authTokens && "/login"}
+                  to={!isAuthenticated && "/login"}
                   style={{ textDecoration: "none" }}
                 >
                   <Button sx={{ color: "black" }}>
-                    <h4>{!authTokens && "Login"}</h4>
+                    <h4>{!isAuthenticated && "Login"}</h4>
                   </Button>
                 </Link>
                 <Link to={"/register"} style={{ textDecoration: "none" }}>
                   <Button sx={{ color: "black" }}>
-                    <h4>{!authTokens && "Register"}</h4>
+                    <h4>{!isAuthenticated && "Register"}</h4>
                   </Button>
                 </Link>
 
@@ -207,7 +207,7 @@ function Header({ user, guest }) {
                   {user !== null ? (
                     <Badge
                       color="secondary"
-                      badgeContent={calculateSum(user.cart)}
+                      // badgeContent={calculateSum(user.cart)}
                     >
                       <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
                     </Badge>
@@ -221,17 +221,21 @@ function Header({ user, guest }) {
                   )}
                 </IconButton>
 
-                {authTokens && (
+                {isAuthenticated && (
                   <>
                     <IconButton
-                      style={{ color: "#000" }}
-                      component={Link}
                       to="/favorites"
+                      component={Link}
+                      style={{ color: "#000" }}
                     >
                       <Badge
                         color="secondary"
-                        badgeContent={0}
-                        // badgeContent={user.favorites.length}
+                        badgeContent={
+                          user !== null && user.favorites
+                            ? user.favorites.length
+                            : null
+                        }
+                        // badgeContent={0}
                       >
                         <FavoriteIcon />
                       </Badge>
@@ -517,6 +521,7 @@ function Header({ user, guest }) {
 const mapStateToProps = (state) => ({
   user: state.user.user,
   guest: state.user.guest,
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps)(Header);
