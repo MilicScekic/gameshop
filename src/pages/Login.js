@@ -21,6 +21,7 @@ import { Redirect, Link as LinkTo } from "react-router-dom";
 import { apiCall } from "../services/api";
 import { loginUser } from "../store/actions/auth";
 import { connect } from "react-redux";
+import Register from "./Register";
 
 function Copyright() {
   return (
@@ -77,9 +78,9 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
 
   const classes = useStyles();
 
-  useEffect(() => {
-    emailRef.current.focus();
-  }, []);
+  // useEffect(() => {
+  //   emailRef.current.focus();
+  // }, []);
 
   useEffect(() => {
     if (email) {
@@ -127,7 +128,8 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
 
     //? Za login
     loginUser({
-      identifier: email,
+      email: email,
+      // identifier: email,
       password: password,
     });
 
@@ -202,20 +204,20 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            disabled={!validEmail || !validPwd || submitDisabled ? true : false}
+            // disabled={!validEmail || !validPwd || submitDisabled ? true : false}
           >
             Sign In
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link to="#" variant="body2">
-                Forgot password?
+              <Link to="#" component={LinkTo} variant="body2">
+                {"Forgot password?"}
               </Link>
             </Grid>
             <Grid item>
-              <LinkTo to="/register" variant="body2">
+              <Link to="/register" component={LinkTo} variant="body2">
                 {"Don't have an account? Sign Up"}
-              </LinkTo>
+              </Link>
             </Grid>
           </Grid>
 
