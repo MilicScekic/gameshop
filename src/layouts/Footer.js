@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import LocalPhoneTwoToneIcon from '@mui/icons-material/LocalPhoneTwoTone';
 import EmailTwoToneIcon from '@mui/icons-material/EmailTwoTone';
 import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
 
 function Footer() {
   return <>
@@ -130,24 +133,25 @@ function Footer() {
             </Box>
             <Box>
               <Typography>
-                  <EmailTwoToneIcon/> gameshop@gmail.com
+                  <EmailTwoToneIcon/> shopgame822@gmail.com
               </Typography>
             </Box>
             <Box>
                 <Typography component="span">
                     <LocationOnTwoToneIcon/> 
-                    <a href="https://www.google.com/maps/place/Dalmatinska+St,+Podgorica/@42.4520761,19.2423606,17z/data=!3m1!4b1!4m5!3m4!1s0x134deb2caf26cd71:0xea88c1a60bfb5b59!8m2!3d42.4520761!4d19.2423606">
-                      Dalmatinska St.
+                    <a href="https://www.google.com/maps/place/Rezidencija+Be%C4%8Di%C4%87/@42.4558619,19.2143717,15z/data=!4m5!3m4!1s0x0:0x71cf01260c4c4eeb!8m2!3d42.4558619!4d19.2143717?hl=en">
+                      Rezidencija Bečić, Milana Raičkovića, Podgorica
                     </a>
                 </Typography>
             </Box>
-            <Box>
-              <Typography>
-
-              </Typography>
-            </Box>
           </Grid>
         </Grid>
+        
+        <Box style={{display:"flex", justifyContent:"center", paddingTop:"1.5rem"}}>
+          <a className='ftrIconLink' href="https://www.twitter.com/"><TwitterIcon></TwitterIcon></a>
+          <a className='ftrIconLink' href="https://www.facebook.com/"><FacebookIcon></FacebookIcon></a>
+          <a className='ftrIconLink'href="https://www.instagram.com/"><InstagramIcon></InstagramIcon></a>
+        </Box>
         <Box>
           <Typography variant="h5" 
           style={{
