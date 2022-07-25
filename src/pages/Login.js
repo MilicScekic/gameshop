@@ -16,7 +16,6 @@ import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
-import { AuthContext } from "../contexts/AuthContext";
 import { Redirect, Link as LinkTo } from "react-router-dom";
 import { apiCall } from "../services/api";
 import { loginUser } from "../store/actions/auth";
@@ -50,9 +49,11 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%",
     marginTop: theme.spacing(1),
+    borderColor: "#000 !important",
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: "#000 !important",
   },
 }));
 
@@ -61,8 +62,6 @@ const EMAIL_REGEX =
   /^[a-z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1}([a-z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1})*[a-z0-9]@[a-z0-9][-\.]{0,1}([a-z][-\.]{0,1})*[a-z0-9]\.[a-z0-9]{1,}([\.\-]{0,1}[a-z]){0,}[a-z0-9]{0,}$/;
 
 const Login = ({ isAuthenticated, loading, loginUser }) => {
-  const { authTokens, setTokens } = useContext(AuthContext);
-
   const emailRef = useRef();
 
   const [email, setEmail] = useState("");
@@ -78,9 +77,9 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
 
   const classes = useStyles();
 
-  // useEffect(() => {
-  //   emailRef.current.focus();
-  // }, []);
+  useEffect(() => {
+    emailRef.current.focus();
+  }, []);
 
   useEffect(() => {
     if (email) {
@@ -115,13 +114,6 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // const v1 = PWD_REGEX.test(password);
-    // const v2 = EMAIL_REGEX.test(email);
-    // if (!v1 || !v2) {
-    //   setErrMsg("Invalid Entry");
-    //   return;
-    // }
-
     setSubmitDisabled(true); // zamrzni dugme
     setEmail("");
     setPassword("");
@@ -129,26 +121,11 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
     //? Za login
     loginUser({
       email: email,
-      // identifier: email,
       password: password,
     });
-
-    // apiCall
-    //   .post("/auth/local", {
-    //     identifier: email,
-    //     password: password,
-    //   })
-    //   .then((result) => {
-    //     let { jwt } = result.data;
-    //     console.log(jwt);
-    //     setTokens(jwt);
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   });
   };
 
-  if (isAuthenticated || authTokens) {
+  if (isAuthenticated) {
     return <Redirect to="/" />;
   }
 
@@ -202,7 +179,6 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
             type="submit"
             fullWidth
             variant="contained"
-            color="primary"
             className={classes.submit}
             // disabled={!validEmail || !validPwd || submitDisabled ? true : false}
           >
@@ -210,12 +186,17 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link to="#" component={LinkTo} variant="body2">
+              <Link to="#" component={LinkTo} variant="body2" className="black">
                 {"Forgot password?"}
               </Link>
             </Grid>
             <Grid item>
-              <Link to="/register" component={LinkTo} variant="body2">
+              <Link
+                to="/register"
+                component={LinkTo}
+                variant="body2"
+                className="black"
+              >
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
