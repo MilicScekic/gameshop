@@ -18,6 +18,7 @@
       rgba(149, 201, 234, 1) 35%,
       rgba(222, 224, 244, 1) 100%
     );
+  --black: #000;
 }
 
 body {
@@ -39,4 +40,13 @@ body {
 
 .active {
   background: var(--clr-gradient);
+}
+
+.black {
+  color: var(--black) !important;
+  text-decoration: none !important;
+}
+
+.blackBg {
+  background: var(--black) !important;
 }
