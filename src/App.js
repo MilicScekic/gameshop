@@ -17,6 +17,7 @@ import { LastLocationProvider } from "react-router-last-location";
 import { connect } from "react-redux";
 import Favorites from "./pages/Favorites";
 import { autoSigninUser, logoutAfterSession } from "./store/actions/auth";
+import Dashboard from "./pages/Dashboard";
 // import { CartContextProvider } from "./contexts/CartContext";
 
 const theme = createTheme({
@@ -47,8 +48,9 @@ function App({ autoSigninUser, logoutAfterSession }) {
       <AuthContextProvider>
         <Router>
           <LastLocationProvider>
-            <Layout>
-              <Switch>
+            <Switch>
+              <Route path="/dashboard" component={Dashboard} />
+              <Layout>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/cart" component={Cart} />
                 <Route exact path="/about" component={About} />
@@ -63,8 +65,8 @@ function App({ autoSigninUser, logoutAfterSession }) {
 
                 <Route exact path="/products" component={Products} />
                 <Route exact path="/product/:id" component={Product} />
-              </Switch>
-            </Layout>
+              </Layout>
+            </Switch>
           </LastLocationProvider>
         </Router>
       </AuthContextProvider>
