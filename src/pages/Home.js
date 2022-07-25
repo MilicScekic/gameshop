@@ -68,7 +68,7 @@ function Home() {
           },
         }}
       >
-        <Grid item xs={12} md={7} gridArea={"slider"}>
+        <Grid item xs={12} md={7} gridArea={"slider"} maxWidth="100%">
           <Slider games={placeholderData} />
         </Grid>
         {placeholderData2.map((game) => {
@@ -77,6 +77,7 @@ function Home() {
               key={game.name}
               gridArea={game.area}
               item
+              maxWidth="100%"
               xs={6}
               md={5}
               sx={{
