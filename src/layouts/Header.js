@@ -19,17 +19,16 @@ import ComputerTwoToneIcon from "@mui/icons-material/ComputerTwoTone";
 import HeadsetTwoToneIcon from "@mui/icons-material/HeadsetTwoTone";
 import SportsEsportsTwoToneIcon from "@mui/icons-material/SportsEsportsTwoTone";
 import NightlifeTwoToneIcon from "@mui/icons-material/NightlifeTwoTone";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import KeyboardArrowDownTwoToneIcon from "@mui/icons-material/KeyboardArrowDownTwoTone";
 import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
-import { AuthContext } from "../contexts/AuthContext";
-//import { CartContext } from "../contexts/CartContext"; //? Ne koristi se vise ova korpa
 import Cart from "../pages/Cart";
 import { connect } from "react-redux";
+import { logout } from "../store/actions/auth";
 
-const settings = ["Dashboard", "Profile", "Register", "Login", "Logout"];
+const loggedInMenu = ["Dashboard", "Profile"];
 
 function Header({ isAuthenticated, user, guest, logout }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -207,7 +206,11 @@ function Header({ isAuthenticated, user, guest, logout }) {
                   {user !== null ? (
                     <Badge
                       color="secondary"
-                      // badgeContent={calculateSum(user.cart)}
+                      badgeContent={
+                        user !== null && user?.cart
+                          ? calculateSum(user.cart)
+                          : null
+                      }
                     >
                       <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
                     </Badge>
@@ -260,15 +263,24 @@ function Header({ isAuthenticated, user, guest, logout }) {
                       open={Boolean(anchorElUser)}
                       onClose={handleCloseUserMenu}
                     >
-                      {settings.map((setting) => (
-                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                          <Link to={setting}>
-                            <Typography textAlign="center">
-                              {setting}
-                            </Typography>
-                          </Link>
+                      {isAuthenticated &&
+                        loggedInMenu.map((setting) => (
+                          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                            <Link to={setting}>
+                              <Typography textAlign="center" color="primary">
+                                {setting}
+                              </Typography>
+                            </Link>
+                          </MenuItem>
+                        ))}
+
+                      {isAuthenticated && (
+                        <MenuItem onClick={() => logout()}>
+                          <Typography textAlign="center" color="primary">
+                            Logout
+                          </Typography>
                         </MenuItem>
-                      ))}
+                      )}
                     </Menu>
                   </>
                 )}
@@ -524,4 +536,4 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, { logout })(Header);
