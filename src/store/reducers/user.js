@@ -20,7 +20,7 @@ import {
 
 const initialState = {
   user: null,
-  //! I ovaj dio je bitan uz onaj sa useEffect u ProductCard
+  //! I ovaj dio je bitan uz onaj sa useEffect u Header
   guest: {
     cart: localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))
@@ -42,14 +42,7 @@ const userReducer = (state = initialState, { type, payload }) => {
         ...state,
         user: null,
       };
-
-    //   return { ...state, cart: [...state.cart, { ...action.payload, qty: 1 }] };
-
     case ADD_TO_GUEST_CART:
-      // return {
-      //   ...state,
-      //   cart: [...state.guest.cart, { ...payload, qty: 1 }],
-      // };
       return {
         ...state,
         guest: {
@@ -57,6 +50,7 @@ const userReducer = (state = initialState, { type, payload }) => {
           cart: [...state.guest.cart, { ...payload, quantity: 1 }],
         },
       };
+
     case ADD_TO_USER_CART:
       return {
         ...state,
@@ -78,7 +72,7 @@ const userReducer = (state = initialState, { type, payload }) => {
       };
     case REMOVE_FROM_USER_CART:
       const newUserCart = state.user.cart.filter(
-        (item) => item.productId !== payload
+        (item) => item._id !== payload
       );
       return {
         ...state,

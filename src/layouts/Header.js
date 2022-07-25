@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
+import FavoriteIcon from "@mui/icons-material/FavoriteTwoTone";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
@@ -30,7 +31,7 @@ import { connect } from "react-redux";
 
 const settings = ["Dashboard", "Profile", "Register", "Login", "Logout"];
 
-function Header({ user, guest }) {
+function Header({ isAuthenticated, user, guest, logout }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -62,12 +63,9 @@ function Header({ user, guest }) {
   //* Ovo mora biti najvisi nivo
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(guest.cart));
-    // localStorage.removeItem("cart", guest.cart);
   }, [guest.cart]);
 
-  const { authTokens } = useContext(AuthContext);
-
-  const cart = authTokens ? user.cart : guest.cart;
+  // const { authTokens } = useContext(AuthContext);
 
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
@@ -188,32 +186,61 @@ function Header({ user, guest }) {
             <div>
               <Box sx={{ flexGrow: 0 }}>
                 <Link
-                  to={!authTokens && "/login"}
+                  to={!isAuthenticated && "/login"}
                   style={{ textDecoration: "none" }}
                 >
                   <Button sx={{ color: "black" }}>
-                    <h4>{!authTokens && "Login"}</h4>
+                    <h4>{!isAuthenticated && "Login"}</h4>
                   </Button>
                 </Link>
                 <Link to={"/register"} style={{ textDecoration: "none" }}>
                   <Button sx={{ color: "black" }}>
-                    <h4>{!authTokens && "Register"}</h4>
+                    <h4>{!isAuthenticated && "Register"}</h4>
                   </Button>
                 </Link>
 
-                <Link to="/cart">
-                  <IconButton>
+                <IconButton
+                  style={{ color: "#fff" }}
+                  component={Link}
+                  to="/cart"
+                >
+                  {user !== null ? (
                     <Badge
                       color="secondary"
-                      badgeContent={cart.length > 0 ? calculateSum(cart) : 0}
+                      // badgeContent={calculateSum(user.cart)}
                     >
                       <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
                     </Badge>
-                  </IconButton>
-                </Link>
+                  ) : (
+                    <Badge
+                      color="secondary"
+                      badgeContent={calculateSum(guest.cart)}
+                    >
+                      <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
+                    </Badge>
+                  )}
+                </IconButton>
 
-                {authTokens && (
+                {isAuthenticated && (
                   <>
+                    <IconButton
+                      to="/favorites"
+                      component={Link}
+                      style={{ color: "#000" }}
+                    >
+                      <Badge
+                        color="secondary"
+                        badgeContent={
+                          user !== null && user.favorites
+                            ? user.favorites.length
+                            : null
+                        }
+                        // badgeContent={0}
+                      >
+                        <FavoriteIcon />
+                      </Badge>
+                    </IconButton>
+
                     <IconButton onClick={handleOpenUserMenu}>
                       <PersonTwoToneIcon sx={{ color: "black" }} />
                     </IconButton>
@@ -494,6 +521,7 @@ function Header({ user, guest }) {
 const mapStateToProps = (state) => ({
   user: state.user.user,
   guest: state.user.guest,
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps)(Header);

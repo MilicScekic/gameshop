@@ -19,11 +19,21 @@ import {
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 import axios from "axios";
 
-export const getUserProfile = () => async (dispatch) => {
+export const getUserProfile = (token) => async (dispatch) => {
   try {
-    const res = await axios.get("/api/me");
+    //* Ovdje je cilj da se popuni user objekat/state u reducer(user)
+    //? Daj mi podatke o prijavljenom korisniku
+    const res = await axios.get(
+      `https://api.escuelajs.co/api/v1/auth/profile`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
     dispatch({ type: CLEAN_GUEST });
-    dispatch({ type: GET_PROFILE, payload: res.data });
+    dispatch({ type: GET_PROFILE, payload: res.data }); //?  user: { res.data } Popunjava se objekat user
   } catch ({ response }) {
     dispatch(setAlert(response.data.message, "error"));
   }
@@ -56,10 +66,11 @@ export const addToGuestCart = (product) => async (dispatch) => {
   }
 };
 
-export const addToUserCart = (id) => async (dispatch) => {
+export const addToUserCart = (product) => async (dispatch) => {
   try {
-    const res = await axios.post(`/api/me/cart/${id}`);
-    dispatch({ type: ADD_TO_USER_CART, payload: res.data.cart });
+    // const res = await axios.post(`/api/me/cart/${id}`);
+    // dispatch({ type: ADD_TO_USER_CART, payload: res.data.cart });
+    dispatch({ type: ADD_TO_USER_CART, payload: product });
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message, "error"));
@@ -84,6 +95,7 @@ export const addToUserFavorites = (id) => async (dispatch) => {
   try {
     const res = await axios.post(`/api/me/fav/${id}`);
     dispatch({ type: ADD_TO_USER_FAVS, payload: res.data.favorites });
+
     dispatch(setAlert("Added to favorites", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message, "error"));
