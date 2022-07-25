@@ -50,3 +50,51 @@ body {
 .blackBg {
   background: var(--black) !important;
 }
+
+.ftr {
+  background-color: black;
+  color: white;
+  position: absolute;
+  width: 100%;
+}
+
+.ftr a {
+  text-decoration: none;
+  color: white;
+}
+
+.ftr h6 {
+  margin-bottom: 1rem;
+}
+
+.ftr a:hover {
+  background: var(--clr-gradient);
+  color: black;
+}
+
+#ftrLogo {
+  height: 4.2rem;
+  width: 9rem;
+  font-size: 3rem;
+  font-family: "VerminVibesV";
+  color: white;
+  background-color: black;
+}
+
+#ftrLogo:hover {
+  color: black;
+  background: var(--clr-gradient);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
