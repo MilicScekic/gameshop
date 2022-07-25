@@ -21,7 +21,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { CartContext } from "../contexts/CartContext";
 import { AuthContext } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
