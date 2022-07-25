@@ -67,7 +67,7 @@ const Favorites = ({ user: { favorites }, removeFromUserFavorites }) => {
     <section style={{ background: "#f8f8f8", minHeight: "calc(100vh - 60px)" }}>
       <ResponsiveContainer>
         <div className={classes.centered}>
-          {favorites.length > 0 ? (
+          {favorites?.length > 0 ? (
             <Fragment>
               <Headline className={classes.headline}>
                 Your favorite items ({favorites.length})
@@ -99,7 +99,7 @@ const Favorites = ({ user: { favorites }, removeFromUserFavorites }) => {
                           variant="body1"
                           className={classes.priceTag}
                         >
-                          {price.toLocaleString()} / pcs
+                          {price.toLocaleString()}
                         </Typography>
                       </div>
                     </Grid>
