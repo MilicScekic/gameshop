@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import {
@@ -17,11 +17,10 @@ import { Subheadline } from "../utils/Responsive";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { AuthContext } from "../contexts/AuthContext";
+// import InputLabel from "@mui/material/InputLabel";
+// import MenuItem from "@mui/material/MenuItem";
+// import FormControl from "@mui/material/FormControl";
+// import Select from "@mui/material/Select";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -65,38 +64,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CartItem = ({
-  item: { _id, productId, name, imgSrc, quantity, price },
+  item: { id, name, media, quantity, price },
   removeFromGuestCart,
   removeFromUserCart,
   handleGuestQuantity,
   handleUserQuantity,
+  isAuthenticated,
 }) => {
   const classes = useStyles();
 
-  const { authTokens } = useContext(AuthContext);
-
   const handleQuantity = (type) => {
-    return authTokens
-      ? handleUserQuantity(type, productId)
-      : handleGuestQuantity(type, _id);
+    return isAuthenticated
+      ? handleUserQuantity(type, id)
+      : handleGuestQuantity(type, id);
   };
 
   return (
     <Paper className={classes.paper}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={2} className={classes.gridItem}>
-          <Link to={authTokens ? `/products/${productId}` : `/products/${_id}`}>
+          <Link to={`/products/${id}`}>
             <div className={classes.img}>
-              <img className={classes.image} src={`/images/${imgSrc}`} alt="" />
+              <img
+                className={classes.image}
+                src={media && media.map((m) => m.media)}
+                alt=""
+              />
             </div>
           </Link>
         </Grid>
         <Grid item xs={12} md={4} className={classes.gridItem}>
           <div style={{ marginTop: 20 }}>
-            <Link
-              to={authTokens ? `/products/${productId}` : `/products/${_id}`}
-              className={classes.link}
-            >
+            <Link to={`/products/${id}`} className={classes.link}>
               <Subheadline center>{name}</Subheadline>
             </Link>
             <Typography variant="body1" style={{ textAlign: "center" }}>
@@ -132,9 +131,9 @@ const CartItem = ({
           <Tooltip placement="top" title="Delete from cart">
             <IconButton
               onClick={() =>
-                authTokens
-                  ? removeFromUserCart(productId)
-                  : removeFromGuestCart(_id)
+                isAuthenticated
+                  ? removeFromUserCart(id)
+                  : removeFromGuestCart(id)
               }
             >
               <DeleteIcon />
@@ -146,7 +145,9 @@ const CartItem = ({
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
 
 export default connect(mapStateToProps, {
   removeFromGuestCart,

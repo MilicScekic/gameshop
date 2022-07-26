@@ -14,27 +14,35 @@ export const clearProducts = () => (dispatch) => {
 };
 
 export const getProducts = (targetUrl) => async (dispatch) => {
+  const cors = "https://cors-anywhere.herokuapp.com/";
   dispatch(showSpinner());
 
   try {
-    const res = await axios.get(targetUrl);
-    res.data.products.length === 0
+    const res = await axios.get(`${cors}${targetUrl}`);
+
+    res.data.length === 0
       ? dispatch({ type: STOP_PAGINATION })
       : dispatch({ type: GET_PRODUCTS, payload: res.data });
-
+    dispatch(setAlert("Enjoy in shopping :)", "success"));
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch(hideSpinner());
-    dispatch(setAlert(response.data.message && response.data.message, "error"));
+    // dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert("Error", "error"));
   }
 };
 
 export const getCurrentProduct = (id) => async (dispatch) => {
+  const cors = "https://cors-anywhere.herokuapp.com/";
   try {
-    const res = await axios.get(`/api/products/${id}`);
+    const res = await axios.get(
+      `${cors}https://gameshop-g5.com/products/${id}`
+    );
+
     dispatch({ type: GET_CURRENT_PRODUCT, payload: res.data });
   } catch ({ response }) {
-    dispatch(setAlert(response.data.message && response.data.message, "error"));
+    // dispatch(setAlert(response.data.message && response.data.message, "error"));
+    dispatch(setAlert("Error", "error"));
   }
 };
 

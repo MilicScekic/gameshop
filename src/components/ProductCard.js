@@ -13,7 +13,6 @@ import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { AuthContext } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ProductCard = ({
-  product: { _id, name, imgSrc, specs, price },
+  product: { id, name, content, media, price },
   addToGuestCart,
   addToUserCart,
   isAuthenticated,
@@ -52,28 +51,26 @@ const ProductCard = ({
 }) => {
   const classes = useStyles();
 
-  // const { authTokens } = useContext(AuthContext);
-
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Paper className={classes.paper}>
-        <Link to={`/products/${_id}`}>
+        <Link to={`/products/${id}`}>
           <div className={classes.divImg}>
-            <img src={`/images/${imgSrc}`} alt="" className={classes.img} />
+            <img
+              src={media.map((item) => item.media)}
+              alt=""
+              className={classes.img}
+            />
           </div>
         </Link>
-        <Link to={`/products/${_id}`}>
+        <Link to={`/products/${id}`}>
           <Typography variant="body1" className={classes.name}>
             {name}
           </Typography>
         </Link>
 
         <div style={{ textAlign: "center" }}>
-          {Object.keys(specs).map((spec) => (
-            <Typography variant="body2" key={spec}>
-              {specs[spec]}
-            </Typography>
-          ))}
+          <Typography variant="body2">{content}</Typography>
         </div>
 
         <div className={classes.flex}>
@@ -81,32 +78,26 @@ const ProductCard = ({
           {user !== null && isAuthenticated ? (
             <>
               <IconButton
-                disabled={
-                  user.cart && user.cart.some((item) => item._id === _id)
-                }
-                onClick={() => addToUserCart(_id)}
+                disabled={user.cart && user.cart.some((item) => item.id === id)}
+                onClick={() => addToUserCart(id)}
               >
                 <AddShoppingCartIcon />
               </IconButton>
 
               <IconButton
                 disabled={
-                  user.cart
-                    ? user.favorites.some((item) => item._id === _id)
-                    : ""
+                  user.cart ? user.favorites.some((item) => item.id === id) : ""
                 }
-                onClick={() =>
-                  addToUserFavorites({ _id, name, imgSrc, specs, price })
-                }
+                onClick={() => addToUserFavorites({ id, name, content, price })}
               >
                 <FavoriteIcon />
               </IconButton>
             </>
           ) : (
             <IconButton
-              disabled={guest.cart.some((item) => item._id === _id)}
+              disabled={guest.cart.some((item) => item.id === id)}
               onClick={() =>
-                addToGuestCart({ _id, name, imgSrc, specs, price })
+                addToGuestCart({ id, name, content, media, price })
               }
             >
               <AddShoppingCartIcon />

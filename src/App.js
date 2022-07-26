@@ -9,10 +9,10 @@ import Register from "./pages/Register";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { pink, purple } from "@mui/material/colors";
 import { AuthContextProvider } from "./contexts/AuthContext"; //? vise se nece koristiti
-import Product from "./pages/Product";
 import PrivateRoute from "./hoc/PrivateRoute";
 import Cart from "./pages/Cart";
 import Products from "./pages/Products";
+import Product from "./pages/Product";
 import { LastLocationProvider } from "react-router-last-location";
 import { connect } from "react-redux";
 import Favorites from "./pages/Favorites";
@@ -62,7 +62,7 @@ function App({ autoSigninUser, logoutAfterSession }) {
                 {/* <Route exact path="/favorites" component={Favorites} /> */}
 
                 <Route exact path="/products" component={Products} />
-                <Route exact path="/product/:id" component={Product} />
+                <Route exact path="/products/:id" component={Product} />
               </Switch>
             </Layout>
           </LastLocationProvider>

@@ -108,7 +108,7 @@ function Footer() {
                 <Typography component="span">
                   <LocationOnTwoToneIcon />
                   <a href="https://www.google.com/maps/place/Rezidencija+Be%C4%8Di%C4%87/@42.4554491,19.2147517,18z/data=!4m13!1m7!3m6!1s0x134deb2caf26cd71:0xea88c1a60bfb5b59!2sDalmatinska,+Podgorica!3b1!8m2!3d42.4520761!4d19.2423606!3m4!1s0x0:0x71cf01260c4c4eeb!8m2!3d42.4558619!4d19.2143717">
-                    Rezidencija Bečić
+                    Milana Raičkovića bb
                   </a>
                 </Typography>
               </Box>

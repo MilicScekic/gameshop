@@ -20,7 +20,6 @@ import {
   Subheadline,
 } from "../utils/Responsive";
 import CartItem from "../components/CartItem";
-import { AuthContext } from "../contexts/AuthContext";
 import { getUserProfile } from "../store/actions/user";
 
 const useStyles = makeStyles((theme) => ({
@@ -79,27 +78,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cart = ({ user, guest, getUserProfile }) => {
-  //? Ovo vise necu koristiti. Od sad ide samo guest korpa.
-  // const { removeFromCart, changeCartQty } = useContext(CartContext);
-
-  //? Ovo koristim za autorizaciju
-  const { authTokens } = useContext(AuthContext);
-
+const Cart = ({ user, guest, getUserProfile, isAuthenticated }) => {
   useEffect(() => {
-    if (authTokens) getUserProfile();
+    isAuthenticated && getUserProfile();
   }, []);
 
   const calculateTotal = (arr) => {
     return arr
-      .reduce((acc, { quantity, price }) => acc + quantity * price, 0)
+      .reduce((acc, { quantity, price }) => acc + quantity * price, 0) // parseFloat(price) za slucaj da ne bude racunao kako treba
       .toLocaleString();
   };
 
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
 
-  const userCartPresent = authTokens && user !== null && user.cart.length > 0;
+  const userCartPresent =
+    isAuthenticated && user !== null && user.cart.length > 0;
   const guestCartPresent = guest.cart.length > 0;
 
   const classes = useStyles();
@@ -109,30 +103,31 @@ const Cart = ({ user, guest, getUserProfile }) => {
       <ResponsiveContainer>
         <Headline className={classes.headline}>
           Your cart{" "}
-          {authTokens && user !== null && user.cart.length > 0
+          {isAuthenticated && user !== null && user.cart.length > 0
             ? `(${calculateSum(user.cart)})`
-            : !authTokens && guest.cart.length > 0
+            : !isAuthenticated && guest.cart.length > 0
             ? `(${calculateSum(guest.cart)})`
             : null}
         </Headline>
-        {!authTokens && guest.cart.length == 0 && (
+        {!isAuthenticated && guest.cart.length == 0 && (
           <div className={classes.centered}>
             <SadEmojiIcon className={classes.emoji} />
             <Subheadline>You have no cart items</Subheadline>
           </div>
         )}
-        {!authTokens &&
-          guest.cart.map((item) => <CartItem key={item._id} item={item} />)}
-        {authTokens && user !== null && user.cart.length == 0 && (
+        {!isAuthenticated &&
+          guest.cart.map((item) => <CartItem key={item.id} item={item} />)}
+
+        {isAuthenticated && user !== null && user.cart.length === 0 && (
           <div className={classes.centered}>
             <SadEmojiIcon className={classes.emoji} />
             <Subheadline>You have no cart items</Subheadline>
           </div>
         )}
-        {authTokens &&
+        {isAuthenticated &&
           user !== null &&
           user.cart.map((item) => (
-            <CartItem key={item._id} item={item} quantity={item.quantity} />
+            <CartItem key={item.id} item={item} quantity={item.quantity} />
           ))}
 
         {(userCartPresent || guestCartPresent) && (
@@ -141,15 +136,15 @@ const Cart = ({ user, guest, getUserProfile }) => {
             <Subheadline gutterBottom>
               Total price:{" "}
               <span style={{ fontWeight: "bold" }}>
-                {authTokens && user !== null
+                {isAuthenticated
                   ? calculateTotal(user.cart)
                   : calculateTotal(guest.cart)}{" "}
                 &euro;
               </span>
             </Subheadline>
             <Button
-              component={Link}
               to="/checkout"
+              component={Link}
               color="primary"
               variant="contained"
             >
@@ -165,6 +160,7 @@ const Cart = ({ user, guest, getUserProfile }) => {
 const mapStateToProps = (state) => ({
   user: state.user.user,
   guest: state.user.guest,
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps, { getUserProfile })(Cart);

@@ -61,7 +61,7 @@ const userReducer = (state = initialState, { type, payload }) => {
       };
     case REMOVE_FROM_GUEST_CART:
       const newGuestCart = state.guest.cart.filter(
-        (item) => item._id !== payload
+        (item) => item.id !== payload
       );
       return {
         ...state,
@@ -71,9 +71,7 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
     case REMOVE_FROM_USER_CART:
-      const newUserCart = state.user.cart.filter(
-        (item) => item._id !== payload
-      );
+      const newUserCart = state.user.cart.filter((item) => item.id !== payload);
       return {
         ...state,
         user: {
@@ -90,9 +88,7 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
     case REMOVE_FROM_USER_FAVS:
-      const newFavs = state.user.favorites.filter(
-        (fav) => fav.productId !== payload
-      );
+      const newFavs = state.user.favorites.filter((fav) => fav.id !== payload);
       return {
         ...state,
         user: {
@@ -126,7 +122,7 @@ const userReducer = (state = initialState, { type, payload }) => {
       };
     case INCREMENT_GUEST_PRODUCT:
       const newGuestIncCart = [...state.guest.cart];
-      let incIndex = state.guest.cart.findIndex((prod) => prod._id === payload);
+      let incIndex = state.guest.cart.findIndex((prod) => prod.id === payload);
       let incProduct = { ...state.guest.cart[incIndex] };
       incProduct.quantity = incProduct.quantity + 1;
       newGuestIncCart[incIndex] = incProduct;
@@ -139,7 +135,7 @@ const userReducer = (state = initialState, { type, payload }) => {
       };
     case DECREMENT_GUEST_PRODUCT:
       const newGuestDecCart = [...state.guest.cart];
-      let decIndex = state.guest.cart.findIndex((prod) => prod._id === payload);
+      let decIndex = state.guest.cart.findIndex((prod) => prod.id === payload);
       let decProduct = { ...state.guest.cart[decIndex] };
       decProduct.quantity = decProduct.quantity - 1;
       newGuestDecCart[decIndex] = decProduct;
@@ -153,7 +149,7 @@ const userReducer = (state = initialState, { type, payload }) => {
     case USER_PRODUCT_QUANTITY:
       const newCart = [...state.user.cart];
       const desiredIndex = state.user.cart.findIndex(
-        (prod) => prod.productId === payload.productId
+        (prod) => prod.id === payload.id
       );
       newCart[desiredIndex] = { ...payload };
       return {
