@@ -32,14 +32,15 @@ const theme = createTheme({
 
 function App({ autoSigninUser, logoutAfterSession }) {
   //? Moze posluziti...
-  // const [isLogged, setIsLogged] = useState(!!localStorage.getItem('token'));
+  // const [isLogged, setIsLogged] = useState(!!localStorage.getItem('access'));
 
-  //* Ukoliko ima token u local storage, prijavi tog korisnika
-  useEffect(() => {
-    localStorage.token
-      ? autoSigninUser(localStorage.token) && logoutAfterSession(60) // U minutima
-      : delete localStorage.token;
-  }, []);
+  //* Ukoliko ima token(access) u local storage, prijavi tog korisnika
+  //! Za sad komentar dok se ne napravi ruta koja vraca prijavljenog korisnika
+  // useEffect(() => {
+  //   localStorage.access
+  //     ? autoSigninUser(localStorage.access) && logoutAfterSession(60) // U minutima
+  //     : delete localStorage.access;
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>

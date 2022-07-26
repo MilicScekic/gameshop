@@ -79,9 +79,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Cart = ({ user, guest, getUserProfile, isAuthenticated }) => {
-  useEffect(() => {
-    isAuthenticated && getUserProfile();
-  }, []);
+  // useEffect(() => {
+  // isAuthenticated && getUserProfile(token); // Ovo nam treba da dobijemo korisnika u slucaju da je prijavljen
+  // if (localStorage.token) setAxiosToken(localStorage.token);
+  // }, []);
 
   const calculateTotal = (arr) => {
     return arr

@@ -8,13 +8,13 @@ import {
 } from "./types";
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
+import { cors } from "../reducers/auth";
 
 export const clearProducts = () => (dispatch) => {
   dispatch({ type: CLEAR_PRODUCTS });
 };
 
 export const getProducts = (targetUrl) => async (dispatch) => {
-  const cors = "https://cors-anywhere.herokuapp.com/";
   dispatch(showSpinner());
 
   try {
@@ -33,7 +33,6 @@ export const getProducts = (targetUrl) => async (dispatch) => {
 };
 
 export const getCurrentProduct = (id) => async (dispatch) => {
-  const cors = "https://cors-anywhere.herokuapp.com/";
   try {
     const res = await axios.get(
       `${cors}https://gameshop-g5.com/products/${id}`

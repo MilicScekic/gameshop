@@ -14,17 +14,16 @@ import { makeStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
-import axios from "axios";
-import { AuthContext } from "../contexts/AuthContext";
 import { Redirect, Link as LinkTo } from "react-router-dom";
-import { apiCall } from "../services/api";
+import { registerUser } from "../store/actions/auth";
+import { connect } from "react-redux";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" to="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" to="/">
+        Gameshop
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -57,20 +56,19 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX =
   /^[a-z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1}([a-z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1})*[a-z0-9]@[a-z0-9][-\.]{0,1}([a-z][-\.]{0,1})*[a-z0-9]\.[a-z0-9]{1,}([\.\-]{0,1}[a-z]){0,}[a-z0-9]{0,}$/;
 
-const Register = () => {
-  const { authTokens, setTokens } = useContext(AuthContext);
-
+const Register = ({ isAuthenticated, registerUser }) => {
   const usernameRef = useRef();
 
   const [username, setUsername] = useState("");
   const [validUsername, setValidUsername] = useState(false);
-  const [name, setName] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(false);
 
   const [password, setPassword] = useState("");
+  const [matchPwd, setMatchPwd] = useState("");
+  const [validMatch, setValidMatch] = useState(false);
   const [validPwd, setValidPwd] = useState(false);
 
   const [usernameErrMsg, setUsernameErrMsg] = useState("");
@@ -129,44 +127,44 @@ const Register = () => {
     }
   }, [password, validPwd]);
 
+  // useEffect(() => {
+  //   if (password && matchPwd) {
+  //     setMatchPwd(password === matchPwd);
+  //     const timeoutId = setTimeout(() => {
+  //       return !!matchPwd
+  //         ? setPwdErrMsg("")
+  //         : setPwdErrMsg("Passwords not matching");
+  //     }, 1000);
+  //     return () => {
+  //       clearTimeout(timeoutId);
+  //     };
+  //   }
+  // }, [password, matchPwd]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // const v1 = PWD_REGEX.test(password);
-    // const v2 = EMAIL_REGEX.test(email);
-    // const v3 = USERNAME_REGEX.test(username);
-    // if (!v1) {
-    //   setErrMsg("Invalid Entry");
-    //   return;
-    // }
-
     setSubmitDisabled(true); // zamrzni dugme
-    setEmail("");
-    setName("");
-    setPassword("");
-    setEmailErrMsg("");
-    setPwdErrMsg("");
-    setUsernameErrMsg("");
+    // setEmail("");
+    // setFirstName("");
+    // setLastName("");
+    // setPassword("");
+    // setMatchPwd("");
+    // setEmailErrMsg("");
+    // setPwdErrMsg("");
+    // setUsernameErrMsg("");
 
-    //? Za kasnije kad Matija zavrsi
-    apiCall
-      .post("/auth/local/register", {
-        username: username,
-        email: email,
-        password: password,
-      })
-      .then((res) => {
-        console.log(res.data);
-        console.log(res.data.user);
-        // let { jwt } = res.data;
-        // setTokens(jwt);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    registerUser({
+      username: username,
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+      password: password,
+      password2: matchPwd,
+    });
   };
 
-  if (authTokens) {
+  if (isAuthenticated) {
     return <Redirect to="/" />;
   }
 
@@ -206,10 +204,10 @@ const Register = () => {
             required
             fullWidth
             id="name"
-            label="Full name"
+            label="First name"
             name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
             // onChange={handleChange}
           />
           <TextField
@@ -217,23 +215,11 @@ const Register = () => {
             margin="normal"
             required
             fullWidth
-            id="city"
-            label="City"
+            id="name"
+            label="Last name"
             name="name"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            // onChange={handleChange}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="country"
-            label="Country"
-            name="country"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
             // onChange={handleChange}
           />
           <TextField
@@ -259,6 +245,20 @@ const Register = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            // onChange={handleChange}
+          />
+
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password2"
+            label="Password"
+            type="password"
+            id="password"
+            value={matchPwd}
+            onChange={(e) => setMatchPwd(e.target.value)}
             // onChange={handleChange}
           />
           <FormControlLabel
@@ -296,4 +296,8 @@ const Register = () => {
   );
 };
 
-export default Register;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { registerUser })(Register);
