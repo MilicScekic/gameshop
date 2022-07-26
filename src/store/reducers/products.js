@@ -9,7 +9,11 @@ import {
 
 const initialState = {
   productCount: null,
-  products: [],
+  // products: [],
+  //! Posto mi je istekla sesija, posluzicu se local storage-om
+  products: localStorage.getItem("products")
+    ? JSON.parse(localStorage.getItem("products"))
+    : [],
   currentProduct: null,
   paginationable: true,
 };
@@ -19,7 +23,7 @@ const productsReducer = (state = initialState, { type, payload }) => {
     case GET_PRODUCTS:
       return {
         ...state,
-        products: [...state.products, ...payload.products],
+        products: [...state.products, ...payload],
         productCount: payload.count,
         paginationable: true,
       };

@@ -59,10 +59,10 @@ const Product = ({
       getCurrentProduct(match.params.id);
     }, 200);
 
-    return () => {
-      clearCurrentProduct();
-      clearTimeout(timeout);
-    };
+    // return () => {
+    //   clearCurrentProduct();
+    //   clearTimeout(timeout);
+    // };
   }, []);
 
   const classes = useStyles();
@@ -76,14 +76,14 @@ const Product = ({
       <ResponsiveContainer>
         <div className={classes.centered}>
           <Typography variant="h4">{currentProduct.name}</Typography>
-          {currentProduct.rating ? (
+          {currentProduct.review_score ? (
             <Fragment>
               <Link to={`/products/${match.params.id}/reviews`}>
-                <Rating value={currentProduct.rating} readOnly />
+                <Rating value={currentProduct.review_score} readOnly />
               </Link>
-              <Typography variant="body2">
+              {/* <Typography variant="body2">
                 {currentProduct.reviews.length} reviews
-              </Typography>
+              </Typography> */}
             </Fragment>
           ) : (
             <Fragment>
@@ -94,22 +94,24 @@ const Product = ({
             </Fragment>
           )}
           <img
-            src={`/images/${currentProduct.imgSrc}`}
+            src={
+              currentProduct.media && currentProduct.media.map((m) => m.media)
+            }
             alt=""
             className={classes.img}
           />
         </div>
 
         <LineLength className={classes.actionButtons}>
-          <Typography variant="h6">
+          {/* <Typography variant="h6">
             {currentProduct.stock > 0 ? `${currentProduct.stock} in` : "Out of"}{" "}
             stock
-          </Typography>
+          </Typography> */}
           <div>
             {isAuthenticated && (
               <IconButton
                 disabled={user.favorites.some(
-                  (item) => item.productId === match.params.id
+                  (item) => item.id === match.params.id
                 )}
                 onClick={() => addToUserFavorites(match.params.id)}
               >
@@ -118,9 +120,7 @@ const Product = ({
             )}
             {user && isAuthenticated ? (
               <IconButton
-                disabled={user.cart.some(
-                  (item) => item.productId === match.params.id
-                )}
+                disabled={user.cart.some((item) => item.id === match.params.id)}
                 onClick={() => addToUserCart(match.params.id)}
               >
                 <AddShoppingCartIcon />
@@ -128,7 +128,7 @@ const Product = ({
             ) : (
               <IconButton
                 disabled={guest.cart.some(
-                  (item) => item._id === match.params.id
+                  (item) => item.id === match.params.id
                 )}
                 onClick={() => addToGuestCart(match.params.id)}
               >
@@ -140,18 +140,18 @@ const Product = ({
         <Divider />
 
         <LineLength className={classes.description}>
-          <Typography variant="h5">Description</Typography>
-          <Typography variant="body1">{currentProduct.description}</Typography>
+          <Typography variant="h5">Content</Typography>
+          <Typography variant="body1">{currentProduct.content}</Typography>
         </LineLength>
 
-        <LineLength className={classes.description}>
+        {/* <LineLength className={classes.description}>
           <Typography variant="h5">Specs</Typography>
           {Object.keys(currentProduct.specs).map((spec) => (
             <Typography key={spec} variant="body1">
               {spec.toUpperCase()}: {currentProduct.specs[spec]}
             </Typography>
           ))}
-        </LineLength>
+        </LineLength> */}
       </ResponsiveContainer>
     </section>
   );

@@ -16,12 +16,6 @@ const Products = ({
   const [page, setPage] = useState(1);
   const lastLocation = useLastLocation();
 
-  // const currentURL = `${location.pathname}${location.search}`;
-  // const prevLocation = useLastLocation();
-  // let prevURL;
-  // if (prevLocation)
-  //   prevURL = `${prevLocation.pathname}${prevLocation.search}` || null;
-
   useEffect(() => {
     // in case user was searching desktops and clicked 'products' in header again
     if (lastLocation && lastLocation.pathname === "/products") clearProducts();
