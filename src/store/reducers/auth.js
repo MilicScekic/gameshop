@@ -7,6 +7,8 @@ import {
   CLEAN_USER,
 } from "../actions/types";
 
+export const cors = "https://cors-anywhere.herokuapp.com/";
+
 const initialState = {
   isAuthenticated: false,
   user: null,
@@ -16,7 +18,8 @@ const authReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case AUTH_SUCCESS:
       // localStorage.setItem("token", payload.token);
-      localStorage.setItem("token", payload); // u auth za dispatch({ type: AUTH_SUCCESS, payload: res.data.jwt });
+      //! access je token kod Matije
+      localStorage.setItem("access", payload); // u auth za dispatch({ type: AUTH_SUCCESS, payload: res.data.access });
       return state;
     case AUTO_SIGNIN_SUCCESS:
       return {
