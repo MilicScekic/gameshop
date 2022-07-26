@@ -18,8 +18,9 @@ const Products = ({
 
   useEffect(() => {
     // in case user was searching desktops and clicked 'products' in header again
-    if (lastLocation && lastLocation.pathname === "/products") clearProducts();
+    // if (lastLocation && lastLocation.pathname === "/products") clearProducts();
 
+    clearProducts();
     showSpinner();
 
     const targetURL = `https://gameshop-g5.com/products/?format=json`;
