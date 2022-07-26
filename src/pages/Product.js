@@ -59,10 +59,10 @@ const Product = ({
       getCurrentProduct(match.params.id);
     }, 200);
 
-    // return () => {
-    //   clearCurrentProduct();
-    //   clearTimeout(timeout);
-    // };
+    return () => {
+      clearCurrentProduct();
+      clearTimeout(timeout);
+    };
   }, []);
 
   const classes = useStyles();
