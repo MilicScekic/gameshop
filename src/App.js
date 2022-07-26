@@ -18,6 +18,9 @@ import { connect } from "react-redux";
 import Favorites from "./pages/Favorites";
 import { autoSigninUser, logoutAfterSession } from "./store/actions/auth";
 import Dashboard from "./pages/Dashboard";
+import Games from "./pages/Games";
+import Sidebar from "./layouts/Sidebar";
+import Orders from "./pages/Orders";
 // import { CartContextProvider } from "./contexts/CartContext";
 
 const theme = createTheme({
@@ -49,7 +52,14 @@ function App({ autoSigninUser, logoutAfterSession }) {
         <Router>
           <LastLocationProvider>
             <Switch>
-              <Route path="/dashboard" component={Dashboard} />
+              <Route path="/admin/">
+                <Sidebar>
+                  <Route path="/admin/dashboard" component={Dashboard} />
+                  <Route path="/admin/games" component={Games} />
+                  <Route path="/admin/orders" component={Orders} />
+                </Sidebar>
+              </Route>
+
               <Layout>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/cart" component={Cart} />
