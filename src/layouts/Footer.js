@@ -121,7 +121,7 @@ function Footer() {
             <Typography
               variant="h5"
               style={{
-                color: "#444444",
+                color: "#fff",
                 fontSize: "0.6rem",
                 borderTop: "1px solid #444444",
                 textAlign: "center",
