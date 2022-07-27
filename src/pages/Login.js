@@ -58,19 +58,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{7,24}$/;
-const EMAIL_REGEX =
-  /^[a-z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1}([a-z0-9][\-_\.\+\!\#\$\%\&\'\*\/\=\?\^\`\{\|]{0,1})*[a-z0-9]@[a-z0-9][-\.]{0,1}([a-z][-\.]{0,1})*[a-z0-9]\.[a-z0-9]{1,}([\.\-]{0,1}[a-z]){0,}[a-z0-9]{0,}$/;
+const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,}[a-zA-Z]+[0-9]*$/;
 
 const Login = ({ isAuthenticated, loading, loginUser }) => {
-  const emailRef = useRef();
+  const userRef = useRef();
 
-  const [email, setEmail] = useState("");
-  const [validEmail, setValidEmail] = useState(false);
+  const [user, setUser] = useState("");
+  const [validUsername, setValidUsername] = useState(false);
 
   const [password, setPassword] = useState("");
   const [validPwd, setValidPwd] = useState(false);
 
-  const [emailErrMsg, setEmailErrMsg] = useState("");
+  const [usernameErrMsg, setUsernameErrMsg] = useState("");
   const [pwdErrMsg, setPwdErrMsg] = useState("");
 
   const [submitDisabled, setSubmitDisabled] = useState(false);
@@ -78,22 +77,22 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
   const classes = useStyles();
 
   useEffect(() => {
-    emailRef.current.focus();
+    userRef.current.focus();
   }, []);
 
   useEffect(() => {
-    if (email) {
-      setValidEmail(EMAIL_REGEX.test(email));
+    if (user) {
+      setValidUsername(USERNAME_REGEX.test(user));
       const timeoutId = setTimeout(() => {
-        return validEmail
-          ? setEmailErrMsg("")
-          : setEmailErrMsg("Email isn't correct");
+        return !!validUsername
+          ? setUsernameErrMsg("")
+          : setUsernameErrMsg("Username isn't correct");
       }, 1000);
       return () => {
         clearTimeout(timeoutId);
       };
     }
-  }, [email, validEmail]);
+  }, [user, validUsername]);
 
   useEffect(() => {
     if (password) {
@@ -115,12 +114,12 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
     e.preventDefault();
 
     setSubmitDisabled(true); // zamrzni dugme
-    setEmail("");
+    setUser("");
     setPassword("");
 
     //? Za login
     loginUser({
-      email: email,
+      username: user,
       password: password,
     });
   };
@@ -141,7 +140,11 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <Stack sx={{ width: "100%" }} spacing={2}>
-            {emailErrMsg ? <Alert severity="error">{emailErrMsg}</Alert> : ""}
+            {usernameErrMsg ? (
+              <Alert severity="error">{usernameErrMsg}</Alert>
+            ) : (
+              ""
+            )}
             {pwdErrMsg ? <Alert severity="error">{pwdErrMsg}</Alert> : ""}
           </Stack>
 
@@ -150,13 +153,12 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            ref={emailRef}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            // onChange={handleChange}
+            id="username"
+            label="Username"
+            name="username"
+            ref={userRef}
+            value={user}
+            onChange={(e) => setUser(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -169,7 +171,6 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            // onChange={handleChange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -180,7 +181,9 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
             fullWidth
             variant="contained"
             className={classes.submit}
-            // disabled={!validEmail || !validPwd || submitDisabled ? true : false}
+            disabled={
+              !validUsername || !validPwd || submitDisabled ? true : false
+            }
           >
             Sign In
           </Button>
