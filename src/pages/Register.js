@@ -141,6 +141,21 @@ const Register = ({ isAuthenticated, registerUser }) => {
     }
   }, [password, matchPwd]);
 
+  const disabledCondition =
+    !validUsername ||
+    !validEmail ||
+    !validPwd ||
+    !validMatch ||
+    !username ||
+    !password ||
+    !firstName ||
+    !lastName ||
+    !email ||
+    !matchPwd ||
+    submitDisabled
+      ? true
+      : false;
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -162,6 +177,8 @@ const Register = ({ isAuthenticated, registerUser }) => {
       password: password,
       password2: matchPwd,
     });
+
+    setSubmitDisabled(false);
   };
 
   if (isAuthenticated) {
@@ -271,15 +288,7 @@ const Register = ({ isAuthenticated, registerUser }) => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            disabled={
-              !validUsername ||
-              !validEmail ||
-              !validPwd ||
-              !validMatch ||
-              submitDisabled
-                ? true
-                : false
-            }
+            disabled={disabledCondition}
           >
             Sign Up
           </Button>
