@@ -17,7 +17,7 @@ export const clearProducts = () => (dispatch) => {
 export const getProducts = (targetUrl) => async (dispatch) => {
   dispatch(showSpinner());
   try {
-    const res = await axios.get(targetUrl, {
+    const res = await axios.get(cors + targetUrl, {
       headers: {
         Accept: "application/json",
       },
