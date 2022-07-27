@@ -8,7 +8,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { pink, purple } from "@mui/material/colors";
-import { AuthContextProvider } from "./contexts/AuthContext"; //? vise se nece koristiti
 import PrivateRoute from "./hoc/PrivateRoute";
 import Cart from "./pages/Cart";
 import Products from "./pages/Products";
@@ -44,32 +43,28 @@ function App({ autoSigninUser, logoutAfterSession }) {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <CartContextProvider> */}
-      <AuthContextProvider>
-        <Router>
-          <LastLocationProvider>
-            <Layout>
-              <Switch>
-                <Route exact path="/" component={Home} />
-                <Route exact path="/cart" component={Cart} />
-                <Route exact path="/about" component={About} />
-                <Route path="/contact" component={Contact} />
+      <Router>
+        <LastLocationProvider>
+          <Layout>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/cart" component={Cart} />
+              <Route exact path="/about" component={About} />
+              <Route path="/contact" component={Contact} />
 
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/register" component={Register} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/register" component={Register} />
 
-                {/* <PrivateRoute exact path="/admin" component={Dashboard} /> */}
-                <PrivateRoute exact path="/favorites" component={Favorites} />
-                {/* <Route exact path="/favorites" component={Favorites} /> */}
+              {/* <PrivateRoute exact path="/admin" component={Dashboard} /> */}
+              <PrivateRoute exact path="/favorites" component={Favorites} />
+              {/* <Route exact path="/favorites" component={Favorites} /> */}
 
-                <Route exact path="/products" component={Products} />
-                <Route exact path="/products/:id" component={Product} />
-              </Switch>
-            </Layout>
-          </LastLocationProvider>
-        </Router>
-      </AuthContextProvider>
-      {/* </CartContextProvider> */}
+              <Route exact path="/products" component={Products} />
+              <Route exact path="/products/:id" component={Product} />
+            </Switch>
+          </Layout>
+        </LastLocationProvider>
+      </Router>
     </ThemeProvider>
   );
 }
