@@ -17,15 +17,22 @@ export const registerUser = (formData) => async (dispatch) => {
   try {
     const res = await axios.post(
       `${cors}https://gameshop-g5.com/auth/register/`,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      },
       formData
     );
-    dispatch({ type: AUTH_SUCCESS, payload: res.data });
-    dispatch(autoSigninUser());
+    console.log(res.data);
+    // dispatch({ type: AUTH_SUCCESS, payload: res.data });
+    // dispatch(autoSigninUser());
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch({ type: AUTH_FAIL });
     dispatch(hideSpinner());
-    dispatch(setAlert(response.data.message, "error"));
+    // dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert("Registration failed", "error"));
   }
 };
 
@@ -34,16 +41,21 @@ export const loginUser = (formData) => async (dispatch) => {
   try {
     const res = await axios.post(
       `${cors}https://gameshop-g5.com/auth/login/`,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      },
       formData
     );
 
-    // console.log(res.data.access);
+    console.log(res.data);
 
     //? moze i ovako
     // let { jwt } = res.data;
-    dispatch({ type: AUTH_SUCCESS, payload: res.data.access });
+    // dispatch({ type: AUTH_SUCCESS, payload: res.data.access });
 
-    dispatch(autoSigninUser(res.data.access)); //! Ovaj tip funkcije ne bi trebao da ima parametar
+    //dispatch(autoSigninUser(res.data.access)); //! Ovaj tip funkcije ne bi trebao da ima parametar
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch({ type: AUTH_FAIL });

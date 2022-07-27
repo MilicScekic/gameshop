@@ -16,10 +16,12 @@ export const clearProducts = () => (dispatch) => {
 
 export const getProducts = (targetUrl) => async (dispatch) => {
   dispatch(showSpinner());
-
   try {
-    const res = await axios.get(`${cors}${targetUrl}`);
-
+    const res = await axios.get(targetUrl, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
     res.data.length === 0
       ? dispatch({ type: STOP_PAGINATION })
       : dispatch({ type: GET_PRODUCTS, payload: res.data });
@@ -35,7 +37,12 @@ export const getProducts = (targetUrl) => async (dispatch) => {
 export const getCurrentProduct = (id) => async (dispatch) => {
   try {
     const res = await axios.get(
-      `${cors}https://gameshop-g5.com/products/${id}`
+      `${cors}https://gameshop-g5.com/products/${id}`,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      }
     );
 
     dispatch({ type: GET_CURRENT_PRODUCT, payload: res.data });
