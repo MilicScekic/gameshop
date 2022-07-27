@@ -55,7 +55,7 @@ export const loginUser = (formData) => async (dispatch) => {
     // let { jwt } = res.data;
     // dispatch({ type: AUTH_SUCCESS, payload: res.data.access });
 
-    //dispatch(autoSigninUser(res.data.access)); //! Ovaj tip funkcije ne bi trebao da ima parametar
+    //dispatch(autoSigninUser(res.data.access)); //! Ovaj tip funkcije bi trebao da ima parametar
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch({ type: AUTH_FAIL });
