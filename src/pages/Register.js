@@ -127,32 +127,32 @@ const Register = ({ isAuthenticated, registerUser }) => {
     }
   }, [password, validPwd]);
 
-  // useEffect(() => {
-  //   if (password && matchPwd) {
-  //     setMatchPwd(password === matchPwd);
-  //     const timeoutId = setTimeout(() => {
-  //       return !!matchPwd
-  //         ? setPwdErrMsg("")
-  //         : setPwdErrMsg("Passwords not matching");
-  //     }, 1000);
-  //     return () => {
-  //       clearTimeout(timeoutId);
-  //     };
-  //   }
-  // }, [password, matchPwd]);
+  useEffect(() => {
+    if (password && matchPwd) {
+      setValidMatch(password === matchPwd);
+      const timeoutId = setTimeout(() => {
+        return !!matchPwd
+          ? setPwdErrMsg("")
+          : setPwdErrMsg("Passwords not matching");
+      }, 1000);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [password, matchPwd]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     setSubmitDisabled(true); // zamrzni dugme
-    // setEmail("");
-    // setFirstName("");
-    // setLastName("");
-    // setPassword("");
-    // setMatchPwd("");
-    // setEmailErrMsg("");
-    // setPwdErrMsg("");
-    // setUsernameErrMsg("");
+    setEmail("");
+    setFirstName("");
+    setLastName("");
+    setPassword("");
+    setMatchPwd("");
+    setEmailErrMsg("");
+    setPwdErrMsg("");
+    setUsernameErrMsg("");
 
     registerUser({
       username: username,
@@ -254,9 +254,9 @@ const Register = ({ isAuthenticated, registerUser }) => {
             required
             fullWidth
             name="password2"
-            label="Password"
+            label="Confirmation password"
             type="password"
-            id="password"
+            id="password2"
             value={matchPwd}
             onChange={(e) => setMatchPwd(e.target.value)}
             // onChange={handleChange}
@@ -272,7 +272,11 @@ const Register = ({ isAuthenticated, registerUser }) => {
             color="primary"
             className={classes.submit}
             disabled={
-              !validUsername || !validEmail || !validPwd || submitDisabled
+              !validUsername ||
+              !validEmail ||
+              !validPwd ||
+              !validMatch ||
+              submitDisabled
                 ? true
                 : false
             }
