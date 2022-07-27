@@ -15,12 +15,9 @@ import { makeStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
-import axios from "axios";
 import { Redirect, Link as LinkTo } from "react-router-dom";
-import { apiCall } from "../services/api";
 import { loginUser } from "../store/actions/auth";
 import { connect } from "react-redux";
-import Register from "./Register";
 
 function Copyright() {
   return (
@@ -110,6 +107,11 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
     }
   }, [password, validPwd]);
 
+  const disabledCondition =
+    !validUsername || !validPwd || submitDisabled || !user || !password
+      ? true
+      : false;
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -181,9 +183,7 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
             fullWidth
             variant="contained"
             className={classes.submit}
-            disabled={
-              !validUsername || !validPwd || submitDisabled ? true : false
-            }
+            disabled={disabledCondition}
           >
             Sign In
           </Button>
