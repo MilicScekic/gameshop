@@ -15,7 +15,7 @@ export const StatsCard = (props) => (
       <Grid container spacing={10} sx={{ justifyContent: "space-between" }}>
         <Grid item>
           <Typography color="textSecondary" gutterBottom variant="overline">
-            BUDGET
+            {props.title}
           </Typography>
           <Typography color="textPrimary" variant="h4">
             $24k

@@ -1,4 +1,5 @@
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
+import { enGB, sr, srLatn } from "date-fns/locale";
 import {
   Box,
   Button,
@@ -13,12 +14,14 @@ import {
 } from "@mui/material";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { connect } from "react-redux";
+import SkeletonSpinner from "./SkeletonSpinner";
 
-export const Latest = ({ products }) => {
+const Latest = ({ products, productCount, loading }) => {
   return (
     <Card style={{ flex: 1 }}>
       <CardHeader
-        subtitle={`${products?.length} in total`}
+        subtitle={`${productCount} in total`}
         title="Latest Products"
       />
       <Divider />
@@ -28,7 +31,7 @@ export const Latest = ({ products }) => {
             <ListItemAvatar>
               <img
                 alt={product.name}
-                src={product.image}
+                src={product.media.map((m) => m.media)}
                 style={{
                   height: 48,
                   width: 48,
@@ -37,7 +40,10 @@ export const Latest = ({ products }) => {
             </ListItemAvatar>
             <ListItemText
               primary={product.name}
-              secondary={`Created ${formatDistanceToNow(product.updatedAt)}`}
+              secondary={`Created ${formatDistanceToNow(
+                new Date(product.created),
+                { locale: enGB }
+              )} ago`}
             />
             <IconButton edge="end" size="small">
               <MoreVertIcon />
@@ -62,6 +68,16 @@ export const Latest = ({ products }) => {
           View all
         </Button>
       </Box>
+
+      {loading && <SkeletonSpinner />}
     </Card>
   );
 };
+
+const mapStateToProps = (state) => ({
+  products: state.products.products,
+  productCount: state.products.productCount,
+  loading: state.visual.loading,
+});
+
+export default connect(mapStateToProps)(Latest);
