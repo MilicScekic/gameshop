@@ -26,7 +26,7 @@ const Products = ({
     const targetURL = `https://gameshop-g5.com/products/?format=json`;
 
     const timeoutId = setTimeout(() => {
-      getProducts(targetURL);
+      getProducts(targetURL); // popunjava niz products u reducer
     }, 200);
 
     return () => {
