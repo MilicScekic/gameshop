@@ -16,7 +16,10 @@ import { LastLocationProvider } from "react-router-last-location";
 import { connect } from "react-redux";
 import Favorites from "./pages/Favorites";
 import { autoSigninUser, logoutAfterSession } from "./store/actions/auth";
-// import { CartContextProvider } from "./contexts/CartContext";
+import Dashboard from "./pages/Dashboard";
+import Games from "./pages/Games";
+import Sidebar from "./layouts/Sidebar";
+import Orders from "./pages/Orders";
 
 const theme = createTheme({
   palette: {
@@ -35,18 +38,27 @@ function App({ autoSigninUser, logoutAfterSession }) {
 
   //* Ukoliko ima token(access) u local storage, prijavi tog korisnika
   //! Za sad komentar dok se ne napravi ruta koja vraca prijavljenog korisnika
-  // useEffect(() => {
-  //   localStorage.access
-  //     ? autoSigninUser(localStorage.access) && logoutAfterSession(60) // U minutima
-  //     : delete localStorage.access;
-  // }, []);
+  //? access je token
+  useEffect(() => {
+    localStorage.access
+      ? autoSigninUser(localStorage.access) && logoutAfterSession(60) // U minutima
+      : delete localStorage.access;
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <LastLocationProvider>
-          <Layout>
-            <Switch>
+          <Switch>
+            <Route path="/admin/">
+              <Sidebar>
+                <Route path="/admin/dashboard" component={Dashboard} />
+                <Route path="/admin/games" component={Games} />
+                <Route path="/admin/orders" component={Orders} />
+              </Sidebar>
+            </Route>
+
+            <Layout>
               <Route exact path="/" component={Home} />
               <Route exact path="/cart" component={Cart} />
               <Route exact path="/about" component={About} />
@@ -61,8 +73,8 @@ function App({ autoSigninUser, logoutAfterSession }) {
 
               <Route exact path="/products" component={Products} />
               <Route exact path="/products/:id" component={Product} />
-            </Switch>
-          </Layout>
+            </Layout>
+          </Switch>
         </LastLocationProvider>
       </Router>
     </ThemeProvider>
