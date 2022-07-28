@@ -161,6 +161,7 @@ const Register = ({ isAuthenticated, registerUser }) => {
     e.preventDefault();
 
     setSubmitDisabled(true); // zamrzni dugme
+    setUsername("");
     setEmail("");
     setFirstName("");
     setLastName("");
