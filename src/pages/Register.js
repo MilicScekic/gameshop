@@ -68,7 +68,7 @@ const Register = ({ isAuthenticated, registerUser }) => {
   const [validEmail, setValidEmail] = useState(false);
 
   const [password, setPassword] = useState("");
-  const [matchPwd, setMatchPwd] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [validMatch, setValidMatch] = useState(false);
   const [validPwd, setValidPwd] = useState(false);
 
@@ -129,10 +129,10 @@ const Register = ({ isAuthenticated, registerUser }) => {
   }, [password, validPwd]);
 
   useEffect(() => {
-    if (password && matchPwd) {
-      setValidMatch(password === matchPwd);
+    if (password && confirmPassword) {
+      setValidMatch(password === confirmPassword);
       const timeoutId = setTimeout(() => {
-        return !!matchPwd
+        return !!confirmPassword
           ? setPwdErrMsg("")
           : setPwdErrMsg("Passwords not matching");
       }, 1000);
@@ -140,7 +140,7 @@ const Register = ({ isAuthenticated, registerUser }) => {
         clearTimeout(timeoutId);
       };
     }
-  }, [password, matchPwd]);
+  }, [password, confirmPassword]);
 
   const disabledCondition =
     !validUsername ||
@@ -152,7 +152,7 @@ const Register = ({ isAuthenticated, registerUser }) => {
     !firstName ||
     !lastName ||
     !email ||
-    !matchPwd ||
+    !confirmPassword ||
     submitDisabled
       ? true
       : false;
@@ -166,7 +166,7 @@ const Register = ({ isAuthenticated, registerUser }) => {
     setFirstName("");
     setLastName("");
     setPassword("");
-    setMatchPwd("");
+    setConfirmPassword("");
     setEmailErrMsg("");
     setPwdErrMsg("");
     setUsernameErrMsg("");
@@ -177,7 +177,7 @@ const Register = ({ isAuthenticated, registerUser }) => {
       last_name: lastName,
       email: email,
       password: password,
-      password2: matchPwd,
+      password2: confirmPassword,
     });
 
     setSubmitDisabled(false);
@@ -276,8 +276,8 @@ const Register = ({ isAuthenticated, registerUser }) => {
             label="Confirmation password"
             type="password"
             id="password2"
-            value={matchPwd}
-            onChange={(e) => setMatchPwd(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             // onChange={handleChange}
           />
           <FormControlLabel
