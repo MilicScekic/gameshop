@@ -17,7 +17,6 @@ import { connect } from "react-redux";
 import Favorites from "./pages/Favorites";
 import {
   autoSigninUser,
-  logout,
   logoutAfterSession,
   refreshAccessToken,
 } from "./store/actions/auth";
@@ -37,15 +36,10 @@ const theme = createTheme({
   },
 });
 
-function App({
-  autoSigninUser,
-  logout,
-  logoutAfterSession,
-  refreshAccessToken,
-}) {
+function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
   //* Ovo je ako se osvjezi stranica, da odma prijavi korisnika, da ne ceka 5 minuta da to uradi useEffect dolje pri pri rifresu tokena
   useEffect(() => {
-    localStorage.access ? autoSigninUser(localStorage.access) : logout();
+    localStorage.access && autoSigninUser(localStorage.access);
 
     //? Po ure
     logoutAfterSession(30); // u minutima. Trajanje sesije
@@ -55,14 +49,10 @@ function App({
   //* access je token za pristup koji traje 5 min. Refresh je token koji traje 24h
   useEffect(() => {
     setInterval(() => {
-      !!localStorage.access
-        ? autoSigninUser(localStorage.access)
-        : delete localStorage.access;
-
       !!localStorage.refresh
         ? refreshAccessToken(localStorage.refresh)
-        : delete localStorage.refresh;
-    }, 300000);
+        : delete localStorage.refresh && delete localStorage.access;
+    }, 5 * 60000);
   }, []);
 
   return (
@@ -103,7 +93,6 @@ function App({
 
 export default connect(null, {
   autoSigninUser,
-  logout,
   logoutAfterSession,
   refreshAccessToken,
 })(App);

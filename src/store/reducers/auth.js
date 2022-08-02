@@ -34,8 +34,8 @@ const authReducer = (state = initialState, { type, payload }) => {
     case AUTO_SIGNIN_FAIL:
     case CLEAN_USER:
     case LOGOUT:
-      delete localStorage.removeItem("refresh");
-      delete localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      localStorage.removeItem("access");
       return {
         ...state,
         isAuthenticated: false,
