@@ -44,7 +44,7 @@ function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
       : delete localStorage.access;
 
     //? Po ure
-    logoutAfterSession(30); // u minutima.
+    logoutAfterSession(30); // u minutima. Trajanje sesije
   }, []);
 
   //! Ako bi se na server postavio trajanje za osvjezavanje tokena na 5ms, onda bi morali i interval pomjeriti spram tog kasnjenja
