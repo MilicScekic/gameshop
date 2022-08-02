@@ -5,6 +5,7 @@ import {
   AUTO_SIGNIN_FAIL,
   LOGOUT,
   CLEAN_USER,
+  NEW_ACCESS_TOKEN,
 } from "./types";
 import axios from "axios";
 import { setAxiosToken } from "../../utils/setAxiosToken";
@@ -16,22 +17,16 @@ export const registerUser = (formData) => async (dispatch) => {
   dispatch(showSpinner());
   try {
     const res = await axios.post(
-      `${cors}https://gameshop-g5.com/auth/register/`,
-      {
-        headers: {
-          Accept: "application/json",
-        },
-      },
+      "https://gameshop-g5.com/auth/register/",
       formData
     );
-    console.log(res.data);
-    // dispatch({ type: AUTH_SUCCESS, payload: res.data });
-    // dispatch(autoSigninUser());
+    // console.log(res.data);
+    dispatch(autoSigninUser(res.data.access));
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch({ type: AUTH_FAIL });
     dispatch(hideSpinner());
-    // dispatch(setAlert(response.data.message, "error"));
+    // dispatch(setAlert(response.data.detail, "error"));
     dispatch(setAlert("Registration failed", "error"));
   }
 };
@@ -40,22 +35,12 @@ export const loginUser = (formData) => async (dispatch) => {
   dispatch(showSpinner());
   try {
     const res = await axios.post(
-      `${cors}https://gameshop-g5.com/auth/login/`,
-      {
-        headers: {
-          Accept: "application/json",
-        },
-      },
+      "https://gameshop-g5.com/auth/login/",
       formData
     );
 
-    console.log(res.data);
-
-    //? moze i ovako
-    // let { jwt } = res.data;
-    // dispatch({ type: AUTH_SUCCESS, payload: res.data.access });
-
-    //dispatch(autoSigninUser(res.data.access)); //! Ovaj tip funkcije bi trebao da ima parametar
+    dispatch({ type: AUTH_SUCCESS, payload: res.data });
+    dispatch(autoSigninUser(res.data.access)); //! Ovaj tip funkcije bi trebao da ima parametar
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch({ type: AUTH_FAIL });
@@ -64,27 +49,42 @@ export const loginUser = (formData) => async (dispatch) => {
   }
 };
 
-export const autoSigninUser = (token) => async (dispatch) => {
-  if (localStorage.token) setAxiosToken(localStorage.token);
-
+export const refreshAccessToken = (refreshToken) => async (dispatch) => {
   try {
-    //* PRIMJER za testiranje (Storage API sam uzeo kao test)
-    const res = await axios.get(
-      `https://api.escuelajs.co/api/v1/auth/profile`,
+    const res = await axios.post(
+      `https://gameshop-g5.com/auth/login/refresh/`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        refresh: refreshToken,
       }
     );
-
-    // console.log(res.data);
-    dispatch({ type: AUTO_SIGNIN_SUCCESS, payload: res.data });
-    dispatch(getUserProfile(token)); //? Pokupi podatke prema tokenu
-    dispatch(setAlert("Logged in successfully", "success"));
+    console.log("New refreshed token:");
+    console.log(res.data.access);
+    dispatch({ type: NEW_ACCESS_TOKEN, payload: res.data }); //u reducer(auth): payload.access pa ne mora res.data.access
   } catch (err) {
+    dispatch(setAlert("Error", "error"));
+  }
+};
+
+export const autoSigninUser = (token) => async (dispatch) => {
+  if (localStorage.access) setAxiosToken(localStorage.access);
+
+  try {
+    const res = await axios.get(`https://gameshop-g5.com/auth/current_user/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    //? Testiranje
+    console.log("Current user");
+    console.log(res.data);
+
+    dispatch({ type: AUTO_SIGNIN_SUCCESS, payload: res.data });
+    dispatch(getUserProfile(token)); //? Pokupi podatke prema tokenu i popuni user objekat
+    dispatch(setAlert("Logged in successfully", "success"));
+  } catch ({ response }) {
     dispatch({ type: AUTO_SIGNIN_FAIL });
-    dispatch(setAlert("Automatic login failed, please log in", "warning"));
+    dispatch(setAlert(response.messages[0].message, "warning"));
   }
 };
 
@@ -94,7 +94,6 @@ export const logout = () => (dispatch) => {
   dispatch(setAlert("Logged out successfully", "success"));
 };
 
-//* Opciono
 //? Optional feature
 export const logoutAfterSession = (timer) => (dispatch) => {
   setTimeout(() => {

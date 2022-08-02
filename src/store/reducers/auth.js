@@ -5,6 +5,7 @@ import {
   AUTO_SIGNIN_FAIL,
   LOGOUT,
   CLEAN_USER,
+  NEW_ACCESS_TOKEN,
 } from "../actions/types";
 
 export const cors = "https://cors-anywhere.herokuapp.com/";
@@ -17,9 +18,11 @@ const initialState = {
 const authReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case AUTH_SUCCESS:
-      // localStorage.setItem("token", payload.token);
-      //! access je token kod Matije
-      localStorage.setItem("access", payload); // u auth za dispatch({ type: AUTH_SUCCESS, payload: res.data.access });
+      localStorage.setItem("refresh", payload.refresh);
+      localStorage.setItem("access", payload.access);
+      return state;
+    case NEW_ACCESS_TOKEN:
+      localStorage.setItem("access", payload.access);
       return state;
     case AUTO_SIGNIN_SUCCESS:
       return {
@@ -31,7 +34,8 @@ const authReducer = (state = initialState, { type, payload }) => {
     case AUTO_SIGNIN_FAIL:
     case CLEAN_USER:
     case LOGOUT:
-      localStorage.removeItem("token");
+      delete localStorage.removeItem("refresh");
+      delete localStorage.removeItem("access");
       return {
         ...state,
         isAuthenticated: false,
