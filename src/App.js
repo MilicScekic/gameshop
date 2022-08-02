@@ -52,7 +52,7 @@ function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
       !!localStorage.refresh
         ? refreshAccessToken(localStorage.refresh)
         : delete localStorage.refresh && delete localStorage.access;
-    }, 5 * 60000);
+    }, 5 * 60 * 1000);
   }, []);
 
   return (
