@@ -9,11 +9,7 @@ import {
 
 const initialState = {
   productCount: null,
-  // products: [],
-  //! Posto mi je istekla sesija, posluzicu se local storage-om
-  products: localStorage.getItem("products")
-    ? JSON.parse(localStorage.getItem("products"))
-    : [],
+  products: [],
   currentProduct: null,
   paginationable: true,
 };
