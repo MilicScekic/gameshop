@@ -38,3 +38,4 @@ export const AUTH_FAIL = "AUTH_FAIL";
 export const AUTO_SIGNIN_SUCCESS = "AUTO_SIGNIN_SUCCESS";
 export const AUTO_SIGNIN_FAIL = "AUTO_SIGNIN_FAIL";
 export const LOGOUT = "LOGOUT";
+export const NEW_ACCESS_TOKEN = "NEW_ACCESS_TOKEN";

@@ -53,6 +53,7 @@ body {
 }
 
 .ftr {
+  padding-top: 2rem;
   background-color: #2b2e31;
   color: white;
   position: absolute;
@@ -85,6 +86,11 @@ body {
 #ftrLogo:hover {
   color: black;
   background: var(--clr-gradient);
+}
+
+.ftrIconLink {
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
 }
 
 .grid-container {

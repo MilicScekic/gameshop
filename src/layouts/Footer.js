@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import LocalPhoneTwoToneIcon from "@mui/icons-material/LocalPhoneTwoTone";
 import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
 import LocationOnTwoToneIcon from "@mui/icons-material/LocationOnTwoTone";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 function Footer() {
   return (
@@ -28,11 +31,6 @@ function Footer() {
             <Grid item xs={12} sm={3}>
               <Box>
                 <Typography variant="h6">Categories</Typography>
-              </Box>
-              <Box>
-                <Link to="/products">
-                  <Typography component="span">Products</Typography>
-                </Link>
               </Box>
               <Box>
                 <Link to="/consoles">
@@ -75,8 +73,8 @@ function Footer() {
                 </Link>
               </Box>
               <Box>
-                <Link to="/shop">
-                  <Typography component="span">Shop</Typography>
+                <Link to="/products">
+                  <Typography component="span">Products</Typography>
                 </Link>
               </Box>
               <Box>
@@ -101,14 +99,18 @@ function Footer() {
               </Box>
               <Box>
                 <Typography>
-                  <EmailTwoToneIcon /> gameshop@gmail.com
+                  <EmailTwoToneIcon />{" "}
+                  <a href="mailto:gameshop@gmail.com">gameshop@gmail.com</a>
                 </Typography>
               </Box>
               <Box>
                 <Typography component="span">
                   <LocationOnTwoToneIcon />
-                  <a href="https://www.google.com/maps/place/Rezidencija+Be%C4%8Di%C4%87/@42.4554491,19.2147517,18z/data=!4m13!1m7!3m6!1s0x134deb2caf26cd71:0xea88c1a60bfb5b59!2sDalmatinska,+Podgorica!3b1!8m2!3d42.4520761!4d19.2423606!3m4!1s0x0:0x71cf01260c4c4eeb!8m2!3d42.4558619!4d19.2143717">
-                    Milana Raičkovića bb
+                  <a
+                    href="https://www.google.com/maps/place/Rezidencija+Be%C4%8Di%C4%87/@42.4558619,19.2143717,15z/data=!4m5!3m4!1s0x0:0x71cf01260c4c4eeb!8m2!3d42.4558619!4d19.2143717?hl=en"
+                    target="__blank"
+                  >
+                    Rezidencija Bečić, Ul. Milana Raičkovića bb, Podgorica
                   </a>
                 </Typography>
               </Box>
@@ -117,6 +119,23 @@ function Footer() {
               </Box>
             </Grid>
           </Grid>
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              paddingTop: "1.5rem",
+            }}
+          >
+            <a className="ftrIconLink" href="https://www.twitter.com/">
+              <TwitterIcon></TwitterIcon>
+            </a>
+            <a className="ftrIconLink" href="https://www.facebook.com/">
+              <FacebookIcon></FacebookIcon>
+            </a>
+            <a className="ftrIconLink" href="https://www.instagram.com/">
+              <InstagramIcon></InstagramIcon>
+            </a>
+          </Box>
           <Box>
             <Typography
               variant="h5"

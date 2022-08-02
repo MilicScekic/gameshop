@@ -17,11 +17,7 @@ export const clearProducts = () => (dispatch) => {
 export const getProducts = (targetUrl) => async (dispatch) => {
   dispatch(showSpinner());
   try {
-    const res = await axios.get(cors + targetUrl, {
-      headers: {
-        Accept: "application/json",
-      },
-    });
+    const res = await axios.get(targetUrl);
     res.data.length === 0
       ? dispatch({ type: STOP_PAGINATION })
       : dispatch({ type: GET_PRODUCTS, payload: res.data });

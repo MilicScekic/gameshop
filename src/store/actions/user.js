@@ -23,14 +23,11 @@ export const getUserProfile = (token) => async (dispatch) => {
   try {
     //* Ovdje je cilj da se popuni user objekat/state u reducer(user)
     //? Daj mi podatke o prijavljenom korisniku
-    const res = await axios.get(
-      `https://api.escuelajs.co/api/v1/auth/profile`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const res = await axios.get(`https://gameshop-g5.com/auth/current_user/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     dispatch({ type: CLEAN_GUEST });
     dispatch({ type: GET_PROFILE, payload: res.data }); //?  user: { res.data } Popunjava se objekat user
