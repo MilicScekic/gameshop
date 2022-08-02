@@ -20,7 +20,6 @@ import {
 
 const initialState = {
   user: null,
-  //! I ovaj dio je bitan uz onaj sa useEffect u Header
   guest: {
     cart: localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))

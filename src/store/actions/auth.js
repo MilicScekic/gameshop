@@ -20,8 +20,8 @@ export const registerUser = (formData) => async (dispatch) => {
       "https://gameshop-g5.com/auth/register/",
       formData
     );
-    // console.log(res.data);
-    dispatch(autoSigninUser(res.data.access));
+    console.log(res.data);
+    dispatch(setAlert("Registration success. Now you can login!", "success"));
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch({ type: AUTH_FAIL });
@@ -60,13 +60,14 @@ export const refreshAccessToken = (refreshToken) => async (dispatch) => {
     console.log("New refreshed token:");
     console.log(res.data.access);
     dispatch({ type: NEW_ACCESS_TOKEN, payload: res.data }); //u reducer(auth): payload.access pa ne mora res.data.access
+    autoSigninUser(res.data.access);
   } catch (err) {
     dispatch(setAlert("Error", "error"));
   }
 };
 
 export const autoSigninUser = (token) => async (dispatch) => {
-  if (localStorage.access) setAxiosToken(localStorage.access);
+  // if (localStorage.access) setAxiosToken(localStorage.access);
 
   try {
     const res = await axios.get(`https://gameshop-g5.com/auth/current_user/`, {
@@ -84,7 +85,7 @@ export const autoSigninUser = (token) => async (dispatch) => {
     dispatch(setAlert("Logged in successfully", "success"));
   } catch ({ response }) {
     dispatch({ type: AUTO_SIGNIN_FAIL });
-    dispatch(setAlert(response.messages[0].message, "warning"));
+    dispatch(setAlert("Can not login!", "warning"));
   }
 };
 
