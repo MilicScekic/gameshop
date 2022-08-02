@@ -79,11 +79,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Cart = ({ user, guest, getUserProfile, isAuthenticated }) => {
-  // useEffect(() => {
-  // isAuthenticated && getUserProfile(token); // Ovo nam treba da dobijemo korisnika u slucaju da je prijavljen
-  // if (localStorage.token) setAxiosToken(localStorage.token);
-  // }, []);
-
   const calculateTotal = (arr) => {
     return arr
       .reduce((acc, { quantity, price }) => acc + quantity * price, 0) // parseFloat(price) za slucaj da ne bude racunao kako treba
@@ -94,7 +89,7 @@ const Cart = ({ user, guest, getUserProfile, isAuthenticated }) => {
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
 
   const userCartPresent =
-    isAuthenticated && user !== null && user.cart.length > 0;
+    isAuthenticated && user !== null && user.cart && user.cart?.length > 0;
   const guestCartPresent = guest.cart.length > 0;
 
   const classes = useStyles();
@@ -104,7 +99,7 @@ const Cart = ({ user, guest, getUserProfile, isAuthenticated }) => {
       <ResponsiveContainer>
         <Headline className={classes.headline}>
           Your cart{" "}
-          {isAuthenticated && user !== null && user.cart.length > 0
+          {isAuthenticated && user !== null && user.cart?.length > 0
             ? `(${calculateSum(user.cart)})`
             : !isAuthenticated && guest.cart.length > 0
             ? `(${calculateSum(guest.cart)})`
