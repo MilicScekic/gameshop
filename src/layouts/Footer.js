@@ -99,7 +99,8 @@ function Footer() {
               </Box>
               <Box>
                 <Typography>
-                  <EmailTwoToneIcon /> gameshop@gmail.com
+                  <EmailTwoToneIcon />{" "}
+                  <a href="mailto:gameshop@gmail.com">gameshop@gmail.com</a>
                 </Typography>
               </Box>
               <Box>
