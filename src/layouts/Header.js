@@ -64,8 +64,6 @@ function Header({ isAuthenticated, user, guest, logout }) {
     localStorage.setItem("cart", JSON.stringify(guest.cart));
   }, [guest.cart]);
 
-  // const { authTokens } = useContext(AuthContext);
-
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
 
