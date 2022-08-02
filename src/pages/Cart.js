@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cart = ({ user, guest, getUserProfile, isAuthenticated }) => {
+const Cart = ({ user, guest, isAuthenticated }) => {
   const calculateTotal = (arr) => {
     return arr
       .reduce((acc, { quantity, price }) => acc + quantity * price, 0) // parseFloat(price) za slucaj da ne bude racunao kako treba
