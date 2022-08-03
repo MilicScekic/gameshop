@@ -63,11 +63,11 @@ export const addToGuestCart = (product) => async (dispatch) => {
   }
 };
 
-export const addToUserCart = (product) => async (dispatch) => {
+export const addToUserCart = (id) => async (dispatch) => {
   try {
-    // const res = await axios.post(`/api/me/cart/${id}`);
-    // dispatch({ type: ADD_TO_USER_CART, payload: res.data.cart });
-    dispatch({ type: ADD_TO_USER_CART, payload: product });
+    // dispatch({ type: ADD_TO_USER_CART, payload: product });
+    const res = await axios.post(`/api/me/cart/${id}`);
+    dispatch({ type: ADD_TO_USER_CART, payload: res.data.cart });
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message, "error"));
