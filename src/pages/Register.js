@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: "#000 !important",
   },
 }));
 
@@ -288,7 +287,7 @@ const Register = ({ isAuthenticated, registerUser }) => {
             type="submit"
             fullWidth
             variant="contained"
-            color="primary"
+            color="secondary"
             className={classes.submit}
             disabled={disabledCondition}
           >

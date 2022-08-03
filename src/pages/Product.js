@@ -110,7 +110,7 @@ const Product = ({
           <div>
             {isAuthenticated && (
               <IconButton
-                disabled={user.favorites.some(
+                disabled={user.favorites?.some(
                   (item) => item.id === match.params.id
                 )}
                 onClick={() => addToUserFavorites(match.params.id)}
@@ -118,7 +118,7 @@ const Product = ({
                 <FavoriteIcon />
               </IconButton>
             )}
-            {user && isAuthenticated ? (
+            {user && isAuthenticated && user.cart ? (
               <IconButton
                 disabled={user.cart.some((item) => item.id === match.params.id)}
                 onClick={() => addToUserCart(match.params.id)}

@@ -46,11 +46,9 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%",
     marginTop: theme.spacing(1),
-    borderColor: "#000 !important",
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    backgroundColor: "#000 !important",
   },
 }));
 
@@ -182,6 +180,7 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
             type="submit"
             fullWidth
             variant="contained"
+            color="secondary"
             className={classes.submit}
             disabled={disabledCondition}
           >
@@ -189,17 +188,12 @@ const Login = ({ isAuthenticated, loading, loginUser }) => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link to="#" component={LinkTo} variant="body2" className="black">
+              <Link to="#" component={LinkTo} variant="body2">
                 {"Forgot password?"}
               </Link>
             </Grid>
             <Grid item>
-              <Link
-                to="/register"
-                component={LinkTo}
-                variant="body2"
-                className="black"
-              >
+              <Link to="/register" component={LinkTo} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
