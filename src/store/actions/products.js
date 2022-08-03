@@ -32,14 +32,7 @@ export const getProducts = (targetUrl) => async (dispatch) => {
 
 export const getCurrentProduct = (id) => async (dispatch) => {
   try {
-    const res = await axios.get(
-      `${cors}https://gameshop-g5.com/products/${id}`,
-      {
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    );
+    const res = await axios.get(`https://gameshop-g5.com/products/${id}`);
 
     dispatch({ type: GET_CURRENT_PRODUCT, payload: res.data });
   } catch ({ response }) {

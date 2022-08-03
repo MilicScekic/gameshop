@@ -7,7 +7,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { pink, purple } from "@mui/material/colors";
+import { teal, grey } from "@mui/material/colors";
 import PrivateRoute from "./hoc/PrivateRoute";
 import Cart from "./pages/Cart";
 import Products from "./pages/Products";
@@ -28,10 +28,10 @@ import Orders from "./pages/Orders";
 const theme = createTheme({
   palette: {
     primary: {
-      main: purple[700],
+      main: grey[900],
     },
     secondary: {
-      main: pink[600],
+      main: teal[600],
     },
   },
 });
@@ -79,7 +79,6 @@ function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
 
               {/* <PrivateRoute exact path="/admin" component={Dashboard} /> */}
               <PrivateRoute exact path="/favorites" component={Favorites} />
-              {/* <Route exact path="/favorites" component={Favorites} /> */}
 
               <Route exact path="/products" component={Products} />
               <Route exact path="/products/:id" component={Product} />

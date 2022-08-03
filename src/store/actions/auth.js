@@ -8,7 +8,7 @@ import {
   NEW_ACCESS_TOKEN,
 } from "./types";
 import axios from "axios";
-import { setAxiosToken } from "../../utils/setAxiosToken";
+// import { setAxiosToken } from "../../utils/setAxiosToken";
 import { getUserProfile } from "./user";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 import { cors } from "../reducers/auth";
@@ -40,6 +40,7 @@ export const loginUser = (formData) => async (dispatch) => {
     );
 
     dispatch({ type: AUTH_SUCCESS, payload: res.data });
+    dispatch({ type: AUTH_SUCCESS, payload: res.data });
     dispatch(autoSigninUser(res.data.access)); //! Ovaj tip funkcije bi trebao da ima parametar
     dispatch(hideSpinner());
   } catch ({ response }) {
@@ -67,8 +68,6 @@ export const refreshAccessToken = (refreshToken) => async (dispatch) => {
 };
 
 export const autoSigninUser = (token) => async (dispatch) => {
-  // if (localStorage.access) setAxiosToken(localStorage.access);
-
   try {
     const res = await axios.get(`https://gameshop-g5.com/auth/current_user/`, {
       headers: {
