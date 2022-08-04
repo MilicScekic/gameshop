@@ -48,6 +48,7 @@ const ProductCard = ({
   isAuthenticated,
   user,
   guest,
+  orders,
 }) => {
   const classes = useStyles();
 
@@ -79,11 +80,11 @@ const ProductCard = ({
           <>
             <div>{id}</div>
             <IconButton
-              // disabled={user.cart && user.cart.some((item) => item.id === id)}
-              // disabled={
-              //   user.order_items &&
-              //   user.order_items?.some((item) => item.id === id)
-              // }
+              //? jer je product zapravo id proizvoda u korpi. A id je na stranici products id proizvoda
+              disabled={
+                orders.order_items &&
+                orders.order_items?.some((item) => item.product === id)
+              }
               onClick={() => addToUserCart(id)}
             >
               <AddShoppingCartIcon />
@@ -119,6 +120,7 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.user.user,
   guest: state.user.guest,
+  orders: state.user.orders,
 });
 
 export default connect(mapStateToProps, {
