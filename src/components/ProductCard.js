@@ -75,25 +75,30 @@ const ProductCard = ({
 
         <div className={classes.flex}>
           <Typography variant="h5">{price.toLocaleString()} &euro;</Typography>
-          {user !== null && isAuthenticated ? (
-            <>
-              <IconButton
-                disabled={user.cart && user.cart.some((item) => item.id === id)}
-                onClick={() => addToUserCart(id)}
-              >
-                <AddShoppingCartIcon />
-              </IconButton>
+          {/* {user !== null && isAuthenticated ? ( */}
+          <>
+            <div>{id}</div>
+            <IconButton
+              // disabled={user.cart && user.cart.some((item) => item.id === id)}
+              // disabled={
+              //   user.order_items &&
+              //   user.order_items?.some((item) => item.id === id)
+              // }
+              onClick={() => addToUserCart(id)}
+            >
+              <AddShoppingCartIcon />
+            </IconButton>
 
-              <IconButton
+            {/* <IconButton
                 disabled={
                   user.cart ? user.favorites.some((item) => item.id === id) : ""
                 }
                 onClick={() => addToUserFavorites({ id, name, content, price })}
               >
                 <FavoriteIcon />
-              </IconButton>
-            </>
-          ) : (
+              </IconButton> */}
+          </>
+          {/* ) : (
             <IconButton
               disabled={guest.cart.some((item) => item.id === id)}
               onClick={() =>
@@ -102,7 +107,7 @@ const ProductCard = ({
             >
               <AddShoppingCartIcon />
             </IconButton>
-          )}
+          )} */}
         </div>
       </Paper>
     </Grid>

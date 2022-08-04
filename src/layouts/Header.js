@@ -182,20 +182,20 @@ function Header({ isAuthenticated, user, guest, logout }) {
 
             <div>
               <Box sx={{ flexGrow: 0 }}>
-                <Link
-                  to={!isAuthenticated && "/login"}
-                  style={{ textDecoration: "none" }}
-                >
-                  <Button sx={{ color: "black" }}>
-                    <h4>{!isAuthenticated && "Login"}</h4>
-                  </Button>
-                </Link>
-                <Link to={"/register"} style={{ textDecoration: "none" }}>
-                  <Button sx={{ color: "black" }}>
-                    <h4>{!isAuthenticated && "Register"}</h4>
-                  </Button>
-                </Link>
-
+                {!isAuthenticated && (
+                  <>
+                    <Button
+                      sx={{ color: "black", textDecoration: "none" }}
+                      to={!isAuthenticated && "/login"}
+                      component={Link}
+                    >
+                      <h4>{"Login"}</h4>
+                    </Button>
+                    <Button to={"/register"} component={Link}>
+                      <h4>{"Register"}</h4>
+                    </Button>
+                  </>
+                )}
                 <IconButton
                   style={{ color: "#fff" }}
                   component={Link}
@@ -210,18 +210,17 @@ function Header({ isAuthenticated, user, guest, logout }) {
                           : null
                       }
                     >
-                      <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
+                      <ShoppingCartTwoToneIcon color="secondaryDark" />
                     </Badge>
                   ) : (
                     <Badge
                       color="secondary"
                       badgeContent={calculateSum(guest.cart)}
                     >
-                      <ShoppingCartTwoToneIcon sx={{ color: "black" }} />
+                      <ShoppingCartTwoToneIcon color="secondaryDark" />
                     </Badge>
                   )}
                 </IconButton>
-
                 {isAuthenticated && (
                   <>
                     <IconButton
@@ -236,14 +235,13 @@ function Header({ isAuthenticated, user, guest, logout }) {
                             ? user.favorites.length
                             : null
                         }
-                        // badgeContent={0}
                       >
-                        <FavoriteIcon />
+                        <FavoriteIcon color="red" />
                       </Badge>
                     </IconButton>
 
                     <IconButton onClick={handleOpenUserMenu}>
-                      <PersonTwoToneIcon sx={{ color: "black" }} />
+                      <PersonTwoToneIcon color="primary" />
                     </IconButton>
                     <Menu
                       sx={{ mt: "45px" }}

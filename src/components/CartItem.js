@@ -64,7 +64,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CartItem = ({
-  item: { id, name, media, quantity, price },
+  // id je redni broj itema, a product je productId
+  item: { id, product, quantity, price, discount },
   removeFromGuestCart,
   removeFromUserCart,
   handleGuestQuantity,
@@ -75,8 +76,8 @@ const CartItem = ({
 
   const handleQuantity = (type) => {
     return isAuthenticated
-      ? handleUserQuantity(type, id)
-      : handleGuestQuantity(type, id);
+      ? handleUserQuantity(type, product)
+      : handleGuestQuantity(type, product);
   };
 
   return (
@@ -85,18 +86,18 @@ const CartItem = ({
         <Grid item xs={12} md={2} className={classes.gridItem}>
           <Link to={`/products/${id}`}>
             <div className={classes.img}>
-              <img
+              {/* <img
                 className={classes.image}
                 src={media && media.map((m) => m.media)}
                 alt=""
-              />
+              /> */}
             </div>
           </Link>
         </Grid>
         <Grid item xs={12} md={4} className={classes.gridItem}>
           <div style={{ marginTop: 20 }}>
-            <Link to={`/products/${id}`} className={classes.link}>
-              <Subheadline center>{name}</Subheadline>
+            <Link to={`/products/${product}`} className={classes.link}>
+              {/* <Subheadline center>{name}</Subheadline> */}
             </Link>
             <Typography variant="body1" style={{ textAlign: "center" }}>
               {price} / pcs
@@ -132,8 +133,8 @@ const CartItem = ({
             <IconButton
               onClick={() =>
                 isAuthenticated
-                  ? removeFromUserCart(id)
-                  : removeFromGuestCart(id)
+                  ? removeFromUserCart(product)
+                  : removeFromGuestCart(product)
               }
             >
               <DeleteIcon />

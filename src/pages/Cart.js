@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cart = ({ user, guest, isAuthenticated }) => {
+const Cart = ({ user, guest, orders, isAuthenticated }) => {
   const calculateTotal = (arr) => {
     return arr
       .reduce((acc, { quantity, price }) => acc + quantity * price, 0) // parseFloat(price) za slucaj da ne bude racunao kako treba
@@ -88,8 +88,7 @@ const Cart = ({ user, guest, isAuthenticated }) => {
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
 
-  const userCartPresent =
-    isAuthenticated && user !== null && user.cart && user.cart?.length > 0;
+  const userCartPresent = isAuthenticated && orders.order_items !== null;
   const guestCartPresent = guest.cart.length > 0;
 
   const classes = useStyles();
@@ -99,8 +98,8 @@ const Cart = ({ user, guest, isAuthenticated }) => {
       <ResponsiveContainer>
         <Headline className={classes.headline}>
           Your cart{" "}
-          {isAuthenticated && user !== null && user.cart?.length > 0
-            ? `(${calculateSum(user.cart)})`
+          {isAuthenticated && user !== null && orders.order_items?.length > 0
+            ? `(${calculateSum(orders.order_items)})`
             : !isAuthenticated && guest.cart.length > 0
             ? `(${calculateSum(guest.cart)})`
             : null}
@@ -112,9 +111,9 @@ const Cart = ({ user, guest, isAuthenticated }) => {
           </div>
         )}
         {!isAuthenticated &&
-          guest.cart.map((item) => <CartItem key={item.id} item={item} />)}
+          guest.cart.map((item) => <CartItem key={item.product} item={item} />)}
 
-        {isAuthenticated && user !== null && user.cart.length === 0 && (
+        {!isAuthenticated && user !== null && orders.order_items.length === 0 && (
           <div className={classes.centered}>
             <SadEmojiIcon className={classes.emoji} />
             <Subheadline>You have no cart items</Subheadline>
@@ -122,8 +121,8 @@ const Cart = ({ user, guest, isAuthenticated }) => {
         )}
         {isAuthenticated &&
           user !== null &&
-          user.cart.map((item) => (
-            <CartItem key={item.id} item={item} quantity={item.quantity} />
+          orders.order_items?.map((item) => (
+            <CartItem key={item.product} item={item} quantity={item.quantity} />
           ))}
 
         {(userCartPresent || guestCartPresent) && (
@@ -133,8 +132,8 @@ const Cart = ({ user, guest, isAuthenticated }) => {
               Total price:{" "}
               <span style={{ fontWeight: "bold" }}>
                 {isAuthenticated
-                  ? calculateTotal(user.cart)
-                  : calculateTotal(guest.cart)}{" "}
+                  ? calculateTotal(orders.order_items)
+                  : calculateTotal(guest.cart)}
                 &euro;
               </span>
             </Subheadline>
@@ -155,6 +154,7 @@ const Cart = ({ user, guest, isAuthenticated }) => {
 
 const mapStateToProps = (state) => ({
   user: state.user.user,
+  orders: state.user.orders,
   guest: state.user.guest,
   isAuthenticated: state.auth.isAuthenticated,
 });

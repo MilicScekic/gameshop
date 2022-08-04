@@ -16,10 +16,13 @@ import {
   CLEAN_GUEST,
   USER_PURCHASE,
   GUEST_PURCHASE,
+  GET_ORDERS,
+  GET_ORDERS_ID,
 } from "../actions/types";
 
 const initialState = {
   user: null,
+  orders: null,
   guest: {
     cart: localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))
@@ -41,6 +44,19 @@ const userReducer = (state = initialState, { type, payload }) => {
         ...state,
         user: null,
       };
+
+    case GET_ORDERS:
+      return {
+        ...state,
+        orders: payload,
+      };
+
+    // case GET_ORDERS_ID:
+    //   return {
+    //     ...state,
+    //     orders: { orderId: orders.id },
+    //   };
+
     case ADD_TO_GUEST_CART:
       return {
         ...state,
@@ -53,11 +69,12 @@ const userReducer = (state = initialState, { type, payload }) => {
     case ADD_TO_USER_CART:
       return {
         ...state,
-        user: {
-          ...state.user,
-          cart: payload,
+        orders: {
+          ...state.orders,
+          order_items: [...state.orders.order_items, { ...payload }],
         },
       };
+
     case REMOVE_FROM_GUEST_CART:
       const newGuestCart = state.guest.cart.filter(
         (item) => item.id !== payload
@@ -70,12 +87,14 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
     case REMOVE_FROM_USER_CART:
-      const newUserCart = state.user.cart.filter((item) => item.id !== payload);
+      const newUserOrders = state.orders.order_items.filter(
+        (item) => item.id !== payload
+      ); //id je redni broj u order_items. Product je id proizvoda
       return {
         ...state,
-        user: {
-          ...state.user,
-          cart: newUserCart,
+        orders: {
+          ...state.orders,
+          order_items: newUserOrders,
         },
       };
     case ADD_TO_USER_FAVS:
@@ -162,6 +181,7 @@ const userReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         user: null,
+        orders: null,
         delpay: null,
       };
     case CLEAN_GUEST:

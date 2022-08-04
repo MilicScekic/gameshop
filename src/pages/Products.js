@@ -46,6 +46,8 @@ const Products = ({
   );
 };
 
-export default connect(null, { getProducts, clearProducts, showSpinner })(
-  Products
-);
+export default connect(null, {
+  getProducts,
+  clearProducts,
+  showSpinner,
+})(Products);

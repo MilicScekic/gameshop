@@ -15,6 +15,10 @@ import {
   CLEAN_GUEST,
   USER_PURCHASE,
   GUEST_PURCHASE,
+  GET_PRODUCTS,
+  STOP_PAGINATION,
+  GET_ORDERS,
+  GET_ORDERS_ID,
 } from "./types";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 import axios from "axios";
@@ -51,11 +55,46 @@ export const updateUserProfile = (formData, history) => async (dispatch) => {
   }
 };
 
-// Todo: Dobro mozda bi mogli da ne koristimo api za gosta koji dodaje proizvod u korpu
+//* Ovo mu dodje kao: Spremi korpu za trgovinu
+export const openOrder = (token) => async (dispatch) => {
+  try {
+    await axios.post(
+      `https://gameshop-g5.com/orders/`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    dispatch(setAlert("Order opened!", "success"));
+  } catch ({ response }) {
+    dispatch(setAlert("Order is not opened!", "warning"));
+    // dispatch(setAlert(response.detail, "warning"));
+  }
+};
+
+export const getOrderItems = () => async (dispatch) => {
+  try {
+    const res = await axios.post(
+      "https://gameshop-g5.com/orders/",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+    console.log(res.data);
+    dispatch({ type: GET_ORDERS, payload: res.data });
+  } catch ({ response }) {
+    // dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert("Error", "error"));
+  }
+};
+
 export const addToGuestCart = (product) => async (dispatch) => {
   try {
-    //? const res = await axios.get(`/api/products/${id}`);
-    //? dispatch({ type: ADD_TO_GUEST_CART, payload: res.data });
     dispatch({ type: ADD_TO_GUEST_CART, payload: product });
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
@@ -63,14 +102,29 @@ export const addToGuestCart = (product) => async (dispatch) => {
   }
 };
 
-export const addToUserCart = (product) => async (dispatch) => {
+export const addToUserCart = (id) => async (dispatch) => {
+  const orderId = dispatch({ type: GET_ORDERS_ID });
   try {
-    // const res = await axios.post(`/api/me/cart/${id}`);
-    // dispatch({ type: ADD_TO_USER_CART, payload: res.data.cart });
-    dispatch({ type: ADD_TO_USER_CART, payload: product });
+    const res = await axios.post(
+      `https://gameshop-g5.com/orders/2/order_items/`,
+      {
+        product: id,
+        quantity: 1,
+      },
+      {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+
+    console.log("order id:", orderId);
+
+    dispatch({ type: ADD_TO_USER_CART, payload: res.data });
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
-    dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert("Not added", "error"));
   }
 };
 
