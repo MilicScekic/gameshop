@@ -7,7 +7,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { teal, grey } from "@mui/material/colors";
+import { teal, grey, red } from "@mui/material/colors";
 import PrivateRoute from "./hoc/PrivateRoute";
 import Cart from "./pages/Cart";
 import Products from "./pages/Products";
@@ -32,6 +32,12 @@ const theme = createTheme({
     },
     secondary: {
       main: teal[600],
+    },
+    secondaryDark: {
+      main: teal[900],
+    },
+    red: {
+      main: red[900],
     },
   },
 });
