@@ -46,7 +46,6 @@ function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
   //* Ovo je ako se osvjezi stranica, da odma prijavi korisnika, da ne ceka 5 minuta da to uradi useEffect dolje pri pri rifresu tokena
   useEffect(() => {
     localStorage.access && autoSigninUser(localStorage.access);
-
     //? Po ure
     logoutAfterSession(30); // u minutima. Trajanje sesije
   }, []);

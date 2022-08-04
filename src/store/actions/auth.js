@@ -78,7 +78,7 @@ export const autoSigninUser = (token) => async (dispatch) => {
 
     dispatch({ type: AUTO_SIGNIN_SUCCESS, payload: res.data });
     dispatch(getUserProfile(token)); //? Pokupi podatke prema tokenu i popuni user objekat
-    openOrder(res.data.access); //? Otvori ordere. Nisam pokretao preko dispatcha za svaki slucaj. Nekad radi, nekad ne
+    openOrder(res.data.access); //? Otvori order. Nisam pokretao preko dispatcha za svaki slucaj. Nekad radi, nekad ne
     dispatch(getOrderItems()); //? Napuni order_items niz
     dispatch(setAlert("Logged in successfully", "success"));
   } catch ({ response }) {
@@ -102,7 +102,7 @@ export const logoutAfterSession = (timer) => (dispatch) => {
 
 export const deleteAccount = (history) => async (dispatch) => {
   try {
-    await axios.delete("/api/auth");
+    await axios.delete("https://gameshop-g5.com/auth/delete");
     history.push("/");
     dispatch(setAlert("Account deleted", "success"));
     dispatch({ type: CLEAN_USER });

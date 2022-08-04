@@ -32,7 +32,6 @@ export const CLEAN_GUEST = "CLEAN_GUEST";
 export const USER_PURCHASE = "USER_PURCHASE";
 export const GUEST_PURCHASE = "GUEST_PURCHASE";
 export const GET_ORDERS = "GET_ORDERS";
-export const GET_ORDERS_ID = "GET_ORDERS_ID";
 
 // AUTH
 export const AUTH_SUCCESS = "AUTH_SUCCESS";

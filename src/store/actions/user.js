@@ -18,7 +18,6 @@ import {
   GET_PRODUCTS,
   STOP_PAGINATION,
   GET_ORDERS,
-  GET_ORDERS_ID,
 } from "./types";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 import axios from "axios";
@@ -103,10 +102,20 @@ export const addToGuestCart = (product) => async (dispatch) => {
 };
 
 export const addToUserCart = (id) => async (dispatch) => {
-  const orderId = dispatch({ type: GET_ORDERS_ID });
   try {
+    //! Neprakticno
+    const order = await axios.post(
+      "https://gameshop-g5.com/orders/",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+
     const res = await axios.post(
-      `https://gameshop-g5.com/orders/2/order_items/`,
+      `https://gameshop-g5.com/orders/${order.data.id}/order_items/`,
       {
         product: id,
         quantity: 1,
@@ -118,8 +127,6 @@ export const addToUserCart = (id) => async (dispatch) => {
         },
       }
     );
-
-    console.log("order id:", orderId);
 
     dispatch({ type: ADD_TO_USER_CART, payload: res.data });
     dispatch(setAlert("Product added to cart", "success"));
@@ -213,3 +220,7 @@ export const guestPurchase = (cart, history) => async (dispatch) => {
     dispatch(setAlert(response.data.message, "error"));
   }
 };
+
+// const mapStateToProps = (state) => ({
+//   orders: state.users.orders,
+// });

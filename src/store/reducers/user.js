@@ -17,7 +17,6 @@ import {
   USER_PURCHASE,
   GUEST_PURCHASE,
   GET_ORDERS,
-  GET_ORDERS_ID,
 } from "../actions/types";
 
 const initialState = {
@@ -50,12 +49,6 @@ const userReducer = (state = initialState, { type, payload }) => {
         ...state,
         orders: payload,
       };
-
-    // case GET_ORDERS_ID:
-    //   return {
-    //     ...state,
-    //     orders: { orderId: orders.id },
-    //   };
 
     case ADD_TO_GUEST_CART:
       return {
