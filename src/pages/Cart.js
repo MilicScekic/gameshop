@@ -126,48 +126,43 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
         {!isAuthenticated &&
           guest.cart.map((item) => <CartItem key={item.product} item={item} />)}
 
-        {isAuthenticated &&
-          user !== null &&
-          orders.order_items?.length === 0 &&
-          orders?.checkout_date !== "" && (
-            <div className={classes.centered}>
-              <SadEmojiIcon className={classes.emoji} />
-              <Subheadline>You have no cart items</Subheadline>
-            </div>
-          )}
+        {isAuthenticated && user !== null && orders.order_items?.length === 0 && (
+          <div className={classes.centered}>
+            <SadEmojiIcon className={classes.emoji} />
+            <Subheadline>You have no cart items</Subheadline>
+          </div>
+        )}
         {isAuthenticated &&
           user !== null &&
           orders.order_items?.map((item) => (
             <CartItem key={item.id} item={item} quantity={item.quantity} />
           ))}
 
-        {(userCartPresent || guestCartPresent) && (
-          <div className={classes.centered}>
-            <Divider className={classes.divider} />
-            <Subheadline gutterBottom>
-              Total price:{" "}
-              <span style={{ fontWeight: "bold" }}>
-                {isAuthenticated
-                  ? calculateTotal(orders?.order_items)
-                  : // orders?.price
-                    calculateTotal(guest.cart)}
-                &euro;
-              </span>
-            </Subheadline>
-            {isAuthenticated &&
-              user !== null &&
-              orders?.checkout_date === null && (
-                <Button
-                  to="/checkout"
-                  component={Link}
-                  color="secondary"
-                  variant="contained"
-                >
-                  Proceed to checkout
-                </Button>
-              )}
-          </div>
-        )}
+        {(userCartPresent || guestCartPresent) &&
+          orders.order_items?.length !== 0 && (
+            <div className={classes.centered}>
+              <Divider className={classes.divider} />
+              <Subheadline gutterBottom>
+                Total price:{" "}
+                <span style={{ fontWeight: "bold" }}>
+                  {isAuthenticated
+                    ? calculateTotal(orders?.order_items)
+                    : // orders?.price
+                      calculateTotal(guest.cart)}
+                  &euro;
+                </span>
+              </Subheadline>
+
+              <Button
+                to="/checkout"
+                component={Link}
+                color="secondary"
+                variant="contained"
+              >
+                Proceed to checkout
+              </Button>
+            </div>
+          )}
       </ResponsiveContainer>
     </section>
   );
