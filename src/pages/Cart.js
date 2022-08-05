@@ -78,17 +78,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const withDiscount = (price, discount) => (price * (100 - discount)) / 100;
+
 const Cart = ({ user, guest, orders, isAuthenticated }) => {
+  //* Pokupio sam sa state-a punu cijenu. Fja calculateTotal radi iskljucivo za gosta koji moze samo da dodaje u korpu i nista vise
   const calculateTotal = (arr) => {
     return arr
-      .reduce((acc, { quantity, price }) => acc + quantity * price, 0) // parseFloat(price) za slucaj da ne bude racunao kako treba
+      .reduce(
+        (arr, { quantity, price, discount }) =>
+          discount > 0
+            ? arr + quantity + withDiscount(price, discount)
+            : arr + quantity * price,
+        0
+      )
       .toLocaleString();
   };
 
+  const totalPriceOrder = () =>
+    orders?.checkout_date !== null ? 0 : orders?.price;
+
+  //? Kolicina
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
 
-  const userCartPresent = isAuthenticated && orders.order_items !== null;
+  const userCartPresent = isAuthenticated && orders?.order_items !== null;
   const guestCartPresent = guest.cart.length > 0;
 
   const classes = useStyles();
@@ -98,7 +111,10 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
       <ResponsiveContainer>
         <Headline className={classes.headline}>
           Your cart{" "}
-          {isAuthenticated && user !== null && orders.order_items?.length > 0
+          {isAuthenticated &&
+          user !== null &&
+          orders.order_items?.length > 0 &&
+          orders?.checkout_date !== ""
             ? `(${calculateSum(orders.order_items)})`
             : !isAuthenticated && guest.cart.length > 0
             ? `(${calculateSum(guest.cart)})`
@@ -113,12 +129,15 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
         {!isAuthenticated &&
           guest.cart.map((item) => <CartItem key={item.product} item={item} />)}
 
-        {!isAuthenticated && user !== null && orders.order_items.length === 0 && (
-          <div className={classes.centered}>
-            <SadEmojiIcon className={classes.emoji} />
-            <Subheadline>You have no cart items</Subheadline>
-          </div>
-        )}
+        {isAuthenticated &&
+          user !== null &&
+          orders.order_items?.length === 0 &&
+          orders?.checkout_date !== "" && (
+            <div className={classes.centered}>
+              <SadEmojiIcon className={classes.emoji} />
+              <Subheadline>You have no cart items</Subheadline>
+            </div>
+          )}
         {isAuthenticated &&
           user !== null &&
           orders.order_items?.map((item) => (
@@ -132,19 +151,22 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
               Total price:{" "}
               <span style={{ fontWeight: "bold" }}>
                 {isAuthenticated
-                  ? calculateTotal(orders.order_items)
+                  ? // ? calculateTotal(orders?.order_items)
+                    totalPriceOrder()
                   : calculateTotal(guest.cart)}
                 &euro;
               </span>
             </Subheadline>
-            <Button
-              to="/checkout"
-              component={Link}
-              color="primary"
-              variant="contained"
-            >
-              Proceed to checkout
-            </Button>
+            {isAuthenticated && user !== null && orders?.checkout_date === "" && (
+              <Button
+                to="/checkout"
+                component={Link}
+                color="secondary"
+                variant="contained"
+              >
+                Proceed to checkout
+              </Button>
+            )}
           </div>
         )}
       </ResponsiveContainer>
