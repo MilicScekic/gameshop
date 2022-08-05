@@ -180,6 +180,4 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { getUserProfile, getCurrentProduct })(
-  Cart
-);
+export default connect(mapStateToProps, { getUserProfile })(Cart);
