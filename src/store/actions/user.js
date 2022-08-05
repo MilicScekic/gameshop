@@ -135,6 +135,39 @@ export const addToUserCart = (id) => async (dispatch) => {
   }
 };
 
+export const userPurchase = (history) => async (dispatch) => {
+  dispatch(showSpinner());
+  try {
+    const order = await axios.post(
+      "https://gameshop-g5.com/orders/",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+
+    await axios.patch(
+      `https://gameshop-g5.com/orders/${order.data.id}/checkout/`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+
+    dispatch({ type: USER_PURCHASE });
+    dispatch(hideSpinner());
+    history.push("/");
+    dispatch(setAlert("Payment successful", "success"));
+  } catch ({ response }) {
+    dispatch(hideSpinner());
+    dispatch(setAlert("Error in purchasing!", "error"));
+  }
+};
+
 export const removeFromGuestCart = (id) => (dispatch) => {
   dispatch({ type: REMOVE_FROM_GUEST_CART, payload: id });
 };
@@ -192,35 +225,3 @@ export const handleUserQuantity = (type, prodId) => async (dispatch) => {
     dispatch(setAlert(response.data.message, "error"));
   }
 };
-
-export const userPurchase = (history) => async (dispatch) => {
-  dispatch(showSpinner());
-  try {
-    await axios.post("/api/products/quantity/user");
-    dispatch({ type: USER_PURCHASE });
-    dispatch(hideSpinner());
-    history.push("/");
-    dispatch(setAlert("Payment successful", "success"));
-  } catch ({ response }) {
-    dispatch(hideSpinner());
-    dispatch(setAlert(response.data.message, "error"));
-  }
-};
-
-export const guestPurchase = (cart, history) => async (dispatch) => {
-  dispatch(showSpinner());
-  try {
-    await axios.post("/api/products/quantity/guest", { cart });
-    dispatch({ type: GUEST_PURCHASE });
-    dispatch(hideSpinner());
-    history.push("/");
-    dispatch(setAlert("Payment successful", "success"));
-  } catch ({ response }) {
-    dispatch(hideSpinner());
-    dispatch(setAlert(response.data.message, "error"));
-  }
-};
-
-// const mapStateToProps = (state) => ({
-//   orders: state.users.orders,
-// });

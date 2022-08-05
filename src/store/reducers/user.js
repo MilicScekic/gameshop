@@ -189,9 +189,10 @@ const userReducer = (state = initialState, { type, payload }) => {
     case USER_PURCHASE:
       return {
         ...state,
-        user: {
-          ...state.user,
-          cart: [],
+        orders: {
+          ...state.orders,
+          order_items: [],
+          checkout_date: Date.now(),
         },
       };
     case GUEST_PURCHASE:

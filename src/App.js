@@ -24,6 +24,7 @@ import Dashboard from "./pages/Dashboard";
 import Games from "./pages/Games";
 import Sidebar from "./layouts/Sidebar";
 import Orders from "./pages/Orders";
+import Checkout from "./pages/Checkout";
 
 const theme = createTheme({
   palette: {
@@ -87,6 +88,7 @@ function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
 
               <Route exact path="/products" component={Products} />
               <Route exact path="/products/:id" component={Product} />
+              <PrivateRoute exact path="/checkout" component={Checkout} />
             </Layout>
           </Switch>
         </LastLocationProvider>
