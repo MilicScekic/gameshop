@@ -30,7 +30,7 @@ import { logout } from "../store/actions/auth";
 
 const loggedInMenu = ["Dashboard", "Profile"];
 
-function Header({ isAuthenticated, user, guest, logout }) {
+function Header({ isAuthenticated, user, guest, orders, logout }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -205,8 +205,8 @@ function Header({ isAuthenticated, user, guest, logout }) {
                     <Badge
                       color="secondary"
                       badgeContent={
-                        user !== null && user?.cart
-                          ? calculateSum(user.cart)
+                        user !== null && orders?.order_items
+                          ? calculateSum(orders?.order_items)
                           : null
                       }
                     >
@@ -528,6 +528,7 @@ function Header({ isAuthenticated, user, guest, logout }) {
 
 const mapStateToProps = (state) => ({
   user: state.user.user,
+  orders: state.user.orders,
   guest: state.user.guest,
   isAuthenticated: state.auth.isAuthenticated,
 });

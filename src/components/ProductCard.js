@@ -81,7 +81,7 @@ const ProductCard = ({
               <IconButton
                 //? jer je product zapravo id proizvoda u korpi. A id je na stranici products id proizvoda
                 disabled={
-                  orders?.order_items ??
+                  orders?.order_items &&
                   orders.order_items?.some((item) => item.product === id)
                 }
                 onClick={() => addToUserCart(id)}
