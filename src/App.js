@@ -7,7 +7,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { teal, grey } from "@mui/material/colors";
+import { teal, grey, red } from "@mui/material/colors";
 import PrivateRoute from "./hoc/PrivateRoute";
 import Cart from "./pages/Cart";
 import Products from "./pages/Products";
@@ -24,6 +24,7 @@ import Dashboard from "./pages/Dashboard";
 import Games from "./pages/Games";
 import Sidebar from "./layouts/Sidebar";
 import Orders from "./pages/Orders";
+import Checkout from "./pages/Checkout";
 
 const theme = createTheme({
   palette: {
@@ -33,6 +34,12 @@ const theme = createTheme({
     secondary: {
       main: teal[600],
     },
+    secondaryDark: {
+      main: teal[900],
+    },
+    red: {
+      main: red[900],
+    },
   },
 });
 
@@ -40,7 +47,6 @@ function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
   //* Ovo je ako se osvjezi stranica, da odma prijavi korisnika, da ne ceka 5 minuta da to uradi useEffect dolje pri pri rifresu tokena
   useEffect(() => {
     localStorage.access && autoSigninUser(localStorage.access);
-
     //? Po ure
     logoutAfterSession(30); // u minutima. Trajanje sesije
   }, []);
@@ -82,6 +88,7 @@ function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
 
               <Route exact path="/products" component={Products} />
               <Route exact path="/products/:id" component={Product} />
+              <PrivateRoute exact path="/checkout" component={Checkout} />
             </Layout>
           </Switch>
         </LastLocationProvider>

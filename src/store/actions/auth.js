@@ -8,10 +8,8 @@ import {
   NEW_ACCESS_TOKEN,
 } from "./types";
 import axios from "axios";
-// import { setAxiosToken } from "../../utils/setAxiosToken";
-import { getUserProfile } from "./user";
+import { openOrder, getOrderItems, getUserProfile } from "./user";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
-import { cors } from "../reducers/auth";
 
 export const registerUser = (formData) => async (dispatch) => {
   dispatch(showSpinner());
@@ -40,8 +38,7 @@ export const loginUser = (formData) => async (dispatch) => {
     );
 
     dispatch({ type: AUTH_SUCCESS, payload: res.data });
-    dispatch({ type: AUTH_SUCCESS, payload: res.data });
-    dispatch(autoSigninUser(res.data.access)); //! Ovaj tip funkcije bi trebao da ima parametar
+    dispatch(autoSigninUser(res.data.access));
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch({ type: AUTH_FAIL });
@@ -61,7 +58,7 @@ export const refreshAccessToken = (refreshToken) => async (dispatch) => {
     console.log("New refreshed token:");
     console.log(res.data.access);
     dispatch({ type: NEW_ACCESS_TOKEN, payload: res.data }); //u reducer(auth): payload.access pa ne mora res.data.access
-    autoSigninUser(res.data.access);
+    dispatch(autoSigninUser(res.data.access));
   } catch (err) {
     dispatch(setAlert("Error", "error"));
   }
@@ -81,6 +78,8 @@ export const autoSigninUser = (token) => async (dispatch) => {
 
     dispatch({ type: AUTO_SIGNIN_SUCCESS, payload: res.data });
     dispatch(getUserProfile(token)); //? Pokupi podatke prema tokenu i popuni user objekat
+    openOrder(res.data.access); //? Otvori order. Nisam pokretao preko dispatcha za svaki slucaj. Nekad radi, nekad ne
+    dispatch(getOrderItems()); //? Napuni order_items niz
     dispatch(setAlert("Logged in successfully", "success"));
   } catch ({ response }) {
     dispatch({ type: AUTO_SIGNIN_FAIL });
@@ -103,7 +102,7 @@ export const logoutAfterSession = (timer) => (dispatch) => {
 
 export const deleteAccount = (history) => async (dispatch) => {
   try {
-    await axios.delete("/api/auth");
+    await axios.delete("https://gameshop-g5.com/auth/delete");
     history.push("/");
     dispatch(setAlert("Account deleted", "success"));
     dispatch({ type: CLEAN_USER });

@@ -48,6 +48,7 @@ const ProductCard = ({
   isAuthenticated,
   user,
   guest,
+  orders,
 }) => {
   const classes = useStyles();
 
@@ -74,34 +75,41 @@ const ProductCard = ({
         </div>
 
         <div className={classes.flex}>
-          <Typography variant="h5">{price.toLocaleString()} &euro;</Typography>
+          <Typography variant="h5">
+            {parseFloat(price.toLocaleString())} &euro;
+          </Typography>
           {user !== null && isAuthenticated ? (
             <>
               <IconButton
-                disabled={user.cart && user.cart.some((item) => item.id === id)}
+                //? jer je product zapravo id proizvoda u korpi. A id je na stranici products id proizvoda
+                disabled={
+                  orders?.order_items &&
+                  orders.order_items?.some((item) => item.product === id)
+                }
                 onClick={() => addToUserCart(id)}
               >
                 <AddShoppingCartIcon />
               </IconButton>
-
-              <IconButton
+              {/* <IconButton
                 disabled={
                   user.cart ? user.favorites.some((item) => item.id === id) : ""
                 }
                 onClick={() => addToUserFavorites({ id, name, content, price })}
               >
                 <FavoriteIcon />
-              </IconButton>
+              </IconButton> */}
             </>
           ) : (
-            <IconButton
-              disabled={guest.cart.some((item) => item.id === id)}
-              onClick={() =>
-                addToGuestCart({ id, name, content, media, price })
-              }
-            >
-              <AddShoppingCartIcon />
-            </IconButton>
+            <>
+              <IconButton
+                disabled={guest.cart.some((item) => item.id === id)}
+                onClick={() =>
+                  addToGuestCart({ id, name, content, media, price })
+                }
+              >
+                <AddShoppingCartIcon />
+              </IconButton>
+            </>
           )}
         </div>
       </Paper>
@@ -114,6 +122,7 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.user.user,
   guest: state.user.guest,
+  orders: state.user.orders,
 });
 
 export default connect(mapStateToProps, {

@@ -16,10 +16,12 @@ import {
   CLEAN_GUEST,
   USER_PURCHASE,
   GUEST_PURCHASE,
+  GET_ORDERS,
 } from "../actions/types";
 
 const initialState = {
   user: null,
+  orders: null,
   guest: {
     cart: localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))
@@ -41,6 +43,13 @@ const userReducer = (state = initialState, { type, payload }) => {
         ...state,
         user: null,
       };
+
+    case GET_ORDERS:
+      return {
+        ...state,
+        orders: payload,
+      };
+
     case ADD_TO_GUEST_CART:
       return {
         ...state,
@@ -53,11 +62,12 @@ const userReducer = (state = initialState, { type, payload }) => {
     case ADD_TO_USER_CART:
       return {
         ...state,
-        user: {
-          ...state.user,
-          cart: payload,
+        orders: {
+          ...state.orders,
+          order_items: [...state.orders.order_items, { ...payload }],
         },
       };
+
     case REMOVE_FROM_GUEST_CART:
       const newGuestCart = state.guest.cart.filter(
         (item) => item.id !== payload
@@ -70,12 +80,14 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
     case REMOVE_FROM_USER_CART:
-      const newUserCart = state.user.cart.filter((item) => item.id !== payload);
+      const newUserOrders = state.orders.order_items.filter(
+        (item) => item.id !== payload
+      ); //id je redni broj u order_items. Product je id proizvoda
       return {
         ...state,
-        user: {
-          ...state.user,
-          cart: newUserCart,
+        orders: {
+          ...state.orders,
+          order_items: newUserOrders,
         },
       };
     case ADD_TO_USER_FAVS:
@@ -100,12 +112,12 @@ const userReducer = (state = initialState, { type, payload }) => {
         email: payload.email,
         firstName: payload.firstName,
         lastName: payload.lastName,
-        address: {
-          street: payload.street,
-          postalCode: payload.postalCode,
-          city: payload.city,
-        },
-        phone: payload.phone,
+        // address: {
+        //   street: payload.street,
+        //   postalCode: payload.postalCode,
+        //   city: payload.city,
+        // },
+        // phone: payload.phone,
       };
       return {
         ...state,
@@ -146,22 +158,23 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
     case USER_PRODUCT_QUANTITY:
-      const newCart = [...state.user.cart];
-      const desiredIndex = state.user.cart.findIndex(
+      const newCart = [...state.orders.order_items];
+      const desiredIndex = state.orders.order_items.findIndex(
         (prod) => prod.id === payload.id
       );
       newCart[desiredIndex] = { ...payload };
       return {
         ...state,
-        user: {
-          ...state.user,
-          cart: newCart,
+        orders: {
+          ...state.orders,
+          order_items: newCart,
         },
       };
     case CLEAN_USER:
       return {
         ...state,
         user: null,
+        orders: null,
         delpay: null,
       };
     case CLEAN_GUEST:
@@ -176,9 +189,10 @@ const userReducer = (state = initialState, { type, payload }) => {
     case USER_PURCHASE:
       return {
         ...state,
-        user: {
-          ...state.user,
-          cart: [],
+        orders: {
+          ...state.orders,
+          order_items: [],
+          checkout_date: Date.now(),
         },
       };
     case GUEST_PURCHASE:

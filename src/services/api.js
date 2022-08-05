@@ -1,7 +1,7 @@
 import axios from "axios";
 
 //? Matijin host
-const apiUrl = "http://localhost:1337/api"; // primjer
+const apiUrl = "https://gameshop-g5.com";
 
 export const apiCall = axios.create({
   baseURL: apiUrl,
@@ -9,6 +9,9 @@ export const apiCall = axios.create({
 
 apiCall.interceptors.response.use(
   function (response) {
+    response.headers.Authorization = `Bearer ${localStorage.getItem("access")}`;
+    response.headers.withCredentials = true;
+
     return response;
   },
   function (error) {
