@@ -114,7 +114,7 @@ export const addToUserCart = (id) => async (dispatch) => {
       }
     );
 
-    const res = await axios.post(
+    const orderItem = await axios.post(
       `https://gameshop-g5.com/orders/${order.data.id}/order_items/`,
       {
         product: id,
@@ -128,7 +128,14 @@ export const addToUserCart = (id) => async (dispatch) => {
       }
     );
 
-    dispatch({ type: ADD_TO_USER_CART, payload: res.data });
+    //? Ukoliko bude potrebe
+    // const addedProduct = await axios.get(
+    //   `https://gameshop-g5.com/products/${id}/`
+    // );
+
+    // const res = { ...orderItem.data, ...addedProduct.data };
+
+    dispatch({ type: ADD_TO_USER_CART, payload: orderItem.data });
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
     dispatch(setAlert("Not added", "error"));
@@ -174,7 +181,24 @@ export const removeFromGuestCart = (id) => (dispatch) => {
 
 export const removeFromUserCart = (id) => async (dispatch) => {
   try {
-    await axios.delete(`/api/me/cart/${id}`);
+    const order = await axios.post(
+      "https://gameshop-g5.com/orders/",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+
+    await axios.delete(
+      `https://gameshop-g5.com/orders/${order.data.id}/order_items/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
     dispatch({ type: REMOVE_FROM_USER_CART, payload: id });
     dispatch(setAlert("Removed from cart", "success"));
   } catch ({ response }) {
@@ -217,11 +241,31 @@ export const handleGuestQuantity = (type, prodId) => (dispatch) => {
     : dispatch({ type: DECREMENT_GUEST_PRODUCT, payload: prodId });
 };
 
-export const handleUserQuantity = (type, prodId) => async (dispatch) => {
-  try {
-    const res = await axios.put(`/api/me/cart/${prodId}`, { type });
-    dispatch({ type: USER_PRODUCT_QUANTITY, payload: res.data });
-  } catch ({ response }) {
-    dispatch(setAlert(response.data.message, "error"));
-  }
-};
+export const handleUserQuantity =
+  (orderItemId, prodId, qty) => async (dispatch) => {
+    try {
+      const order = await axios.post(
+        "https://gameshop-g5.com/orders/",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
+
+      const res = await axios.put(
+        `https://gameshop-g5.com/orders/${order.data.id}/order_items/${orderItemId}/`,
+        { product: prodId, quantity: qty },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
+
+      dispatch({ type: USER_PRODUCT_QUANTITY, payload: res.data });
+    } catch ({ response }) {
+      dispatch(setAlert(response.data.message, "error"));
+    }
+  };

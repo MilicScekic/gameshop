@@ -75,7 +75,9 @@ const ProductCard = ({
         </div>
 
         <div className={classes.flex}>
-          <Typography variant="h5">{price.toLocaleString()} &euro;</Typography>
+          <Typography variant="h5">
+            {parseFloat(price.toLocaleString())} &euro;
+          </Typography>
           {user !== null && isAuthenticated ? (
             <>
               <IconButton

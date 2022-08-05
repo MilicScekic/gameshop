@@ -87,15 +87,12 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
       .reduce(
         (arr, { quantity, price, discount }) =>
           discount > 0
-            ? arr + quantity + withDiscount(price, discount)
+            ? arr + quantity + withDiscount(price, discount) - 1.0
             : arr + quantity * price,
         0
       )
       .toLocaleString();
   };
-
-  const totalPriceOrder = () =>
-    orders?.checkout_date !== null ? 0 : orders?.price;
 
   //? Kolicina
   const calculateSum = (arr) =>
@@ -141,7 +138,7 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
         {isAuthenticated &&
           user !== null &&
           orders.order_items?.map((item) => (
-            <CartItem key={item.product} item={item} quantity={item.quantity} />
+            <CartItem key={item.id} item={item} quantity={item.quantity} />
           ))}
 
         {(userCartPresent || guestCartPresent) && (
@@ -151,22 +148,24 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
               Total price:{" "}
               <span style={{ fontWeight: "bold" }}>
                 {isAuthenticated
-                  ? // ? calculateTotal(orders?.order_items)
-                    totalPriceOrder()
-                  : calculateTotal(guest.cart)}
+                  ? calculateTotal(orders?.order_items)
+                  : // orders?.price
+                    calculateTotal(guest.cart)}
                 &euro;
               </span>
             </Subheadline>
-            {isAuthenticated && user !== null && orders?.checkout_date === "" && (
-              <Button
-                to="/checkout"
-                component={Link}
-                color="secondary"
-                variant="contained"
-              >
-                Proceed to checkout
-              </Button>
-            )}
+            {isAuthenticated &&
+              user !== null &&
+              orders?.checkout_date === null && (
+                <Button
+                  to="/checkout"
+                  component={Link}
+                  color="secondary"
+                  variant="contained"
+                >
+                  Proceed to checkout
+                </Button>
+              )}
           </div>
         )}
       </ResponsiveContainer>
@@ -181,4 +180,6 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { getUserProfile })(Cart);
+export default connect(mapStateToProps, { getUserProfile, getCurrentProduct })(
+  Cart
+);

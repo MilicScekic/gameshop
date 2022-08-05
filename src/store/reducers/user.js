@@ -112,12 +112,12 @@ const userReducer = (state = initialState, { type, payload }) => {
         email: payload.email,
         firstName: payload.firstName,
         lastName: payload.lastName,
-        address: {
-          street: payload.street,
-          postalCode: payload.postalCode,
-          city: payload.city,
-        },
-        phone: payload.phone,
+        // address: {
+        //   street: payload.street,
+        //   postalCode: payload.postalCode,
+        //   city: payload.city,
+        // },
+        // phone: payload.phone,
       };
       return {
         ...state,
@@ -158,16 +158,16 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
     case USER_PRODUCT_QUANTITY:
-      const newCart = [...state.user.cart];
-      const desiredIndex = state.user.cart.findIndex(
+      const newCart = [...state.orders.order_items];
+      const desiredIndex = state.orders.order_items.findIndex(
         (prod) => prod.id === payload.id
       );
       newCart[desiredIndex] = { ...payload };
       return {
         ...state,
-        user: {
-          ...state.user,
-          cart: newCart,
+        orders: {
+          ...state.orders,
+          order_items: newCart,
         },
       };
     case CLEAN_USER:
