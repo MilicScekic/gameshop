@@ -76,21 +76,19 @@ const ProductCard = ({
 
         <div className={classes.flex}>
           <Typography variant="h5">{price.toLocaleString()} &euro;</Typography>
-          {/* {user !== null && isAuthenticated ? ( */}
-          <>
-            <div>{id}</div>
-            <IconButton
-              //? jer je product zapravo id proizvoda u korpi. A id je na stranici products id proizvoda
-              disabled={
-                orders.order_items &&
-                orders.order_items?.some((item) => item.product === id)
-              }
-              onClick={() => addToUserCart(id)}
-            >
-              <AddShoppingCartIcon />
-            </IconButton>
-
-            {/* <IconButton
+          {user !== null && isAuthenticated ? (
+            <>
+              <IconButton
+                //? jer je product zapravo id proizvoda u korpi. A id je na stranici products id proizvoda
+                disabled={
+                  orders?.order_items ??
+                  orders.order_items?.some((item) => item.product === id)
+                }
+                onClick={() => addToUserCart(id)}
+              >
+                <AddShoppingCartIcon />
+              </IconButton>
+              {/* <IconButton
                 disabled={
                   user.cart ? user.favorites.some((item) => item.id === id) : ""
                 }
@@ -98,17 +96,19 @@ const ProductCard = ({
               >
                 <FavoriteIcon />
               </IconButton> */}
-          </>
-          {/* ) : (
-            <IconButton
-              disabled={guest.cart.some((item) => item.id === id)}
-              onClick={() =>
-                addToGuestCart({ id, name, content, media, price })
-              }
-            >
-              <AddShoppingCartIcon />
-            </IconButton>
-          )} */}
+            </>
+          ) : (
+            <>
+              <IconButton
+                disabled={guest.cart.some((item) => item.id === id)}
+                onClick={() =>
+                  addToGuestCart({ id, name, content, media, price })
+                }
+              >
+                <AddShoppingCartIcon />
+              </IconButton>
+            </>
+          )}
         </div>
       </Paper>
     </Grid>
