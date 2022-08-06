@@ -5,6 +5,7 @@ import {
   GET_CURRENT_PRODUCT,
   CLEAR_CURRENT_PRODUCT,
   ADD_NEW_REVIEW,
+  ADD_NEW_COMMENT,
 } from "../actions/types";
 
 const initialState = {
@@ -51,6 +52,15 @@ const productsReducer = (state = initialState, { type, payload }) => {
         currentProduct: {
           ...state.currentProduct,
           reviews: payload,
+        },
+      };
+
+    case ADD_NEW_COMMENT:
+      return {
+        ...state,
+        currentProduct: {
+          ...state.currentProduct,
+          comments: payload,
         },
       };
     default:
