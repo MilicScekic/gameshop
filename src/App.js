@@ -38,7 +38,7 @@ const theme = createTheme({
       main: teal[900],
     },
     red: {
-      main: red[900],
+      main: red[700],
     },
   },
 });
@@ -84,7 +84,7 @@ function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
               <Route exact path="/register" component={Register} />
 
               {/* <PrivateRoute exact path="/admin" component={Dashboard} /> */}
-              <PrivateRoute exact path="/favorites" component={Favorites} />
+              <PrivateRoute exact path="/wishlist" component={Favorites} />
 
               <Route exact path="/products" component={Products} />
               <Route exact path="/products/:id" component={Product} />

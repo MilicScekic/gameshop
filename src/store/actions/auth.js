@@ -8,7 +8,12 @@ import {
   NEW_ACCESS_TOKEN,
 } from "./types";
 import axios from "axios";
-import { openOrder, getOrderItems, getUserProfile } from "./user";
+import {
+  openOrder,
+  getOrderItems,
+  getUserProfile,
+  getWishlistItems,
+} from "./user";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 
 export const registerUser = (formData) => async (dispatch) => {
@@ -80,6 +85,7 @@ export const autoSigninUser = (token) => async (dispatch) => {
     dispatch(getUserProfile(token)); //? Pokupi podatke prema tokenu i popuni user objekat
     openOrder(res.data.access); //? Otvori order. Nisam pokretao preko dispatcha za svaki slucaj. Nekad radi, nekad ne
     dispatch(getOrderItems()); //? Napuni order_items niz
+    dispatch(getWishlistItems()); //? Napuni wishlist niz
     dispatch(setAlert("Logged in successfully", "success"));
   } catch ({ response }) {
     dispatch({ type: AUTO_SIGNIN_FAIL });

@@ -4,7 +4,7 @@ import {
   ADD_TO_USER_CART,
   CLEAR_PROFILE,
   ADD_TO_USER_FAVS,
-  REMOVE_FROM_USER_FAVS,
+  REMOVE_FROM_USER_WISHLIST,
   REMOVE_FROM_GUEST_CART,
   REMOVE_FROM_USER_CART,
   SAVE_GUEST_INFO,
@@ -17,11 +17,14 @@ import {
   USER_PURCHASE,
   GUEST_PURCHASE,
   GET_ORDERS,
+  GET_WISHLIST,
+  ADD_TO_USER_WISHLIST,
 } from "../actions/types";
 
 const initialState = {
   user: null,
   orders: null,
+  wishlist: null,
   guest: {
     cart: localStorage.getItem("cart")
       ? JSON.parse(localStorage.getItem("cart"))
@@ -48,6 +51,12 @@ const userReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         orders: payload,
+      };
+
+    case GET_WISHLIST:
+      return {
+        ...state,
+        wishlist: payload, //? moze i: [...state.products, ...payload]. Ali mora ici -> wishlist: []
       };
 
     case ADD_TO_GUEST_CART:
@@ -90,16 +99,15 @@ const userReducer = (state = initialState, { type, payload }) => {
           order_items: newUserOrders,
         },
       };
-    case ADD_TO_USER_FAVS:
+
+    case ADD_TO_USER_WISHLIST:
       return {
         ...state,
-        user: {
-          ...state.user,
-          favorites: payload,
-        },
+        wishlist: [...state.wishlist, { ...payload }],
       };
-    case REMOVE_FROM_USER_FAVS:
-      const newFavs = state.user.favorites.filter((fav) => fav.id !== payload);
+
+    case REMOVE_FROM_USER_WISHLIST:
+      const newFavs = state.wishlist.filter((fav) => fav.id !== payload);
       return {
         ...state,
         user: {
@@ -175,6 +183,7 @@ const userReducer = (state = initialState, { type, payload }) => {
         ...state,
         user: null,
         orders: null,
+        wishlist: null,
         delpay: null,
       };
     case CLEAN_GUEST:

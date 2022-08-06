@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { removeFromUserFavorites } from "../store/actions/user";
+import { removeFromUserWishlist } from "../store/actions/user";
 import { ResponsiveContainer } from "../utils/Responsive";
 import { makeStyles } from "@mui/styles";
 import Paper from "@mui/material/Paper";
@@ -60,62 +60,65 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Favorites = ({ user: { favorites }, removeFromUserFavorites }) => {
+const Favorites = ({ wishlist, removeFromUserWishlist }) => {
   const classes = useStyles();
 
   return (
     <section style={{ background: "#f8f8f8", minHeight: "calc(100vh - 60px)" }}>
       <ResponsiveContainer>
         <div className={classes.centered}>
-          {favorites?.length > 0 ? (
+          {wishlist[0].products.length > 0 ? (
             <Fragment>
               <Headline className={classes.headline}>
-                Your favorite items ({favorites.length})
+                Your favorite items ({wishlist.length})
               </Headline>
-              {favorites.map(({ productId, name, imgSrc, price }) => (
-                <Paper key={productId} className={classes.paper}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={2} className={classes.gridItem}>
-                      <Link to={`/products/${productId}`}>
-                        <div className={classes.img}>
-                          <img
-                            className={classes.image}
-                            src={`/images/${imgSrc}`}
-                            alt=""
-                          />
-                        </div>
-                      </Link>
-                    </Grid>
-
-                    <Grid item xs={12} md={8} className={classes.gridItem}>
-                      <div>
-                        <Link
-                          to={`/products/${productId}`}
-                          className={classes.link}
-                        >
-                          <Subheadline variant="h5">{name}</Subheadline>
+              {wishlist[0].products.map(
+                ({ id, name, price, discount, media }) => (
+                  <Paper key={id} className={classes.paper}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={2} className={classes.gridItem}>
+                        <Link to={`/products/${id}`}>
+                          <div className={classes.img}>
+                            <img
+                              className={classes.image}
+                              src={
+                                media.length > 0 &&
+                                media[0].media !== "" &&
+                                media[0].media
+                              }
+                              alt=""
+                            />
+                          </div>
                         </Link>
-                        <Typography
-                          variant="body1"
-                          className={classes.priceTag}
-                        >
-                          {price.toLocaleString()}
-                        </Typography>
-                      </div>
-                    </Grid>
+                      </Grid>
 
-                    <Grid item xs={12} md={2} className={classes.gridItem}>
-                      <Tooltip placement="top" title="Delete from favorites">
-                        <IconButton
-                          onClick={() => removeFromUserFavorites(productId)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Tooltip>
+                      <Grid item xs={12} md={8} className={classes.gridItem}>
+                        <div>
+                          <Link to={`/products/${id}`} className={classes.link}>
+                            <Subheadline variant="h5">{name}</Subheadline>
+                          </Link>
+                          <Typography
+                            variant="body1"
+                            className={classes.priceTag}
+                          >
+                            {parseFloat(price).toLocaleString()} &euro;
+                          </Typography>
+                        </div>
+                      </Grid>
+
+                      <Grid item xs={12} md={2} className={classes.gridItem}>
+                        <Tooltip placement="top" title="Delete from favorites">
+                          <IconButton
+                            onClick={() => removeFromUserWishlist(id)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Paper>
-              ))}
+                  </Paper>
+                )
+              )}
             </Fragment>
           ) : (
             <Fragment>
@@ -131,6 +134,7 @@ const Favorites = ({ user: { favorites }, removeFromUserFavorites }) => {
 
 const mapStateToProps = (state) => ({
   user: state.user.user,
+  wishlist: state.user.wishlist,
 });
 
-export default connect(mapStateToProps, { removeFromUserFavorites })(Favorites);
+export default connect(mapStateToProps, { removeFromUserWishlist })(Favorites);

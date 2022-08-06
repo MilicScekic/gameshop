@@ -4,7 +4,7 @@ import {
   ADD_TO_USER_CART,
   CLEAR_PROFILE,
   ADD_TO_USER_FAVS,
-  REMOVE_FROM_USER_FAVS,
+  REMOVE_FROM_USER_WISHLIST,
   REMOVE_FROM_GUEST_CART,
   REMOVE_FROM_USER_CART,
   SAVE_GUEST_INFO,
@@ -14,10 +14,11 @@ import {
   USER_PRODUCT_QUANTITY,
   CLEAN_GUEST,
   USER_PURCHASE,
-  GUEST_PURCHASE,
   GET_PRODUCTS,
   STOP_PAGINATION,
   GET_ORDERS,
+  GET_WISHLIST,
+  ADD_TO_USER_WISHLIST,
 } from "./types";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 import axios from "axios";
@@ -92,6 +93,21 @@ export const getOrderItems = () => async (dispatch) => {
   }
 };
 
+export const getWishlistItems = () => async (dispatch) => {
+  try {
+    const res = await axios.get("https://gameshop-g5.com/wishlist/", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    });
+    console.log(res.data); // niz products puni u wishlist
+    dispatch({ type: GET_WISHLIST, payload: res.data });
+  } catch ({ response }) {
+    // dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert("Error", "error"));
+  }
+};
+
 export const addToGuestCart = (product) => async (dispatch) => {
   try {
     dispatch({ type: ADD_TO_GUEST_CART, payload: product });
@@ -139,6 +155,53 @@ export const addToUserCart = (id) => async (dispatch) => {
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
     dispatch(setAlert("Not added", "error"));
+  }
+};
+
+export const addToUserWishlist = (productId) => async (dispatch) => {
+  try {
+    const res = await axios.post(
+      "https://gameshop-g5.com/wishlist/",
+      { products: [productId] },
+      {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+
+    console.log(res.data);
+
+    dispatch({ type: ADD_TO_USER_WISHLIST, payload: res.data });
+    dispatch(setAlert("Product added to wishlist", "success"));
+  } catch ({ response }) {
+    dispatch(setAlert("Not added", "error"));
+  }
+};
+
+export const removeFromUserWishlist = (id) => async (dispatch) => {
+  try {
+    const wishlist = await axios.get(`https://gameshop-g5.com/wishlist/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    });
+
+    // console.log(wishlist);
+
+    await axios.delete(
+      `https://gameshop-g5.com/wishlist/${wishlist.data[0].id}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+    dispatch({ type: REMOVE_FROM_USER_WISHLIST, payload: id });
+    dispatch(setAlert("Removed from favorites", "success"));
+  } catch ({ response }) {
+    dispatch(setAlert(response.data.message, "error"));
   }
 };
 
@@ -209,19 +272,9 @@ export const removeFromUserCart = (id) => async (dispatch) => {
 export const addToUserFavorites = (id) => async (dispatch) => {
   try {
     const res = await axios.post(`/api/me/fav/${id}`);
-    dispatch({ type: ADD_TO_USER_FAVS, payload: res.data.favorites });
+    dispatch({ type: ADD_TO_USER_FAVS, payload: res.data });
 
     dispatch(setAlert("Added to favorites", "success"));
-  } catch ({ response }) {
-    dispatch(setAlert(response.data.message, "error"));
-  }
-};
-
-export const removeFromUserFavorites = (id) => async (dispatch) => {
-  try {
-    await axios.delete(`/api/me/fav/${id}`);
-    dispatch({ type: REMOVE_FROM_USER_FAVS, payload: id });
-    dispatch(setAlert("Removed from favorites", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message, "error"));
   }
