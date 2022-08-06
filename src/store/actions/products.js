@@ -5,10 +5,10 @@ import {
   GET_CURRENT_PRODUCT,
   CLEAR_CURRENT_PRODUCT,
   ADD_NEW_REVIEW,
+  ADD_NEW_COMMENT,
 } from "./types";
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
-import { cors } from "../reducers/auth";
 
 export const clearProducts = () => (dispatch) => {
   dispatch({ type: CLEAR_PRODUCTS });
@@ -45,12 +45,30 @@ export const clearCurrentProduct = () => (dispatch) => {
   dispatch({ type: CLEAR_CURRENT_PRODUCT });
 };
 
-export const postNewReview = (formData, productId) => async (dispatch) => {
+export const postNewComment = (formData, productId) => async (dispatch) => {
   try {
-    const res = await axios.post(`/api/products/${productId}/review`, formData);
-    dispatch({ type: ADD_NEW_REVIEW, payload: res.data.reviews });
-    dispatch(setAlert("Review posted", "success"));
+    const res = await axios.post(
+      `https://gameshop-g5.com/products/${productId}/comments/`,
+      formData, //? moze i na drugi nacin. Tako sto cu u funkciji handleSubmit: postNewComment({ content: comment }, currentProduct.id)
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+    dispatch({ type: ADD_NEW_COMMENT, payload: res.data });
+    dispatch(setAlert("Comment posted", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message && response.data.message, "error"));
   }
 };
+
+// export const postNewReview = (formData, productId) => async (dispatch) => {
+//   try {
+//     const res = await axios.post(`/api/products/${productId}/review`, formData);
+//     dispatch({ type: ADD_NEW_REVIEW, payload: res.data.reviews });
+//     dispatch(setAlert("Review posted", "success"));
+//   } catch ({ response }) {
+//     dispatch(setAlert(response.data.message && response.data.message, "error"));
+//   }
+// };

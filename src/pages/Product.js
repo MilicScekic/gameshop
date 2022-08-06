@@ -8,7 +8,7 @@ import {
 import {
   addToUserCart,
   addToGuestCart,
-  addToUserFavorites,
+  addToUserWishlist,
 } from "../store/actions/user";
 import Spinner from "../components/Spinner";
 import { makeStyles } from "@mui/styles";
@@ -19,6 +19,7 @@ import Divider from "@mui/material/Divider";
 import Rating from "@mui/material/Rating";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import Comments from "../components/Comments/Comments";
 
 const useStyles = makeStyles((theme) => ({
   centered: {
@@ -46,13 +47,15 @@ const Product = ({
   match,
   user,
   guest,
+  orders,
+  wishlist,
   isAuthenticated,
   getCurrentProduct,
   clearCurrentProduct,
   currentProduct,
   addToUserCart,
   addToGuestCart,
-  addToUserFavorites,
+  addToUserWishlist,
 }) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -81,9 +84,9 @@ const Product = ({
               <Link to={`/products/${match.params.id}/reviews`}>
                 <Rating value={currentProduct.review_score} readOnly />
               </Link>
-              {/* <Typography variant="body2">
-                {currentProduct.reviews.length} reviews
-              </Typography> */}
+              <Typography variant="body2">
+                {currentProduct.review_score.length} reviews
+              </Typography>
             </Fragment>
           ) : (
             <Fragment>
@@ -95,7 +98,7 @@ const Product = ({
           )}
           <img
             src={
-              currentProduct.media && currentProduct.media.map((m) => m.media)
+              currentProduct.media.length !== 0 && currentProduct.media[0].media
             }
             alt=""
             className={classes.img}
@@ -110,17 +113,17 @@ const Product = ({
           <div>
             {isAuthenticated && (
               <IconButton
-                disabled={user.favorites?.some(
-                  (item) => item.id === match.params.id
-                )}
-                onClick={() => addToUserFavorites(match.params.id)}
+                disabled={wishlist?.some((item) => item.id === match.params.id)}
+                onClick={() => addToUserWishlist(match.params.id)}
               >
                 <FavoriteIcon />
               </IconButton>
             )}
-            {user && isAuthenticated && user.cart ? (
+            {user && isAuthenticated ? (
               <IconButton
-                disabled={user.cart.some((item) => item.id === match.params.id)}
+                disabled={orders.order_items?.some(
+                  (item) => item.product === match.params.id
+                )}
                 onClick={() => addToUserCart(match.params.id)}
               >
                 <AddShoppingCartIcon />
@@ -143,7 +146,7 @@ const Product = ({
           <Typography variant="h5">Content</Typography>
           <Typography variant="body1">{currentProduct.content}</Typography>
         </LineLength>
-
+        <Divider style={{ marginTop: 50 }} />
         {/* <LineLength className={classes.description}>
           <Typography variant="h5">Specs</Typography>
           {Object.keys(currentProduct.specs).map((spec) => (
@@ -152,6 +155,10 @@ const Product = ({
             </Typography>
           ))}
         </LineLength> */}
+
+        <LineLength>
+          <Comments />
+        </LineLength>
       </ResponsiveContainer>
     </section>
   );
@@ -161,6 +168,8 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   currentProduct: state.products.currentProduct,
   user: state.user.user,
+  wishlist: state.user.wishlist,
+  orders: state.user.orders,
   guest: state.user.guest,
 });
 
@@ -169,5 +178,5 @@ export default connect(mapStateToProps, {
   clearCurrentProduct,
   addToUserCart,
   addToGuestCart,
-  addToUserFavorites,
+  addToUserWishlist,
 })(Product);
