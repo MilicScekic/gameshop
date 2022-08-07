@@ -25,6 +25,7 @@ import Games from "./pages/Games";
 import Sidebar from "./layouts/Sidebar";
 import Orders from "./pages/Orders";
 import Checkout from "./pages/Checkout";
+import { getCategories, clearCategories } from "./store/actions/products";
 
 const theme = createTheme({
   palette: {
@@ -43,7 +44,13 @@ const theme = createTheme({
   },
 });
 
-function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
+function App({
+  autoSigninUser,
+  logoutAfterSession,
+  refreshAccessToken,
+  getCategories,
+  clearCategories,
+}) {
   //* Ovo je ako se osvjezi stranica, da odma prijavi korisnika, da ne ceka 5 minuta da to uradi useEffect dolje pri pri rifresu tokena
   useEffect(() => {
     localStorage.access && autoSigninUser(localStorage.access);
@@ -59,6 +66,17 @@ function App({ autoSigninUser, logoutAfterSession, refreshAccessToken }) {
         ? refreshAccessToken(localStorage.refresh)
         : delete localStorage.refresh && delete localStorage.access;
     }, 5 * 60 * 1000);
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      getCategories(); // popunjava niz categories u reducer
+    }, 200);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearCategories(); //prazni ga nakon 200ms
+    };
   }, []);
 
   return (
@@ -101,4 +119,6 @@ export default connect(null, {
   autoSigninUser,
   logoutAfterSession,
   refreshAccessToken,
+  getCategories,
+  clearCategories,
 })(App);

@@ -15,11 +15,14 @@ import PhoneTwoToneIcon from "@mui/icons-material/PhoneTwoTone";
 import ShoppingCartTwoToneIcon from "@mui/icons-material/ShoppingCartTwoTone";
 import PersonTwoToneIcon from "@mui/icons-material/PersonTwoTone";
 import GamepadTwoToneIcon from "@mui/icons-material/GamepadTwoTone";
-import ComputerTwoToneIcon from "@mui/icons-material/ComputerTwoTone";
 import HeadsetTwoToneIcon from "@mui/icons-material/HeadsetTwoTone";
 import SportsEsportsTwoToneIcon from "@mui/icons-material/SportsEsportsTwoTone";
 import NightlifeTwoToneIcon from "@mui/icons-material/NightlifeTwoTone";
-import React, { useState, useEffect } from "react";
+import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
+import PhoneAndroidTwoToneIcon from "@mui/icons-material/PhoneAndroidTwoTone";
+import MemoryTwoToneIcon from "@mui/icons-material/MemoryTwoTone";
+import ExtensionTwoToneIcon from "@mui/icons-material/ExtensionTwoTone";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import KeyboardArrowDownTwoToneIcon from "@mui/icons-material/KeyboardArrowDownTwoTone";
@@ -30,9 +33,20 @@ import { logout } from "../store/actions/auth";
 
 const loggedInMenu = ["Dashboard", "Profile"];
 
-function Header({ isAuthenticated, user, guest, orders, wishlist, logout }) {
+function Header({
+  isAuthenticated,
+  user,
+  guest,
+  orders,
+  wishlist,
+  categories,
+  logout,
+}) {
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [dropdownCategories, setDropdownCategories] = useState(null);
+  const [isDropdown, setIsDropdown] = useState(false);
+  const dropdownRef = useRef();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -51,12 +65,32 @@ function Header({ isAuthenticated, user, guest, orders, wishlist, logout }) {
 
   const [open, setOpen] = useState(false);
 
+  // closes the dropdown menu if clicked outside
+  useEffect(() => {
+    const handler = (event) => {
+      if (!dropdownRef.current.contains(event.target)) {
+        setIsDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
+
+  // opens dropdown menu for a specified parent category
+  const handleDropdown = (cat) => {
+    const cats = categories.filter((category) => {
+      if (category.parent !== null) return category.parent.name === cat;
+      else return false;
+    });
+    setDropdownCategories(cats);
+    setIsDropdown(true);
+  };
+
   const handleOpen = () => {
     setOpen(!open);
   };
-
-  //? Vise necu koristiti ovu korpu
-  // const { cart } = useContext(CartContext);
 
   //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
   //* Ovo mora biti najvisi nivo
@@ -286,242 +320,245 @@ function Header({ isAuthenticated, user, guest, orders, wishlist, logout }) {
         </Container>
       </AppBar>
 
-      {/*//! Bottom bar  */}
-      <AppBar
-        className="bottomBar"
-        position="static"
-        style={{ backgroundColor: "black" }}
-      >
-        <Container maxWidth="xl">
-          <Grid
-            container
-            spacing={2}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              padding: 0,
-            }}
-          >
-            <Grid
-              item
-              xs={4}
-              sx={{ display: "flex", alignItems: "center", padding: 0 }}
+      <div className="bottomAppBar">
+        <div className="searchItem">
+          <button className="searchBtn">
+            <SearchTwoToneIcon />
+          </button>
+          <input
+            type="text"
+            className="searchBar"
+            placeholder="Search..."
+          ></input>
+        </div>
+        <div className="scrollItem">
+          <div className="categories">
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
             >
-              <Box sx={{ alignItems: "center" }}>
+              <Link
+                to={"/products?category=games&sortBy=price&maxPrice=1000"}
+                style={{ textDecoration: "none" }}
+              >
                 <Button
-                  variant="contained"
-                  onClick={handleOpen}
+                  onClick={() => handleDropdown("Games")}
                   sx={{
-                    width: "300px",
-                    my: 2,
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <SportsEsportsTwoToneIcon />
+                  Games
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link
+                to={"/products?category=consoles&sortBy=price&maxPrice=1000"}
+                style={{ textDecoration: "none" }}
+              >
+                <Button
+                  onClick={() => handleDropdown("Consoles")}
+                  sx={{
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <GamepadTwoToneIcon />
+                  Consoles
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link
+                to={"/products?category=components&sortBy=price&maxPrice=1000"}
+                style={{ textDecoration: "none" }}
+              >
+                <Button
+                  onClick={() => handleDropdown("Components")}
+                  sx={{
                     mr: 5,
                     color: "black",
-                    display: "block",
                     background: "white",
-                    borderRadius: "0.2rem",
+                    borderRadius: "1.3rem",
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span style={{ fontWeight: "bold" }}>Categories</span>
-                    <KeyboardArrowDownTwoToneIcon
-                      sx={{
-                        color: "black",
-                      }}
-                    />
-                  </div>
+                  <MemoryTwoToneIcon />
+                  Components
                 </Button>
-                <Box>
-                  {open && (
-                    <ul>
-                      <li>Kat 1</li>
-                      <li>Kat 1</li>
-                      <li>Kat 1</li>
-                      <li>Kat 1</li>
-                      <li>Kat 1</li>
-                      <li>Kat 1</li>
-                    </ul>
-                  )}
-                </Box>
-              </Box>
-            </Grid>
-
-            <Grid item xs={8}>
-              <Toolbar disableGutters>
-                <Box
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link
+                to={"/products?category=perifery&sortBy=price&maxPrice=1000"}
+                style={{ textDecoration: "none" }}
+              >
+                <Button
+                  onClick={() => handleDropdown("Perifery")}
                   sx={{
-                    flexGrow: 1,
-                    justifyContent: "center",
-                    display: { xs: "none", md: "flex" },
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
                   }}
                 >
-                  {/* {settings.map((page) => (
+                  <HeadsetTwoToneIcon />
+                  Perifery
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link
+                to={"/products?category=boardgames&sortBy=price&maxPrice=1000"}
+                style={{ textDecoration: "none" }}
+              >
+                <Button
+                  onClick={() => handleDropdown("Board games")}
+                  sx={{
+                    mr: 5,
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <ExtensionTwoToneIcon />
+                  Board games
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link
+                to={"/products?category=phones&sortBy=price&maxPrice=1000"}
+                style={{ textDecoration: "none" }}
+              >
+                <Button
+                  onClick={() => handleDropdown("Phones")}
+                  sx={{
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <PhoneAndroidTwoToneIcon />
+                  Phones
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link
+                to={"/products?category=lifestyle&sortBy=price&maxPrice=1000"}
+                style={{ textDecoration: "none" }}
+              >
+                <Button
+                  onClick={() => handleDropdown("Lifestyle")}
+                  sx={{
+                    mr: 5,
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <NightlifeTwoToneIcon />
+                  Lifestyle
+                </Button>
+              </Link>
+            </Box>
+          </div>
+        </div>
+        <div
+          ref={dropdownRef}
+          className={
+            "dropdownMenu scale-in-ver-top" +
+            (isDropdown ? " displayBlock" : "")
+          }
+        >
+          {dropdownCategories ? (
+            <h6>{dropdownCategories[0].parent.name}</h6>
+          ) : (
+            <h6></h6>
+          )}
+          <ul>
+            {dropdownCategories ? (
+              dropdownCategories.map((cat) => {
+                return (
+                  <li>
                     <Link
-                      to={page}
-                      style={{ color: "white", textDecoration: "none" }}
-                      key={page}
+                      to={`/products?category=${cat.name}&sortBy=price&maxPrice=1000`}
+                      style={{ textDecoration: "none" }}
                     >
-                      <Button
-                        onClick={handleCloseNavMenu}
-                        sx={{
-                          my: 2,
-                          mr: 5,
-                          color: "white",
-                          display: "block",
-                          background: "#333",
-                        }}
-                      >
-                        {page}
-                      </Button>
+                      {cat.name}
                     </Link>
-                  ))} */}
-                  <Link
-                    to="/products"
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    <Button
-                      sx={{
-                        my: 2,
-                        mr: 5,
-                        color: "black",
-                        display: "block",
-                        background: "white",
-                        borderRadius: "1.3rem",
-                      }}
-                    >
-                      <div style={{ display: "flex" }}>
-                        <ComputerTwoToneIcon
-                          sx={{
-                            color: "black",
-                            marginRight: "5px",
-                          }}
-                        />
-                        Products
-                      </div>
-                    </Button>
-                  </Link>
-
-                  <Link
-                    to={
-                      "/products?category=consoles&sortBy=price&maxPrice=1000"
-                    }
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Button
-                      onClick={handleCloseNavMenu}
-                      sx={{
-                        my: 2,
-                        mr: 5,
-                        color: "black",
-                        display: "block",
-                        background: "white",
-                        borderRadius: "1.3rem",
-                      }}
-                    >
-                      <div style={{ display: "flex" }}>
-                        <GamepadTwoToneIcon
-                          sx={{
-                            color: "black",
-                            marginRight: "5px",
-                          }}
-                        />
-                        Consoles
-                      </div>
-                    </Button>
-                  </Link>
-
-                  <Link
-                    to={
-                      "/products?category=headphones&sortBy=price&maxPrice=1000"
-                    }
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Button
-                      onClick={handleCloseNavMenu}
-                      sx={{
-                        my: 2,
-                        mr: 5,
-                        color: "black",
-                        display: "block",
-                        background: "white",
-                        borderRadius: "1.3rem",
-                      }}
-                    >
-                      <div style={{ display: "flex" }}>
-                        <HeadsetTwoToneIcon
-                          sx={{
-                            color: "black",
-                            marginRight: "5px",
-                          }}
-                        />
-                        Headphones
-                      </div>
-                    </Button>
-                  </Link>
-
-                  <Link
-                    to={"/products?category=games&sortBy=price&maxPrice=1000"}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Button
-                      sx={{
-                        my: 2,
-                        mr: 5,
-                        color: "black",
-                        display: "block",
-                        background: "white",
-                        borderRadius: "1.3rem",
-                      }}
-                    >
-                      <div style={{ display: "flex" }}>
-                        <SportsEsportsTwoToneIcon
-                          sx={{
-                            color: "black",
-                            marginRight: "5px",
-                          }}
-                        />
-                        Games
-                      </div>
-                    </Button>
-                  </Link>
-
-                  <Link
-                    to={
-                      "/products?category=lifestyle&sortBy=price&maxPrice=1000"
-                    }
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Button
-                      sx={{
-                        my: 2,
-                        mr: 5,
-                        color: "black",
-                        display: "block",
-                        background: "white",
-                        borderRadius: "1.3rem",
-                      }}
-                    >
-                      <div style={{ display: "flex" }}>
-                        <NightlifeTwoToneIcon
-                          sx={{
-                            color: "black",
-                            marginRight: "5px",
-                          }}
-                        />
-                        Lifestyle
-                      </div>
-                    </Button>
-                  </Link>
-                </Box>
-              </Toolbar>
-            </Grid>
-          </Grid>
-        </Container>
-      </AppBar>
+                  </li>
+                );
+              })
+            ) : (
+              <li>Category not selected</li>
+            )}
+          </ul>
+        </div>
+      </div>
     </>
   );
 }
@@ -530,6 +567,7 @@ const mapStateToProps = (state) => ({
   user: state.user.user,
   orders: state.user.orders,
   wishlist: state.user.wishlist,
+  categories: state.products.categories,
   guest: state.user.guest,
   isAuthenticated: state.auth.isAuthenticated,
 });
