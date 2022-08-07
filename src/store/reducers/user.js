@@ -16,7 +16,7 @@ import {
   CLEAN_GUEST,
   USER_PURCHASE,
   GUEST_PURCHASE,
-  GET_ORDERS,
+  GET_ORDER_ITEMS,
   GET_ALL_ORDERS,
   GET_WISHLIST,
   ADD_TO_USER_WISHLIST,
@@ -52,7 +52,7 @@ const userReducer = (state = initialState, { type, payload }) => {
         user: null,
       };
 
-    case GET_ORDERS:
+    case GET_ORDER_ITEMS:
       return {
         ...state,
         orders: payload,
@@ -67,7 +67,7 @@ const userReducer = (state = initialState, { type, payload }) => {
     case GET_ALL_ORDERS:
       return {
         ...state,
-        all_orders: [...state.all_orders, ...payload],
+        all_orders: [...state.all_orders, { ...payload }],
       };
 
     case CLEAR_ALL_ORDERS:
@@ -199,17 +199,14 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
     case USER_PRODUCT_QUANTITY:
-      const newCart = [...state.orders.order_items];
-      const desiredIndex = state.orders.order_items.findIndex(
-        (prod) => prod.id === payload.id
+      const newCart = [...state.orders];
+      const desiredIndex = state.orders.findIndex(
+        (item) => item.id === payload.id
       );
       newCart[desiredIndex] = { ...payload };
       return {
         ...state,
-        orders: {
-          ...state.orders,
-          order_items: newCart,
-        },
+        orders: newCart,
       };
     case CLEAN_USER:
       return {

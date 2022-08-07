@@ -61,8 +61,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CartItem = ({
-  //* ID proizvoda: {product}, Order Item ID: {id}
-  item: { id, product, quantity, price, discount },
+  item: { id, order, quantity, price, discount },
   removeFromGuestCart,
   removeFromUserCart,
   handleGuestQuantity,
@@ -119,7 +118,7 @@ const CartItem = ({
                   label="Quantity"
                   onChange={(e) => {
                     isAuthenticated && user !== null
-                      ? handleUserQuantity(id, product, e.target.value)
+                      ? handleUserQuantity(order, id, e.target.value)
                       : handleGuestQuantity(e.target.value);
                   }}
                 >

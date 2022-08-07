@@ -14,7 +14,7 @@ import {
   USER_PRODUCT_QUANTITY,
   CLEAN_GUEST,
   USER_PURCHASE,
-  GET_ORDERS,
+  GET_ORDER_ITEMS,
   CLEAR_ORDERS,
   GET_ALL_ORDERS, //Za admina svi orderi
   CLEAR_ALL_ORDERS,
@@ -89,6 +89,7 @@ export const getOrders = () => async (dispatch) => {
         Authorization: `Bearer ${localStorage.getItem("access")}`,
       },
     });
+    console.log("Get all orders");
     console.log(res.data);
     dispatch({ type: GET_ALL_ORDERS, payload: res.data });
     dispatch(hideSpinner());
@@ -115,8 +116,18 @@ export const getOrderItems = () => async (dispatch) => {
       }
     );
 
-    console.log(order.data);
-    dispatch({ type: GET_ORDERS, payload: order.data });
+    const res = await axios.get(
+      `https://gameshop-g5.com/orders/${order.data.id}/order_items/`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+
+    console.log("Order items");
+    console.log(res.data);
+    dispatch({ type: GET_ORDER_ITEMS, payload: res.data });
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message, "error"));
     dispatch(setAlert("Error", "error"));
@@ -190,13 +201,6 @@ export const addToUserCart = (productId) => async (dispatch) => {
         },
       }
     );
-
-    //? Ukoliko bude potrebe
-    // const addedProduct = await axios.get(
-    //   `https://gameshop-g5.com/products/${id}/`
-    // );
-
-    // const res = { ...orderItem.data, ...addedProduct.data };
 
     dispatch({ type: ADD_TO_USER_CART, payload: orderItem.data });
     dispatch(setAlert("Product added to cart", "success"));
@@ -342,28 +346,17 @@ export const handleGuestQuantity = (type, prodId) => (dispatch) => {
 };
 
 export const handleUserQuantity =
-  (orderItemId, prodId, qty) => async (dispatch) => {
+  (orderId, orderItemId, qty) => async (dispatch) => {
     try {
-      const order = await axios.post(
-        "https://gameshop-g5.com/orders/",
-        {},
+      const res = await axios.patch(
+        `https://gameshop-g5.com/orders/${orderId}/order_items/${orderItemId}/`,
+        { quantity: qty },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access")}`,
           },
         }
       );
-
-      const res = await axios.put(
-        `https://gameshop-g5.com/orders/${order.data.id}/order_items/${orderItemId}/`,
-        { product: prodId, quantity: qty },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`,
-          },
-        }
-      );
-
       dispatch({ type: USER_PRODUCT_QUANTITY, payload: res.data });
     } catch ({ response }) {
       dispatch(setAlert(response.data.message, "error"));

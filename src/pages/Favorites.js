@@ -70,7 +70,7 @@ const Favorites = ({ wishlist, removeFromUserWishlist }) => {
           {wishlist[0].products.length > 0 ? (
             <Fragment>
               <Headline className={classes.headline}>
-                Your favorite items ({wishlist.length})
+                Your favorite items ({wishlist[0].length})
               </Headline>
               {wishlist[0].products.map(
                 ({ id, name, price, discount, media }) => (

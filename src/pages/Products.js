@@ -14,13 +14,13 @@ const Products = ({
   showSpinner,
 }) => {
   const [page, setPage] = useState(1);
-  const lastLocation = useLastLocation();
+  // const lastLocation = useLastLocation();
 
   useEffect(() => {
     // in case user was searching desktops and clicked 'products' in header again
     // if (lastLocation && lastLocation.pathname === "/products") clearProducts();
 
-    showSpinner();
+    // showSpinner();
 
     const targetURL = `https://gameshop-g5.com/products/?format=json`;
 
@@ -29,8 +29,8 @@ const Products = ({
     }, 200);
 
     return () => {
-      clearTimeout(timeoutId);
       clearProducts(); // isprazni niz kad se ode sa stranice Products
+      clearTimeout(timeoutId);
     };
   }, []);
 
