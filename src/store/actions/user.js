@@ -117,7 +117,7 @@ export const addToGuestCart = (product) => async (dispatch) => {
   }
 };
 
-export const addToUserCart = (id) => async (dispatch) => {
+export const addToUserCart = (productId) => async (dispatch) => {
   try {
     //! Neprakticno
     const order = await axios.post(
@@ -133,7 +133,7 @@ export const addToUserCart = (id) => async (dispatch) => {
     const orderItem = await axios.post(
       `https://gameshop-g5.com/orders/${order.data.id}/order_items/`,
       {
-        product: id,
+        product: productId,
         quantity: 1,
       },
       {

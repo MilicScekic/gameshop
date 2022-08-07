@@ -122,9 +122,9 @@ const Product = ({
             {user && isAuthenticated ? (
               <IconButton
                 disabled={orders.order_items?.some(
-                  (item) => item.product === match.params.id
+                  (item) => item.product === currentProduct.id
                 )}
-                onClick={() => addToUserCart(match.params.id)}
+                onClick={() => addToUserCart(match.params.id)} //? moze i currentProduct.id
               >
                 <AddShoppingCartIcon />
               </IconButton>
