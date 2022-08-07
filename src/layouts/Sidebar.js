@@ -28,9 +28,9 @@ export default function Sidebar({ children }) {
       path: `${url}/dashboard`,
     },
     {
-      name: "Games",
+      name: "Products",
       icon: <GamesIcon />,
-      path: `${url}/games`,
+      path: `${url}/products`,
     },
     {
       name: "Orders",

@@ -17,13 +17,18 @@ import {
   USER_PURCHASE,
   GUEST_PURCHASE,
   GET_ORDERS,
+  GET_ALL_ORDERS,
   GET_WISHLIST,
   ADD_TO_USER_WISHLIST,
+  CLEAR_ALL_ORDERS,
+  CLEAR_ORDERS,
+  REMOVE_ORDER,
 } from "../actions/types";
 
 const initialState = {
   user: null,
   orders: null,
+  all_orders: [],
   wishlist: null,
   guest: {
     cart: localStorage.getItem("cart")
@@ -53,10 +58,28 @@ const userReducer = (state = initialState, { type, payload }) => {
         orders: payload,
       };
 
+    case CLEAR_ORDERS:
+      return {
+        ...state,
+        orders: null,
+      };
+
+    case GET_ALL_ORDERS:
+      return {
+        ...state,
+        all_orders: [...state.all_orders, ...payload],
+      };
+
+    case CLEAR_ALL_ORDERS:
+      return {
+        ...state,
+        all_orders: [],
+      };
+
     case GET_WISHLIST:
       return {
         ...state,
-        wishlist: payload, //? moze i: [...state.products, ...payload]. Ali mora ici -> wishlist: []
+        wishlist: payload, //? moze i: [...state.wishlist, ...payload]. Ali mora ici -> wishlist: []
       };
 
     case ADD_TO_GUEST_CART:
@@ -68,6 +91,7 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
 
+    //! Ovo je zapravo dodaj u order
     case ADD_TO_USER_CART:
       return {
         ...state,
@@ -75,6 +99,15 @@ const userReducer = (state = initialState, { type, payload }) => {
           ...state.orders,
           order_items: [...state.orders.order_items, { ...payload }],
         },
+      };
+
+    case REMOVE_ORDER:
+      const newAllOrders = state.all_orders.filter(
+        (order) => order.id !== payload
+      );
+      return {
+        ...state,
+        all_orders: { ...newAllOrders },
       };
 
     case REMOVE_FROM_GUEST_CART:
@@ -184,6 +217,7 @@ const userReducer = (state = initialState, { type, payload }) => {
         user: null,
         orders: null,
         wishlist: null,
+        all_orders: null,
         delpay: null,
       };
     case CLEAN_GUEST:

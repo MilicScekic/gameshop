@@ -14,11 +14,13 @@ import {
   USER_PRODUCT_QUANTITY,
   CLEAN_GUEST,
   USER_PURCHASE,
-  GET_PRODUCTS,
-  STOP_PAGINATION,
   GET_ORDERS,
+  CLEAR_ORDERS,
+  GET_ALL_ORDERS, //Za admina svi orderi
+  CLEAR_ALL_ORDERS,
   GET_WISHLIST,
   ADD_TO_USER_WISHLIST,
+  REMOVE_ORDER,
 } from "./types";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 import axios from "axios";
@@ -67,15 +69,20 @@ export const openOrder = () => async (dispatch) => {
         },
       }
     );
-    dispatch(setAlert("Order opened!", "success"));
+    // dispatch(setAlert("Order opened!", "success"));
   } catch ({ response }) {
-    dispatch(setAlert("Order is not opened!", "warning"));
+    // dispatch(setAlert("Order is not opened!", "warning"));
     // dispatch(setAlert(response.detail, "warning"));
   }
 };
 
+export const clearOrders = () => async (dispatch) => {
+  dispatch({ type: CLEAR_ALL_ORDERS });
+};
+
 //* Vraca sve ordere (admin). A za obicnog korisnika vraca samo njegove ordere. Popunjava niz takodje
 export const getOrders = () => async (dispatch) => {
+  dispatch(showSpinner());
   try {
     const res = await axios.get("https://gameshop-g5.com/orders/", {
       headers: {
@@ -83,11 +90,16 @@ export const getOrders = () => async (dispatch) => {
       },
     });
     console.log(res.data);
-    dispatch({ type: GET_ORDERS, payload: res.data });
+    dispatch({ type: GET_ALL_ORDERS, payload: res.data });
+    dispatch(hideSpinner());
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message, "error"));
     dispatch(setAlert("Error", "error"));
   }
+};
+
+export const clearOrderItems = () => async (dispatch) => {
+  dispatch({ type: CLEAR_ORDERS });
 };
 
 //? Popunice state orders sa objektom koji u sebi sadrzi order_items niz
@@ -108,6 +120,23 @@ export const getOrderItems = () => async (dispatch) => {
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message, "error"));
     dispatch(setAlert("Error", "error"));
+  }
+};
+
+export const removeOrder = (orderId) => async (dispatch) => {
+  dispatch(showSpinner());
+  try {
+    await axios.delete(`https://gameshop-g5.com/orders/${orderId}/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    });
+    dispatch({ type: REMOVE_ORDER, payload: orderId });
+    dispatch(setAlert("Removed order", "success"));
+    dispatch(hideSpinner());
+  } catch ({ response }) {
+    dispatch(hideSpinner());
+    dispatch(setAlert("Order is not removed. Try again!", "error"));
   }
 };
 

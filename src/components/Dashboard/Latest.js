@@ -1,5 +1,5 @@
-import { formatDistanceToNow, format } from "date-fns";
-import { enGB, sr, srLatn } from "date-fns/locale";
+import { formatDistanceToNow } from "date-fns";
+import { enGB } from "date-fns/locale";
 import {
   Box,
   Button,
@@ -13,11 +13,11 @@ import {
   ListItemText,
 } from "@mui/material";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { connect } from "react-redux";
-import SkeletonSpinner from "./SkeletonSpinner";
+import SkeletonSpinner from "../SkeletonSpinner";
+import { Link } from "react-router-dom";
 
-const Latest = ({ products, productCount, loading }) => {
+const Latest = ({ products, orders, productCount, loading }) => {
   return (
     <Card style={{ flex: 1 }}>
       <CardHeader
@@ -26,18 +26,23 @@ const Latest = ({ products, productCount, loading }) => {
       />
       <Divider />
       <List>
-        {products?.map((product, i) => (
+        {products?.slice(0, 5).map((product, i) => (
           <ListItem divider={i < products.length - 1} key={product.id}>
-            <ListItemAvatar>
-              <img
-                alt={product.name}
-                src={product.media.map((m) => m.media)}
-                style={{
-                  height: 48,
-                  width: 48,
-                }}
-              />
-            </ListItemAvatar>
+            {product.media.length > 0 ? (
+              <ListItemAvatar>
+                <img
+                  alt={product.name}
+                  src={product.media.map((m) => m.media)}
+                  style={{
+                    height: 48,
+                    width: 48,
+                  }}
+                />
+              </ListItemAvatar>
+            ) : (
+              <></>
+            )}
+
             <ListItemText
               primary={product.name}
               secondary={`Created ${formatDistanceToNow(
@@ -45,9 +50,9 @@ const Latest = ({ products, productCount, loading }) => {
                 { locale: enGB }
               )} ago`}
             />
-            <IconButton edge="end" size="small">
+            {/* <IconButton edge="end" size="small">
               <MoreVertIcon />
-            </IconButton>
+            </IconButton> */}
           </ListItem>
         ))}
       </List>
@@ -59,14 +64,16 @@ const Latest = ({ products, productCount, loading }) => {
           p: 2,
         }}
       >
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon />}
-          size="small"
-          variant="text"
-        >
-          View all
-        </Button>
+        <Link to="/admin/games" style={{ textDecoration: "none" }}>
+          <Button
+            color="primary"
+            endIcon={<ArrowRightIcon />}
+            size="small"
+            variant="text"
+          >
+            View all
+          </Button>
+        </Link>
       </Box>
 
       {loading && <SkeletonSpinner />}
