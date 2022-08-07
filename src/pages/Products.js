@@ -30,7 +30,7 @@ const Products = ({
 
     return () => {
       clearTimeout(timeoutId);
-      clearProducts();
+      clearProducts(); // isprazni niz kad se ode sa stranice Products
     };
   }, []);
 
