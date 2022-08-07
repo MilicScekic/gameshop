@@ -6,6 +6,8 @@ import {
   CLEAR_CURRENT_PRODUCT,
   ADD_NEW_REVIEW,
   ADD_NEW_COMMENT,
+  GET_CATEGORIES,
+  CLEAR_CATEGORIES,
 } from "./types";
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
@@ -61,6 +63,19 @@ export const postNewComment = (formData, productId) => async (dispatch) => {
   } catch ({ response }) {
     dispatch(setAlert(response.data.message && response.data.message, "error"));
   }
+};
+
+export const getCategories = () => async (dispatch) => {
+  try {
+    const res = await axios.get("https://gameshop-g5.com/categories/");
+    dispatch({ type: GET_CATEGORIES, payload: res.data });
+  } catch ({ response }) {
+    dispatch(setAlert("Error", "error"));
+  }
+};
+
+export const clearCategories = () => (dispatch) => {
+  dispatch({ type: CLEAR_CATEGORIES });
 };
 
 // export const postNewReview = (formData, productId) => async (dispatch) => {

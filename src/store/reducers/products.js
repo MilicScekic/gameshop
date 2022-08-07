@@ -6,11 +6,14 @@ import {
   CLEAR_CURRENT_PRODUCT,
   ADD_NEW_REVIEW,
   ADD_NEW_COMMENT,
+  GET_CATEGORIES,
+  CLEAR_CATEGORIES,
 } from "../actions/types";
 
 const initialState = {
   productCount: null,
   products: [],
+  categories: [],
   currentProduct: null,
   paginationable: true,
 };
@@ -63,6 +66,18 @@ const productsReducer = (state = initialState, { type, payload }) => {
           comments: payload,
         },
       };
+
+    case GET_CATEGORIES:
+      return {
+        ...state,
+        categories: [...state.categories, ...payload],
+      };
+    case CLEAR_CATEGORIES:
+      return {
+        ...state,
+        categories: [],
+      };
+
     default:
       return state;
   }
