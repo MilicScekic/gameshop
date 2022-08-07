@@ -17,7 +17,7 @@ import axios from "axios";
 
 export const refreshProducts = () => async (dispatch) => {
   dispatch(clearProducts());
-  dispatch(getProducts("https://gameshop-g5.com/products/?format=json"));
+  dispatch(fetchProducts());
 };
 
 export const clearProducts = () => (dispatch) => {
@@ -31,7 +31,7 @@ export const fetchProducts = () => async (dispatch) => {
     const res = await axios.get(
       "https://gameshop-g5.com/products/?format=json"
     );
-    dispatch({ type: GET_PRODUCTS, payload: res.data });
+    dispatch({ type: GET_PRODUCTS, payload: res.data.results });
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch(hideSpinner());
@@ -45,7 +45,7 @@ export const getProducts = (targetUrl) => async (dispatch) => {
     const res = await axios.get(targetUrl);
     res.data.length === 0
       ? dispatch({ type: STOP_PAGINATION })
-      : dispatch({ type: GET_PRODUCTS, payload: res.data });
+      : dispatch({ type: GET_PRODUCTS, payload: res.data.results });
     dispatch(setAlert("Enjoy in shopping :)", "success"));
     dispatch(hideSpinner());
   } catch ({ response }) {

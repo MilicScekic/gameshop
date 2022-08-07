@@ -98,7 +98,7 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
 
-  const userCartPresent = isAuthenticated && orders?.order_items !== null;
+  const userCartPresent = isAuthenticated && orders !== null;
   const guestCartPresent = guest.cart.length > 0;
 
   const classes = useStyles();
@@ -110,9 +110,9 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
           Your cart{" "}
           {isAuthenticated &&
           user !== null &&
-          orders.order_items?.length > 0 &&
+          orders?.product?.length > 0 &&
           orders?.checkout_date !== ""
-            ? `(${calculateSum(orders.order_items)})`
+            ? `(${calculateSum(orders)})`
             : !isAuthenticated && guest.cart.length > 0
             ? `(${calculateSum(guest.cart)})`
             : null}
@@ -126,7 +126,7 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
         {!isAuthenticated &&
           guest.cart.map((item) => <CartItem key={item.product} item={item} />)}
 
-        {isAuthenticated && user !== null && orders.order_items?.length === 0 && (
+        {isAuthenticated && user !== null && orders.product?.length === 0 && (
           <div className={classes.centered}>
             <SadEmojiIcon className={classes.emoji} />
             <Subheadline>You have no cart items</Subheadline>
@@ -134,35 +134,32 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
         )}
         {isAuthenticated &&
           user !== null &&
-          orders.order_items?.map((item) => (
-            <CartItem key={item.id} item={item} quantity={item.quantity} />
-          ))}
+          orders.map((item) => <CartItem key={item.id} item={item} />)}
 
-        {(userCartPresent || guestCartPresent) &&
-          orders.order_items?.length !== 0 && (
-            <div className={classes.centered}>
-              <Divider className={classes.divider} />
-              <Subheadline gutterBottom>
-                Total price:{" "}
-                <span style={{ fontWeight: "bold" }}>
-                  {isAuthenticated
-                    ? calculateTotal(orders?.order_items)
-                    : // orders?.price
-                      calculateTotal(guest.cart)}
-                  &euro;
-                </span>
-              </Subheadline>
+        {(userCartPresent || guestCartPresent) && orders?.length !== 0 && (
+          <div className={classes.centered}>
+            <Divider className={classes.divider} />
+            <Subheadline gutterBottom>
+              Total price:{" "}
+              <span style={{ fontWeight: "bold" }}>
+                {isAuthenticated
+                  ? calculateTotal(orders)
+                  : // orders?.price
+                    calculateTotal(guest.cart)}
+                &euro;
+              </span>
+            </Subheadline>
 
-              <Button
-                to="/checkout"
-                component={Link}
-                color="secondary"
-                variant="contained"
-              >
-                Proceed to checkout
-              </Button>
-            </div>
-          )}
+            <Button
+              to="/checkout"
+              component={Link}
+              color="secondary"
+              variant="contained"
+            >
+              Proceed to checkout
+            </Button>
+          </div>
+        )}
       </ResponsiveContainer>
     </section>
   );
