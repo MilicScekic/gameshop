@@ -75,7 +75,7 @@ function App({
 
     return () => {
       clearTimeout(timeoutId);
-      clearCategories(); //prazni ga nakon 200ms
+      clearCategories(); // Nece se niz praznit uopste, jer je u App.js
     };
   }, []);
 

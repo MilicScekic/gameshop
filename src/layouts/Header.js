@@ -24,10 +24,6 @@ import MemoryTwoToneIcon from "@mui/icons-material/MemoryTwoTone";
 import ExtensionTwoToneIcon from "@mui/icons-material/ExtensionTwoTone";
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import Grid from "@mui/material/Grid";
-import KeyboardArrowDownTwoToneIcon from "@mui/icons-material/KeyboardArrowDownTwoTone";
-import ExitToAppTwoToneIcon from "@mui/icons-material/ExitToAppTwoTone";
-import Cart from "../pages/Cart";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/auth";
 
@@ -343,10 +339,7 @@ function Header({
                 padding: "0.3rem",
               }}
             >
-              <Link
-                to={"/products?category=games&sortBy=price&maxPrice=1000"}
-                style={{ textDecoration: "none" }}
-              >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
                 <Button
                   onClick={() => handleDropdown("Games")}
                   sx={{
@@ -370,10 +363,7 @@ function Header({
                 padding: "0.3rem",
               }}
             >
-              <Link
-                to={"/products?category=consoles&sortBy=price&maxPrice=1000"}
-                style={{ textDecoration: "none" }}
-              >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
                 <Button
                   onClick={() => handleDropdown("Consoles")}
                   sx={{
@@ -397,10 +387,7 @@ function Header({
                 padding: "0.3rem",
               }}
             >
-              <Link
-                to={"/products?category=components&sortBy=price&maxPrice=1000"}
-                style={{ textDecoration: "none" }}
-              >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
                 <Button
                   onClick={() => handleDropdown("Components")}
                   sx={{
@@ -425,10 +412,7 @@ function Header({
                 padding: "0.3rem",
               }}
             >
-              <Link
-                to={"/products?category=perifery&sortBy=price&maxPrice=1000"}
-                style={{ textDecoration: "none" }}
-              >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
                 <Button
                   onClick={() => handleDropdown("Perifery")}
                   sx={{
@@ -452,10 +436,7 @@ function Header({
                 padding: "0.3rem",
               }}
             >
-              <Link
-                to={"/products?category=boardgames&sortBy=price&maxPrice=1000"}
-                style={{ textDecoration: "none" }}
-              >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
                 <Button
                   onClick={() => handleDropdown("Board games")}
                   sx={{
@@ -480,10 +461,7 @@ function Header({
                 padding: "0.3rem",
               }}
             >
-              <Link
-                to={"/products?category=phones&sortBy=price&maxPrice=1000"}
-                style={{ textDecoration: "none" }}
-              >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
                 <Button
                   onClick={() => handleDropdown("Phones")}
                   sx={{
@@ -507,10 +485,7 @@ function Header({
                 padding: "0.3rem",
               }}
             >
-              <Link
-                to={"/products?category=lifestyle&sortBy=price&maxPrice=1000"}
-                style={{ textDecoration: "none" }}
-              >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
                 <Button
                   onClick={() => handleDropdown("Lifestyle")}
                   sx={{
