@@ -134,14 +134,7 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
         )}
         {isAuthenticated &&
           user !== null &&
-          orders.map((item) => (
-            <>
-              <CartItem key={item.id} item={item} />
-              <span>Order ID: {item.order} </span>
-              <span>Order item ID: {item.id} </span>
-              <span>Product ID: {item.product.id} </span>
-            </>
-          ))}
+          orders.map((item) => <CartItem key={item.id} item={item} />)}
 
         {(userCartPresent || guestCartPresent) && orders?.length !== 0 && (
           <div className={classes.centered}>
