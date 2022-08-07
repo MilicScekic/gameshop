@@ -107,8 +107,9 @@ const Favorites = ({ wishlist, removeFromUserWishlist }) => {
                       </Grid>
 
                       <Grid item xs={12} md={2} className={classes.gridItem}>
-                        <Tooltip placement="top" title="Delete from favorites">
+                        <Tooltip placement="top" title="Delete from wishlist">
                           <IconButton
+                            color="error"
                             onClick={() => removeFromUserWishlist(id)}
                           >
                             <DeleteIcon />

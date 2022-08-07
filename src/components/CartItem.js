@@ -13,10 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { makeStyles } from "@mui/styles";
-import { Subheadline } from "../utils/Responsive";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -126,8 +123,8 @@ const CartItem = ({
                       : handleGuestQuantity(e.target.value);
                   }}
                 >
-                  {allowedQuantity.map((x) => (
-                    <MenuItem value={x}>{x}</MenuItem>
+                  {allowedQuantity.map((qty) => (
+                    <MenuItem value={qty}>{qty}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -138,6 +135,7 @@ const CartItem = ({
         <Grid item xs={12} md={2} className={classes.gridItem}>
           <Tooltip placement="top" title="Delete from cart">
             <IconButton
+              color="error"
               onClick={() =>
                 isAuthenticated
                   ? removeFromUserCart(id)
