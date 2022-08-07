@@ -56,14 +56,14 @@ export const updateUserProfile = (formData, history) => async (dispatch) => {
 };
 
 //* Ovo mu dodje kao: Spremi korpu za trgovinu
-export const openOrder = (token) => async (dispatch) => {
+export const openOrder = () => async (dispatch) => {
   try {
     await axios.post(
       `https://gameshop-g5.com/orders/`,
       {},
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       }
     );
@@ -74,10 +74,27 @@ export const openOrder = (token) => async (dispatch) => {
   }
 };
 
+//* Vraca sve ordere (admin). A za obicnog korisnika vraca samo njegove ordere. Popunjava niz takodje
+export const getOrders = () => async (dispatch) => {
+  try {
+    const res = await axios.get("https://gameshop-g5.com/orders/", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    });
+    console.log(res.data);
+    dispatch({ type: GET_ORDERS, payload: res.data });
+  } catch ({ response }) {
+    // dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert("Error", "error"));
+  }
+};
+
+//? Popunice state orders sa objektom koji u sebi sadrzi order_items niz
 export const getOrderItems = () => async (dispatch) => {
   try {
-    const res = await axios.post(
-      "https://gameshop-g5.com/orders/",
+    const order = await axios.post(
+      `https://gameshop-g5.com/orders/`,
       {},
       {
         headers: {
@@ -85,8 +102,9 @@ export const getOrderItems = () => async (dispatch) => {
         },
       }
     );
-    console.log(res.data);
-    dispatch({ type: GET_ORDERS, payload: res.data });
+
+    console.log(order.data);
+    dispatch({ type: GET_ORDERS, payload: order.data });
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message, "error"));
     dispatch(setAlert("Error", "error"));

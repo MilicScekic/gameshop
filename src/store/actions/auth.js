@@ -83,7 +83,7 @@ export const autoSigninUser = (token) => async (dispatch) => {
 
     dispatch({ type: AUTO_SIGNIN_SUCCESS, payload: res.data });
     dispatch(getUserProfile(token)); //? Pokupi podatke prema tokenu i popuni user objekat
-    openOrder(res.data.access); //? Otvori order. Nisam pokretao preko dispatcha za svaki slucaj. Nekad radi, nekad ne
+    dispatch(openOrder()); //? Otvori order.
     dispatch(getOrderItems()); //? Napuni order_items niz
     dispatch(getWishlistItems()); //? Napuni wishlist niz
     dispatch(setAlert("Logged in successfully", "success"));
