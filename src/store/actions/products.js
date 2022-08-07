@@ -8,12 +8,35 @@ import {
   ADD_NEW_COMMENT,
   GET_CATEGORIES,
   CLEAR_CATEGORIES,
+  REMOVE_PRODUCT,
+  ADD_PRODUCT,
+  CHANGE_PRODUCT,
 } from "./types";
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
 
+export const refreshProducts = () => async (dispatch) => {
+  dispatch(clearProducts());
+  dispatch(getProducts("https://gameshop-g5.com/products/?format=json"));
+};
+
 export const clearProducts = () => (dispatch) => {
   dispatch({ type: CLEAR_PRODUCTS });
+};
+
+export const fetchProducts = () => async (dispatch) => {
+  dispatch(showSpinner());
+  // dispatch(clearProducts()); //? Ako bude potrebe
+  try {
+    const res = await axios.get(
+      "https://gameshop-g5.com/products/?format=json"
+    );
+    dispatch({ type: GET_PRODUCTS, payload: res.data });
+    dispatch(hideSpinner());
+  } catch ({ response }) {
+    dispatch(hideSpinner());
+    dispatch(setAlert("Error", "error"));
+  }
 };
 
 export const getProducts = (targetUrl) => async (dispatch) => {
@@ -60,6 +83,56 @@ export const postNewComment = (formData, productId) => async (dispatch) => {
     );
     dispatch({ type: ADD_NEW_COMMENT, payload: res.data });
     dispatch(setAlert("Comment posted", "success"));
+  } catch ({ response }) {
+    dispatch(setAlert(response.data.message && response.data.message, "error"));
+  }
+};
+
+export const removeProduct = (id) => async (dispatch) => {
+  dispatch(showSpinner());
+  try {
+    await axios.delete(`https://gameshop-g5.com/products/${id}/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    });
+    dispatch({ type: REMOVE_PRODUCT, payload: id });
+    dispatch(setAlert("Removed product", "success"));
+    dispatch(hideSpinner());
+  } catch ({ response }) {
+    dispatch(hideSpinner());
+    dispatch(setAlert("Product is not deleted. Try again!", "error"));
+  }
+};
+
+export const addProduct = (formData) => async (dispatch) => {
+  try {
+    const res = await axios.post(
+      `https://gameshop-g5.com/products/`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+    dispatch({ type: ADD_PRODUCT, payload: res.data });
+    dispatch(setAlert("Product added", "success"));
+  } catch ({ response }) {
+    dispatch(setAlert(response.data.message && response.data.message, "error"));
+  }
+};
+
+export const changeProduct = (data) => async (dispatch) => {
+  try {
+    // const res = await axios.put(
+    await axios.put(`https://gameshop-g5.com/products/${data.id}/`, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    });
+    //  dispatch({ type: CHANGE_PRODUCT, payload: res.data }); //! nije dodato
+    dispatch(setAlert("Product changed", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message && response.data.message, "error"));
   }

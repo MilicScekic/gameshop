@@ -20,10 +20,10 @@ import {
   logoutAfterSession,
   refreshAccessToken,
 } from "./store/actions/auth";
-import Dashboard from "./pages/Dashboard";
-import Games from "./pages/Games";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import { Products as DashboardProducts } from "./pages/Dashboard/Products";
 import Sidebar from "./layouts/Sidebar";
-import Orders from "./pages/Orders";
+import Orders from "./pages/Dashboard/Orders";
 import Checkout from "./pages/Checkout";
 import { getCategories, clearCategories } from "./store/actions/products";
 
@@ -86,9 +86,12 @@ function App({
           <Switch>
             <Route path="/admin/">
               <Sidebar>
-                <Route path="/admin/dashboard" component={Dashboard} />
-                <Route path="/admin/games" component={Games} />
-                <Route path="/admin/orders" component={Orders} />
+                <PrivateRoute path="/admin/dashboard" component={Dashboard} />
+                <PrivateRoute
+                  path="/admin/products"
+                  component={DashboardProducts}
+                />
+                <PrivateRoute path="/admin/orders" component={Orders} />
               </Sidebar>
             </Route>
 

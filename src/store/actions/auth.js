@@ -13,6 +13,7 @@ import {
   getOrderItems,
   getUserProfile,
   getWishlistItems,
+  getOrders,
 } from "./user";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 
@@ -83,8 +84,9 @@ export const autoSigninUser = (token) => async (dispatch) => {
 
     dispatch({ type: AUTO_SIGNIN_SUCCESS, payload: res.data });
     dispatch(getUserProfile(token)); //? Pokupi podatke prema tokenu i popuni user objekat
-    openOrder(res.data.access); //? Otvori order. Nisam pokretao preko dispatcha za svaki slucaj. Nekad radi, nekad ne
-    dispatch(getOrderItems()); //? Napuni order_items niz
+    dispatch(openOrder()); //? Otvori order.
+    dispatch(getOrders()); //? Napuni all_orders niz
+    dispatch(getOrderItems()); //? Napuni orders niz
     dispatch(getWishlistItems()); //? Napuni wishlist niz
     dispatch(setAlert("Logged in successfully", "success"));
   } catch ({ response }) {

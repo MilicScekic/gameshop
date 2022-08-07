@@ -27,8 +27,6 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/auth";
 
-const loggedInMenu = ["Dashboard", "Profile"];
-
 function Header({
   isAuthenticated,
   user,
@@ -37,6 +35,7 @@ function Header({
   wishlist,
   categories,
   logout,
+  authUser,
 }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -289,21 +288,18 @@ function Header({
                       open={Boolean(anchorElUser)}
                       onClose={handleCloseUserMenu}
                     >
-                      {isAuthenticated &&
-                        loggedInMenu.map((setting) => (
-                          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                            <Link to={setting}>
-                              <Typography textAlign="center" color="primary">
-                                {setting}
-                              </Typography>
-                            </Link>
-                          </MenuItem>
-                        ))}
-
                       {isAuthenticated && (
                         <MenuItem onClick={() => logout()}>
                           <Typography textAlign="center" color="primary">
                             Logout
+                          </Typography>
+                        </MenuItem>
+                      )}
+
+                      {isAuthenticated && authUser.id === 1 && (
+                        <MenuItem to={"/admin/dashboard"} component={Link}>
+                          <Typography textAlign="center" color="primary">
+                            Dashboard
                           </Typography>
                         </MenuItem>
                       )}
@@ -539,6 +535,7 @@ function Header({
 }
 
 const mapStateToProps = (state) => ({
+  authUser: state.auth.user,
   user: state.user.user,
   orders: state.user.orders,
   wishlist: state.user.wishlist,

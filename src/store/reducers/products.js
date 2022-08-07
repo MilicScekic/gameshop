@@ -8,6 +8,7 @@ import {
   ADD_NEW_COMMENT,
   GET_CATEGORIES,
   CLEAR_CATEGORIES,
+  ADD_PRODUCT,
 } from "../actions/types";
 
 const initialState = {
@@ -49,6 +50,12 @@ const productsReducer = (state = initialState, { type, payload }) => {
         ...state,
         currentProduct: null,
       };
+    case ADD_PRODUCT:
+      return {
+        ...state,
+        products: [...state.products, ...payload],
+      };
+
     case ADD_NEW_REVIEW:
       return {
         ...state,

@@ -9,6 +9,9 @@ export const ADD_NEW_REVIEW = "ADD_NEW_REVIEW";
 export const ADD_NEW_COMMENT = "ADD_NEW_COMMENT";
 export const CLEAR_REDUCER = "CLEAR_REDUCER";
 export const STOP_PAGINATION = "STOP_PAGINATION";
+export const REMOVE_PRODUCT = "REMOVE_PRODUCT";
+export const ADD_PRODUCT = "ADD_PRODUCT";
+export const CHANGE_PRODUCT = "CHANGE_PRODUCT";
 
 // VISUALS
 export const LOADING = "LOADING";
@@ -35,6 +38,10 @@ export const CLEAN_GUEST = "CLEAN_GUEST";
 export const USER_PURCHASE = "USER_PURCHASE";
 export const GUEST_PURCHASE = "GUEST_PURCHASE";
 export const GET_ORDERS = "GET_ORDERS";
+export const CLEAR_ORDERS = "CLEAR_ORDERS";
+export const GET_ALL_ORDERS = "GET_ALL_ORDERS";
+export const CLEAR_ALL_ORDERS = "CLEAR_ALL_ORDERS";
+export const REMOVE_ORDER = "REMOVE_ORDER";
 export const GET_WISHLIST = "GET_WISHLIST";
 export const ADD_TO_USER_WISHLIST = "ADD_TO_USER_WISHLIST";
 
