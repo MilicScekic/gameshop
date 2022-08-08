@@ -74,7 +74,7 @@ const CartItem = ({
   isAuthenticated,
   user,
   loading,
-  orderId,
+  orderId, //? smjesten u state
   refreshOrderItems,
 }) => {
   const classes = useStyles();

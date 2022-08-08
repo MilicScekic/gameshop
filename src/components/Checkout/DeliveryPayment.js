@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
-import { withRouter } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { saveDelpay } from "../../store/actions/user";
+import { clearDelpay, saveDelpay } from "../../store/actions/user";
 import {
   FormControlLabel,
   RadioGroup,
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DeliveryPayment = ({ history, inc, saveDelpay }) => {
+const DeliveryPayment = ({ history, inc, saveDelpay, delpay, clearDelpay }) => {
   const [delivery, setDelivery] = useState("");
   const [payment, setPayment] = useState("");
   const classes = useStyles();
@@ -99,7 +99,9 @@ const DeliveryPayment = ({ history, inc, saveDelpay }) => {
             color="primary"
             onClick={() => {
               inc(1);
-              saveDelpay({ delivery, payment });
+              delpay === null
+                ? saveDelpay({ delivery, payment })
+                : clearDelpay() && saveDelpay({ delivery, payment });
             }}
             variant="outlined"
           >
@@ -111,4 +113,10 @@ const DeliveryPayment = ({ history, inc, saveDelpay }) => {
   );
 };
 
-export default connect(null, { saveDelpay })(withRouter(DeliveryPayment));
+const mapStateToProps = (state) => ({
+  delpay: state.user.delpay,
+});
+
+export default connect(mapStateToProps, { saveDelpay, clearDelpay })(
+  withRouter(DeliveryPayment)
+);

@@ -107,28 +107,6 @@ const ProductCard = ({
               >
                 Add to cart
               </Button>
-
-              {/* //! Start */}
-              {/* <IconButton
-                color="success"
-                disabled={
-                  orders?.length > 0 &&
-                  orders.some((order) => order.product.id === id)
-                }
-                onClick={handleAddToCart}
-              >
-                <AddShoppingCartIcon />
-              </IconButton> */}
-              {/* //! end */}
-
-              {/* <IconButton
-                disabled={
-                  user.cart ? user.favorites.some((item) => item.id === id) : ""
-                }
-                onClick={() => addToUserFavorites({ id, name, content, price })}
-              >
-                <FavoriteIcon />
-              </IconButton> */}
             </>
           ) : (
             <>

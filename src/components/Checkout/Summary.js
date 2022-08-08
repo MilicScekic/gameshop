@@ -1,7 +1,12 @@
 import React, { Fragment } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { userPurchase, guestPurchase } from "../../store/actions/user";
+import {
+  userPurchase,
+  refreshOrderItems,
+  clearDelpay,
+  refreshOrders,
+} from "../../store/actions/user";
 import {
   IconButton,
   Tooltip,
@@ -14,6 +19,7 @@ import {
 } from "@material-ui/core";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Subheadline } from "../../utils/Responsive";
+import { setAlert } from "../../store/actions/visual";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,23 +45,27 @@ const Summary = ({
   delpay,
   loading,
   userPurchase,
+  orderId,
+  history,
+  clearDelpay,
+  refreshOrderItems,
+  refreshOrders,
 }) => {
+  const classes = useStyles();
+
   const renderItems = (what) => {
-    if (what?.order_items.length === 0)
+    if (what?.length === 0)
       return (
         <Typography variant="body1" style={{ textAlign: "center" }}>
           No items
         </Typography>
       );
 
-    return what?.order_items.map((item) => (
-      <div key={item.product} className={classes.row}>
-        <Typography
-          key={item.product}
-          variant="body1"
-          style={{ fontWeight: "bold" }}
-        >
-          {item.quantity}x {/*{item.name}*/}
+    return what?.map((item, key) => (
+      <div key={key} className={classes.row}>
+        <Typography key={item.product.id} variant="body1">
+          <span style={{ fontWeight: "bold" }}>{item.quantity}x</span>{" "}
+          {item.product.name}
         </Typography>
         <Typography variant="body1">
           {item.discount > 0
@@ -66,10 +76,33 @@ const Summary = ({
     ));
   };
 
-  //* Orders.price koji daje preciznu cijenu
-  const renderTotalPrice = (what) => what.price;
+  const withDiscount = (price, discount) => (price * (100 - discount)) / 100;
 
-  const classes = useStyles();
+  const calculateTotal = (arr) => {
+    return arr
+      .reduce(
+        (arr, { quantity, price, discount }) =>
+          discount > 0
+            ? arr + quantity + withDiscount(price, discount) - 1.0
+            : arr + quantity * price,
+        0
+      )
+      .toLocaleString();
+  };
+
+  const finishPayment = () => {
+    try {
+      userPurchase(orderId);
+      refreshOrderItems();
+      refreshOrders();
+      clearDelpay();
+      history.push("/");
+    } catch (error) {
+      refreshOrderItems();
+      refreshOrders();
+      history.push("/cart");
+    }
+  };
 
   return (
     <Fragment>
@@ -78,6 +111,7 @@ const Summary = ({
           <ArrowBackIcon />
         </IconButton>
       </Tooltip>
+
       <Paper className={classes.paper}>
         <Subheadline center gutterBottom>
           Order summary
@@ -106,52 +140,18 @@ const Summary = ({
             {isAuthenticated && user.email}
           </Typography>
         </div>
-        {/* <div className={classes.row}>
-          <Typography variant="body1" style={{ fontWeight: "bold" }}>
-            Phone
-          </Typography>
-          <Typography variant="body1">
-            {isAuthenticated ? user.phone : guest.info.phone}
-          </Typography>
-        </div>
-        <div className={classes.row}>
-          <Typography variant="body1" style={{ fontWeight: "bold" }}>
-            Street
-          </Typography>
-          <Typography variant="body1">
-            {isAuthenticated ? user.address.street : guest.info.address.street}
-          </Typography>
-        </div>
-        <div className={classes.row}>
-          <Typography variant="body1" style={{ fontWeight: "bold" }}>
-            Postal code
-          </Typography>
-          <Typography variant="body1">
-            {isAuthenticated
-              ? user.address.postalCode
-              : guest.info.address.postalCode}
-          </Typography> 
-        </div>
-        <div className={classes.row}>
-          <Typography variant="body1" style={{ fontWeight: "bold" }}>
-            City
-          </Typography>
-          <Typography variant="body1">
-            {isAuthenticated ? user.address.city : guest.info.address.city}
-          </Typography>
-        </div>*/}
         <Divider />
         <div className={classes.row}>
           <Typography variant="body1" style={{ fontWeight: "bold" }}>
             Delivery
           </Typography>
-          <Typography variant="body1">{delpay.delivery}</Typography>
+          <Typography variant="body1">{delpay?.delivery}</Typography>
         </div>
         <div className={classes.row} style={{ marginBottom: 32 }}>
           <Typography variant="body1" style={{ fontWeight: "bold" }}>
             Payment
           </Typography>
-          <Typography variant="body1">{delpay.payment}</Typography>
+          <Typography variant="body1">{delpay?.payment}</Typography>
         </div>
         <Subheadline center gutterBottom>
           Ordered items
@@ -163,15 +163,15 @@ const Summary = ({
           <Subheadline bold>
             Total price:{" "}
             {/* {isAuthenticated ? renderTotalPrice(user) : renderTotalPrice(guest)} */}
-            {isAuthenticated ?? renderTotalPrice(orders)} &euro;
+            {(isAuthenticated && delpay !== null) ?? calculateTotal(orders)}
+            &euro;
           </Subheadline>
 
           <Button
             disabled={loading}
-            onClick={userPurchase}
-            // className={classes.payBtn}
+            onClick={finishPayment}
             variant="contained"
-            color="secondary"
+            color="primary"
           >
             Finish order
           </Button>
@@ -186,8 +186,15 @@ const Summary = ({
 
 const mapStateToProps = (state) => ({
   user: state.user.user,
+  orderId: state.user.orderId,
   orders: state.user.orders,
   delpay: state.user.delpay,
+  loading: state.visual.loading,
 });
 
-export default connect(mapStateToProps, { userPurchase })(withRouter(Summary));
+export default connect(mapStateToProps, {
+  userPurchase,
+  clearDelpay,
+  refreshOrderItems,
+  refreshOrders,
+})(withRouter(Summary));

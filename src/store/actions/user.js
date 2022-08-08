@@ -22,9 +22,11 @@ import {
   ADD_TO_USER_WISHLIST,
   REMOVE_ORDER,
   GET_ORDER_ID,
+  CLEAR_DELPAY,
 } from "./types";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 import axios from "axios";
+import { logout } from "./auth";
 
 export const getUserProfile = (token) => async (dispatch) => {
   try {
@@ -73,7 +75,7 @@ export const openOrder = () => async (dispatch) => {
     // dispatch(setAlert("Order opened!", "success"));
     dispatch({ type: GET_ORDER_ID, payload: res.data.id });
   } catch ({ response }) {
-    // dispatch(setAlert("Order is not opened!", "warning"));
+    dispatch(logout());
     // dispatch(setAlert(response.detail, "warning"));
   }
 };
@@ -270,21 +272,11 @@ export const removeFromUserWishlist = (id) => async (dispatch) => {
   }
 };
 
-export const userPurchase = (history) => async (dispatch) => {
+export const userPurchase = (orderId, history) => async (dispatch) => {
   dispatch(showSpinner());
   try {
-    const order = await axios.post(
-      "https://gameshop-g5.com/orders/",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      }
-    );
-
     await axios.patch(
-      `https://gameshop-g5.com/orders/${order.data.id}/checkout/`,
+      `https://gameshop-g5.com/orders/${orderId}/checkout/`,
       {},
       {
         headers: {
@@ -371,3 +363,5 @@ export const handleUserQuantity =
       // dispatch(setAlert(response.data.message, "error"));
     }
   };
+
+export const clearDelpay = () => (dispatch) => dispatch({ type: CLEAR_DELPAY });

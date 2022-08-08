@@ -19,9 +19,10 @@ import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
 import Rating from "@mui/material/Rating";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Comments from "../components/Comments/Comments";
 import { setAlert } from "../store/actions/visual";
+import { green } from "@mui/material/colors";
+import Button from "@mui/material/Button";
 
 const useStyles = makeStyles((theme) => ({
   centered: {
@@ -50,6 +51,7 @@ const Product = ({
   user,
   guest,
   orders,
+  orderId,
   wishlist,
   isAuthenticated,
   getCurrentProduct,
@@ -73,9 +75,11 @@ const Product = ({
 
   const classes = useStyles();
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+
     try {
-      addToUserCart(match.params.id);
+      addToUserCart(orderId, match.params.id);
       refreshOrderItems();
     } catch (error) {
       setAlert("Not added");
@@ -133,24 +137,35 @@ const Product = ({
                 <FavoriteIcon />
               </IconButton>
             )}
-            {user && isAuthenticated ? (
-              <IconButton
-                disabled={orders?.some(
-                  (item) => item.product.id === currentProduct.id
-                )}
-                onClick={handleAddToCart} //? moze i currentProduct.id
-              >
-                <AddShoppingCartIcon />
-              </IconButton>
+            {user !== null && isAuthenticated ? (
+              <>
+                <Button
+                  variant="contained"
+                  color="success"
+                  disabled={
+                    orders &&
+                    orders.some(
+                      (order) => order.product.id === currentProduct.id
+                    )
+                  }
+                  onClick={handleAddToCart}
+                >
+                  Add to cart
+                </Button>
+              </>
             ) : (
-              <IconButton
-                disabled={guest.cart.some(
-                  (item) => item.id === match.params.id
-                )}
-                onClick={() => addToGuestCart(match.params.id)}
-              >
-                <AddShoppingCartIcon />
-              </IconButton>
+              <>
+                <Button
+                  variant="contained"
+                  color="success"
+                  disabled={guest.cart.some(
+                    (item) => item.id === match.params.id
+                  )}
+                  onClick={() => addToGuestCart(match.params.id)}
+                >
+                  Add to cart
+                </Button>
+              </>
             )}
           </div>
         </LineLength>
@@ -184,6 +199,7 @@ const mapStateToProps = (state) => ({
   user: state.user.user,
   wishlist: state.user.wishlist,
   orders: state.user.orders,
+  orderId: state.user.orderId,
   guest: state.user.guest,
 });
 

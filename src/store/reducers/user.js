@@ -24,6 +24,7 @@ import {
   CLEAR_ORDERS,
   REMOVE_ORDER,
   GET_ORDER_ID,
+  CLEAR_DELPAY,
 } from "../actions/types";
 
 const initialState = {
@@ -175,6 +176,12 @@ const userReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         delpay: payload,
+      };
+
+    case CLEAR_DELPAY:
+      return {
+        ...state,
+        delpay: null,
       };
     case INCREMENT_GUEST_PRODUCT:
       const newGuestIncCart = [...state.guest.cart];
