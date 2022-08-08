@@ -20,7 +20,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Subheadline } from "../utils/Responsive";
-import Spinner from "./Spinner";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -64,8 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CartItem = ({
-  //* id je order item id.
-  item: { id, order, quantity, price, discount },
+  item: { id, quantity, price, discount },
   productId,
   name,
   image,
@@ -76,6 +74,7 @@ const CartItem = ({
   isAuthenticated,
   user,
   loading,
+  orderId,
   refreshOrderItems,
 }) => {
   const classes = useStyles();
@@ -96,13 +95,8 @@ const CartItem = ({
 
   const handleSubmitQuantity = (qty) => {
     try {
-      handleUserQuantity(order, id, qty);
+      handleUserQuantity(orderId, id, qty);
       refreshOrderItems();
-
-      setTimeout(() => {
-        refreshOrderItems();
-        <Redirect to="/products" />;
-      }, 7000);
     } catch (error) {
       refreshOrderItems();
       <Redirect to="/products" />;
@@ -161,7 +155,7 @@ const CartItem = ({
               color="error"
               onClick={() =>
                 isAuthenticated
-                  ? removeFromUserCart(order, id)
+                  ? removeFromUserCart(orderId, id)
                   : removeFromGuestCart(id)
               }
             >
@@ -169,8 +163,6 @@ const CartItem = ({
             </IconButton>
           </Tooltip>
         </Grid>
-
-        {loading && <Spinner />}
       </Grid>
     </Paper>
   );
@@ -179,6 +171,7 @@ const CartItem = ({
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.user.user,
+  orderId: state.user.orderId,
   loading: state.visual.loading,
 });
 

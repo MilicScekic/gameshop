@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import {
@@ -10,10 +10,10 @@ import {
 import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { setAlert } from "../store/actions/visual";
+import { green } from "@mui/material/colors";
+import Button from "@mui/material/Button";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,13 +50,16 @@ const ProductCard = ({
   user,
   guest,
   orders,
+  orderId,
   refreshOrderItems,
 }) => {
   const classes = useStyles();
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+
     try {
-      addToUserCart(id);
+      addToUserCart(orderId, id);
       refreshOrderItems();
     } catch (error) {
       setAlert("Not added");
@@ -93,18 +96,31 @@ const ProductCard = ({
           </Typography>
           {user !== null && isAuthenticated ? (
             <>
-              <IconButton
+              <Button
+                variant="contained"
                 color="success"
-                //? jer je product zapravo id proizvoda u korpi. A id je na stranici products id proizvoda
+                sx={{ bgColor: green[700] }}
                 disabled={
-                  orders &&
-                  true &&
+                  orders && orders.some((order) => order.product.id === id)
+                }
+                onClick={handleAddToCart}
+              >
+                Add to cart
+              </Button>
+
+              {/* //! Start */}
+              {/* <IconButton
+                color="success"
+                disabled={
+                  orders?.length > 0 &&
                   orders.some((order) => order.product.id === id)
                 }
                 onClick={handleAddToCart}
               >
                 <AddShoppingCartIcon />
-              </IconButton>
+              </IconButton> */}
+              {/* //! end */}
+
               {/* <IconButton
                 disabled={
                   user.cart ? user.favorites.some((item) => item.id === id) : ""
@@ -116,14 +132,17 @@ const ProductCard = ({
             </>
           ) : (
             <>
-              <IconButton
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ bgColor: green[700] }}
                 disabled={guest.cart.some((item) => item.id === id)}
                 onClick={() =>
                   addToGuestCart({ id, name, content, media, price })
                 }
               >
-                <AddShoppingCartIcon />
-              </IconButton>
+                Add to cart
+              </Button>
             </>
           )}
         </div>
@@ -138,6 +157,8 @@ const mapStateToProps = (state) => ({
   user: state.user.user,
   guest: state.user.guest,
   orders: state.user.orders,
+  orderId: state.user.orderId,
+  loading: state.visual.loading,
 });
 
 export default connect(mapStateToProps, {

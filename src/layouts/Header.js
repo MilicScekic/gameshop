@@ -512,7 +512,7 @@ function Header({
             {dropdownCategories ? (
               dropdownCategories.map((cat) => {
                 return (
-                  <li>
+                  <li key={cat.name}>
                     <Link
                       to={`/products?category=${cat.name}&sortBy=price&maxPrice=1000`}
                       style={{ textDecoration: "none" }}

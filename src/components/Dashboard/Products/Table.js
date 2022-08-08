@@ -12,6 +12,7 @@ import {
   clearProducts,
   // getProducts,
   fetchProducts,
+  refreshProducts,
   removeProduct,
   changeProduct,
 } from "../../../store/actions/products";
@@ -48,10 +49,10 @@ const ProductTable = ({
       try {
         removeProduct(id);
         alert("Product was successfully removed.");
-        clearProducts();
-        fetchProducts();
+        refreshProducts();
       } catch (error) {
         alert("There some error in deleting...");
+        refreshProducts();
       }
     }
   };

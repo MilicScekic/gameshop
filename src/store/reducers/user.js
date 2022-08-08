@@ -23,11 +23,13 @@ import {
   CLEAR_ALL_ORDERS,
   CLEAR_ORDERS,
   REMOVE_ORDER,
+  GET_ORDER_ID,
 } from "../actions/types";
 
 const initialState = {
   user: null,
-  orders: [],
+  orderId: null,
+  orders: null,
   all_orders: [],
   wishlist: null,
   guest: {
@@ -50,6 +52,12 @@ const userReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         user: null,
+      };
+
+    case GET_ORDER_ID:
+      return {
+        ...state,
+        orderId: payload,
       };
 
     case GET_ORDER_ITEMS:
@@ -208,9 +216,9 @@ const userReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         user: null,
-        orders: null,
+        all_orders: [],
+        orders: [],
         wishlist: null,
-        all_orders: null,
         delpay: null,
       };
     case CLEAN_GUEST:

@@ -1,6 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import Layout from "./layouts/Layout";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -9,6 +14,7 @@ import Register from "./pages/Register";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { teal, grey, red } from "@mui/material/colors";
 import PrivateRoute from "./hoc/PrivateRoute";
+import ProtectedRoute from "./hoc/ProtectedRoute";
 import Cart from "./pages/Cart";
 import Products from "./pages/Products";
 import Product from "./pages/Product";
@@ -26,6 +32,7 @@ import Sidebar from "./layouts/Sidebar";
 import Orders from "./pages/Dashboard/Orders";
 import Checkout from "./pages/Checkout";
 import { getCategories, clearCategories } from "./store/actions/products";
+import { setAlert } from "./store/actions/visual";
 
 const theme = createTheme({
   palette: {
@@ -65,7 +72,9 @@ function App({
     setInterval(() => {
       !!localStorage.refresh
         ? refreshAccessToken(localStorage.refresh)
-        : delete localStorage.refresh && delete localStorage.access;
+        : delete localStorage.refresh &&
+          delete localStorage.access &&
+          setAlert("You are offline!", "error") && <Redirect to="/login" />;
     }, 5 * 60 * 1000);
   }, []);
 
@@ -85,16 +94,16 @@ function App({
       <Router>
         <LastLocationProvider>
           <Switch>
-            <Route path="/admin/">
+            <ProtectedRoute path="/admin/">
               <Sidebar>
-                <PrivateRoute path="/admin/dashboard" component={Dashboard} />
-                <PrivateRoute
+                <ProtectedRoute path="/admin/dashboard" component={Dashboard} />
+                <ProtectedRoute
                   path="/admin/products"
                   component={DashboardProducts}
                 />
-                <PrivateRoute path="/admin/orders" component={Orders} />
+                <ProtectedRoute path="/admin/orders" component={Orders} />
               </Sidebar>
-            </Route>
+            </ProtectedRoute>
 
             <Layout>
               <Route exact path="/" component={Home} />
@@ -105,7 +114,6 @@ function App({
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
 
-              {/* <PrivateRoute exact path="/admin" component={Dashboard} /> */}
               <PrivateRoute exact path="/wishlist" component={Favorites} />
 
               <Route exact path="/products" component={Products} />

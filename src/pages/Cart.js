@@ -140,15 +140,17 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
         {isAuthenticated &&
           user !== null &&
           orders?.map((item) => (
-            <CartItem
-              item={item}
-              name={item.product.name}
-              productId={item.product.id}
-              image={
-                item.product.media?.length > 0 &&
-                item.product.media.map((img) => img.media)
-              }
-            />
+            <>
+              <CartItem
+                item={item}
+                name={item.product.name}
+                productId={item.product.id}
+                image={
+                  item.product.media?.length > 0 &&
+                  item.product.media.map((img) => img.media)
+                }
+              />
+            </>
           ))}
 
         {(userCartPresent || guestCartPresent) && orders?.length !== 0 && (

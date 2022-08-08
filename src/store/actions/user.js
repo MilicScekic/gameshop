@@ -21,6 +21,7 @@ import {
   GET_WISHLIST,
   ADD_TO_USER_WISHLIST,
   REMOVE_ORDER,
+  GET_ORDER_ID,
 } from "./types";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 import axios from "axios";
@@ -60,7 +61,7 @@ export const updateUserProfile = (formData, history) => async (dispatch) => {
 //* Ovo mu dodje kao: Spremi korpu za trgovinu
 export const openOrder = () => async (dispatch) => {
   try {
-    await axios.post(
+    const res = await axios.post(
       `https://gameshop-g5.com/orders/`,
       {},
       {
@@ -70,14 +71,20 @@ export const openOrder = () => async (dispatch) => {
       }
     );
     // dispatch(setAlert("Order opened!", "success"));
+    dispatch({ type: GET_ORDER_ID, payload: res.data.id });
   } catch ({ response }) {
     // dispatch(setAlert("Order is not opened!", "warning"));
     // dispatch(setAlert(response.detail, "warning"));
   }
 };
 
-export const refreshOrderItems = () => async (dispatch) => {
+export const refreshOrders = () => async (dispatch) => {
   dispatch(clearOrders());
+  dispatch(getOrders());
+};
+
+export const refreshOrderItems = () => async (dispatch) => {
+  dispatch(clearOrderItems());
   dispatch(getOrderItems());
 };
 
@@ -180,21 +187,21 @@ export const addToGuestCart = (product) => async (dispatch) => {
   }
 };
 
-export const addToUserCart = (productId) => async (dispatch) => {
+export const addToUserCart = (orderId, productId) => async (dispatch) => {
   try {
     //! Neprakticno
-    const order = await axios.post(
-      "https://gameshop-g5.com/orders/",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      }
-    );
+    // const order = await axios.post(
+    //   "https://gameshop-g5.com/orders/",
+    //   {},
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${localStorage.getItem("access")}`,
+    //     },
+    //   }
+    // );
 
     const orderItem = await axios.post(
-      `https://gameshop-g5.com/orders/${order.data.id}/order_items/`,
+      `https://gameshop-g5.com/orders/${orderId}/order_items/`,
       {
         product: productId,
         quantity: 1,
@@ -209,6 +216,7 @@ export const addToUserCart = (productId) => async (dispatch) => {
     console.log("Ovo ti ubacam");
     console.log(orderItem.data);
     dispatch({ type: ADD_TO_USER_CART, payload: orderItem.data });
+
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
     dispatch(setAlert("Not added", "error"));
@@ -346,7 +354,6 @@ export const handleGuestQuantity = (type, prodId) => (dispatch) => {
 
 export const handleUserQuantity =
   (orderId, orderItemId, qty) => async (dispatch) => {
-    dispatch(showSpinner());
     try {
       const res = await axios.patch(
         `https://gameshop-g5.com/orders/${orderId}/order_items/${orderItemId}/`,
@@ -358,8 +365,9 @@ export const handleUserQuantity =
         }
       );
       dispatch({ type: USER_PRODUCT_QUANTITY, payload: res.data });
-      dispatch(hideSpinner());
     } catch ({ response }) {
-      dispatch(setAlert(response.data.message, "error"));
+      // dispatch(hideSpinner());
+      dispatch(setAlert("Something went wrong!", "error"));
+      // dispatch(setAlert(response.data.message, "error"));
     }
   };
