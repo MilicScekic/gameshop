@@ -76,6 +76,11 @@ export const openOrder = () => async (dispatch) => {
   }
 };
 
+export const refreshOrderItems = () => async (dispatch) => {
+  dispatch(clearOrders());
+  dispatch(getOrderItems());
+};
+
 export const clearOrders = () => async (dispatch) => {
   dispatch({ type: CLEAR_ALL_ORDERS });
 };
@@ -201,7 +206,8 @@ export const addToUserCart = (productId) => async (dispatch) => {
         },
       }
     );
-
+    console.log("Ovo ti ubacam");
+    console.log(orderItem.data);
     dispatch({ type: ADD_TO_USER_CART, payload: orderItem.data });
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
@@ -293,32 +299,25 @@ export const removeFromGuestCart = (id) => (dispatch) => {
   dispatch({ type: REMOVE_FROM_GUEST_CART, payload: id });
 };
 
-export const removeFromUserCart = (id) => async (dispatch) => {
-  try {
-    const order = await axios.post(
-      "https://gameshop-g5.com/orders/",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      }
-    );
-
-    await axios.delete(
-      `https://gameshop-g5.com/orders/${order.data.id}/order_items/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      }
-    );
-    dispatch({ type: REMOVE_FROM_USER_CART, payload: id });
-    dispatch(setAlert("Removed from cart", "success"));
-  } catch ({ response }) {
-    dispatch(setAlert(response.data.message, "error"));
-  }
-};
+export const removeFromUserCart =
+  (orderId, orderItemId) => async (dispatch) => {
+    dispatch(showSpinner());
+    try {
+      await axios.delete(
+        `https://gameshop-g5.com/orders/${orderId}/order_items/${orderItemId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
+      dispatch({ type: REMOVE_FROM_USER_CART, payload: orderItemId });
+      dispatch(hideSpinner());
+      dispatch(setAlert("Removed from cart", "success"));
+    } catch ({ response }) {
+      dispatch(setAlert(response.data.message, "error"));
+    }
+  };
 
 export const addToUserFavorites = (id) => async (dispatch) => {
   try {
@@ -347,6 +346,7 @@ export const handleGuestQuantity = (type, prodId) => (dispatch) => {
 
 export const handleUserQuantity =
   (orderId, orderItemId, qty) => async (dispatch) => {
+    dispatch(showSpinner());
     try {
       const res = await axios.patch(
         `https://gameshop-g5.com/orders/${orderId}/order_items/${orderItemId}/`,
@@ -358,6 +358,7 @@ export const handleUserQuantity =
         }
       );
       dispatch({ type: USER_PRODUCT_QUANTITY, payload: res.data });
+      dispatch(hideSpinner());
     } catch ({ response }) {
       dispatch(setAlert(response.data.message, "error"));
     }

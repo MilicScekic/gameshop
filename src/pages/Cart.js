@@ -20,7 +20,12 @@ import {
   Subheadline,
 } from "../utils/Responsive";
 import CartItem from "../components/CartItem";
-import { getUserProfile } from "../store/actions/user";
+import {
+  clearOrderItems,
+  getOrderItems,
+  getUserProfile,
+} from "../store/actions/user";
+import { autoSigninUser, logout } from "../store/actions/auth";
 
 const useStyles = makeStyles((theme) => ({
   headline: {
@@ -110,23 +115,23 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
           Your cart{" "}
           {isAuthenticated &&
           user !== null &&
-          orders?.product?.length > 0 &&
+          orders?.length > 0 &&
           orders?.checkout_date !== ""
             ? `(${calculateSum(orders)})`
             : !isAuthenticated && guest.cart.length > 0
             ? `(${calculateSum(guest.cart)})`
             : null}
         </Headline>
-        {!isAuthenticated && guest.cart.length == 0 && (
+        {!isAuthenticated && guest.cart.length === 0 && (
           <div className={classes.centered}>
             <SadEmojiIcon className={classes.emoji} />
             <Subheadline>You have no cart items</Subheadline>
           </div>
         )}
         {!isAuthenticated &&
-          guest.cart.map((item) => <CartItem key={item.product} item={item} />)}
+          guest.cart.map((item) => <CartItem key={item.id} item={item} />)}
 
-        {isAuthenticated && user !== null && orders.product?.length === 0 && (
+        {isAuthenticated && user !== null && orders?.length === 0 && (
           <div className={classes.centered}>
             <SadEmojiIcon className={classes.emoji} />
             <Subheadline>You have no cart items</Subheadline>
@@ -134,7 +139,17 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
         )}
         {isAuthenticated &&
           user !== null &&
-          orders.map((item) => <CartItem key={item.id} item={item} />)}
+          orders?.map((item) => (
+            <CartItem
+              item={item}
+              name={item.product.name}
+              productId={item.product.id}
+              image={
+                item.product.media?.length > 0 &&
+                item.product.media.map((img) => img.media)
+              }
+            />
+          ))}
 
         {(userCartPresent || guestCartPresent) && orders?.length !== 0 && (
           <div className={classes.centered}>
@@ -142,10 +157,9 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
             <Subheadline gutterBottom>
               Total price:{" "}
               <span style={{ fontWeight: "bold" }}>
-                {isAuthenticated
+                {isAuthenticated && orders.length !== 0
                   ? calculateTotal(orders)
-                  : // orders?.price
-                    calculateTotal(guest.cart)}
+                  : calculateTotal(guest.cart)}
                 &euro;
               </span>
             </Subheadline>
@@ -172,4 +186,10 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { getUserProfile })(Cart);
+export default connect(mapStateToProps, {
+  getUserProfile,
+  getOrderItems,
+  clearOrderItems,
+  autoSigninUser,
+  logout,
+})(Cart);

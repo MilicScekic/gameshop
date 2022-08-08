@@ -1,11 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   removeFromGuestCart,
   removeFromUserCart,
   handleGuestQuantity,
   handleUserQuantity,
+  refreshOrderItems,
 } from "../store/actions/user";
 import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
@@ -18,6 +19,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { Subheadline } from "../utils/Responsive";
+import Spinner from "./Spinner";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -61,13 +64,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CartItem = ({
+  //* id je order item id.
   item: { id, order, quantity, price, discount },
+  productId,
+  name,
+  image,
   removeFromGuestCart,
   removeFromUserCart,
   handleGuestQuantity,
   handleUserQuantity,
   isAuthenticated,
   user,
+  loading,
+  refreshOrderItems,
 }) => {
   const classes = useStyles();
 
@@ -85,20 +94,35 @@ const CartItem = ({
     else return <strong>{price}</strong>;
   };
 
+  const handleSubmitQuantity = (qty) => {
+    try {
+      handleUserQuantity(order, id, qty);
+      refreshOrderItems();
+
+      setTimeout(() => {
+        refreshOrderItems();
+        <Redirect to="/products" />;
+      }, 7000);
+    } catch (error) {
+      refreshOrderItems();
+      <Redirect to="/products" />;
+    }
+  };
+
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} key={id}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={2} className={classes.gridItem}>
           <Link to={`/products/${id}`}>
             <div className={classes.img}>
-              {/* <img className={classes.image} src={media[0].media} alt="" /> */}
+              <img className={classes.image} src={image} alt="" />
             </div>
           </Link>
         </Grid>
         <Grid item xs={12} md={4} className={classes.gridItem}>
           <div style={{ marginTop: 20 }}>
-            <Link to={`/products/${id}`} className={classes.link}>
-              {/* <Subheadline center>{name}</Subheadline> */}
+            <Link to={`/products/${productId}`} className={classes.link}>
+              <Subheadline center>{name}</Subheadline>
             </Link>
             <Typography variant="body1" style={{ textAlign: "center" }}>
               {calculatePrice(price, discount)} &euro;
@@ -118,7 +142,7 @@ const CartItem = ({
                   label="Quantity"
                   onChange={(e) => {
                     isAuthenticated && user !== null
-                      ? handleUserQuantity(order, id, e.target.value)
+                      ? handleSubmitQuantity(e.target.value)
                       : handleGuestQuantity(e.target.value);
                   }}
                 >
@@ -137,7 +161,7 @@ const CartItem = ({
               color="error"
               onClick={() =>
                 isAuthenticated
-                  ? removeFromUserCart(id)
+                  ? removeFromUserCart(order, id)
                   : removeFromGuestCart(id)
               }
             >
@@ -145,6 +169,8 @@ const CartItem = ({
             </IconButton>
           </Tooltip>
         </Grid>
+
+        {loading && <Spinner />}
       </Grid>
     </Paper>
   );
@@ -153,6 +179,7 @@ const CartItem = ({
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.user.user,
+  loading: state.visual.loading,
 });
 
 export default connect(mapStateToProps, {
@@ -160,4 +187,5 @@ export default connect(mapStateToProps, {
   removeFromUserCart,
   handleGuestQuantity,
   handleUserQuantity,
+  refreshOrderItems,
 })(CartItem);

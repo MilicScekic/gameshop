@@ -234,9 +234,7 @@ function Header({
                     <Badge
                       color="secondary"
                       badgeContent={
-                        user !== null && orders?.order_items
-                          ? calculateSum(orders?.order_items)
-                          : null
+                        user !== null && orders ? calculateSum(orders) : null
                       }
                     >
                       <ShoppingCartTwoToneIcon color="secondaryDark" />

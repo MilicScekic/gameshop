@@ -1,10 +1,11 @@
-import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   addToGuestCart,
   addToUserCart,
   addToUserFavorites,
+  refreshOrderItems,
 } from "../store/actions/user";
 import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
@@ -12,7 +13,7 @@ import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import { setAlert } from "../store/actions/visual";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -49,8 +50,20 @@ const ProductCard = ({
   user,
   guest,
   orders,
+  refreshOrderItems,
 }) => {
   const classes = useStyles();
+
+  const handleAddToCart = () => {
+    try {
+      addToUserCart(id);
+      refreshOrderItems();
+    } catch (error) {
+      setAlert("Not added");
+      refreshOrderItems();
+      <Redirect to="/products" />;
+    }
+  };
 
   return (
     <Grid item xs={12} md={6} lg={4}>
@@ -81,12 +94,14 @@ const ProductCard = ({
           {user !== null && isAuthenticated ? (
             <>
               <IconButton
+                color="success"
                 //? jer je product zapravo id proizvoda u korpi. A id je na stranici products id proizvoda
                 disabled={
-                  orders?.order_items &&
-                  orders.order_items?.some((item) => item.product === id)
+                  orders &&
+                  true &&
+                  orders.some((order) => order.product.id === id)
                 }
-                onClick={() => addToUserCart(id)}
+                onClick={handleAddToCart}
               >
                 <AddShoppingCartIcon />
               </IconButton>
@@ -129,4 +144,5 @@ export default connect(mapStateToProps, {
   addToGuestCart,
   addToUserCart,
   addToUserFavorites,
+  refreshOrderItems,
 })(ProductCard);

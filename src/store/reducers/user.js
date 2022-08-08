@@ -27,7 +27,7 @@ import {
 
 const initialState = {
   user: null,
-  orders: null,
+  orders: [],
   all_orders: [],
   wishlist: null,
   guest: {
@@ -95,10 +95,11 @@ const userReducer = (state = initialState, { type, payload }) => {
     case ADD_TO_USER_CART:
       return {
         ...state,
-        orders: {
-          ...state.orders,
-          order_items: [...state.orders.order_items, { ...payload }],
-        },
+        orders: [...state.orders, { ...payload }],
+        // orders: {
+        //   ...state.orders,
+        //   order_items: [...state.orders.order_items, { ...payload }],
+        // },
       };
 
     case REMOVE_ORDER:
@@ -122,15 +123,10 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
     case REMOVE_FROM_USER_CART:
-      const newUserOrders = state.orders.order_items.filter(
-        (item) => item.id !== payload
-      ); //id je redni broj u order_items. Product je id proizvoda
+      const newUserOrders = state.orders.filter((item) => item.id !== payload);
       return {
         ...state,
-        orders: {
-          ...state.orders,
-          order_items: newUserOrders,
-        },
+        orders: newUserOrders,
       };
 
     case ADD_TO_USER_WISHLIST:
@@ -229,11 +225,12 @@ const userReducer = (state = initialState, { type, payload }) => {
     case USER_PURCHASE:
       return {
         ...state,
-        orders: {
-          ...state.orders,
-          order_items: [],
-          checkout_date: Date.now(),
-        },
+        orders: null,
+        // orders: {
+        //   ...state.orders,
+        //   orders: [],
+        //   checkout_date: Date.now(),
+        // },
       };
     case GUEST_PURCHASE:
       return {
