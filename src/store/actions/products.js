@@ -123,18 +123,22 @@ export const addProduct = (formData) => async (dispatch) => {
   }
 };
 
-export const changeProduct = (data) => async (dispatch) => {
+export const changeProduct = (formData) => async (dispatch) => {
   try {
-    // const res = await axios.put(
-    await axios.put(`https://gameshop-g5.com/products/${data.id}/`, data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access")}`,
-      },
-    });
-    //  dispatch({ type: CHANGE_PRODUCT, payload: res.data }); //! nije dodato
+    await axios.patch(
+      `https://gameshop-g5.com/products/${formData.id}/`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+    // dispatch({ type: CHANGE_PRODUCT, payload: res.data }); //! nije dodato
     dispatch(setAlert("Product changed", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message && response.data.message, "error"));
+    dispatch(setAlert("Product not changed", "error"));
   }
 };
 

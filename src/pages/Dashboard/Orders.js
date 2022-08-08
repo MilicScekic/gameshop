@@ -1,7 +1,7 @@
 import { Box } from "@material-ui/core";
 import OrderTable from "../../components/Dashboard/Orders/Table";
 
-const Orders = () => {
+export const Orders = () => {
   return (
     <>
       <Box
@@ -22,4 +22,3 @@ const Orders = () => {
     </>
   );
 };
-export default Orders;

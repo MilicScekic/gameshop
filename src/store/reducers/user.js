@@ -76,7 +76,7 @@ const userReducer = (state = initialState, { type, payload }) => {
     case GET_ALL_ORDERS:
       return {
         ...state,
-        all_orders: [...state.all_orders, { ...payload }],
+        all_orders: [...state.all_orders, ...payload],
       };
 
     case CLEAR_ALL_ORDERS:

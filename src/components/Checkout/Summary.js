@@ -6,6 +6,7 @@ import {
   refreshOrderItems,
   clearDelpay,
   refreshOrders,
+  clearOrderItems,
 } from "../../store/actions/user";
 import {
   IconButton,
@@ -19,7 +20,6 @@ import {
 } from "@material-ui/core";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Subheadline } from "../../utils/Responsive";
-import { setAlert } from "../../store/actions/visual";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,6 +50,7 @@ const Summary = ({
   clearDelpay,
   refreshOrderItems,
   refreshOrders,
+  clearOrderItems,
 }) => {
   const classes = useStyles();
 
@@ -93,7 +94,7 @@ const Summary = ({
   const finishPayment = () => {
     try {
       userPurchase(orderId);
-      refreshOrderItems();
+      clearOrderItems();
       refreshOrders();
       clearDelpay();
       history.push("/");
@@ -197,4 +198,5 @@ export default connect(mapStateToProps, {
   clearDelpay,
   refreshOrderItems,
   refreshOrders,
+  clearOrderItems,
 })(withRouter(Summary));
