@@ -1,5 +1,5 @@
 import React, { useEffect, Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   getCurrentProduct,
@@ -9,6 +9,7 @@ import {
   addToUserCart,
   addToGuestCart,
   addToUserWishlist,
+  refreshOrderItems,
 } from "../store/actions/user";
 import Spinner from "../components/Spinner";
 import { makeStyles } from "@mui/styles";
@@ -20,6 +21,7 @@ import Rating from "@mui/material/Rating";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import Comments from "../components/Comments/Comments";
+import { setAlert } from "../store/actions/visual";
 
 const useStyles = makeStyles((theme) => ({
   centered: {
@@ -56,6 +58,7 @@ const Product = ({
   addToUserCart,
   addToGuestCart,
   addToUserWishlist,
+  refreshOrderItems,
 }) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -69,6 +72,17 @@ const Product = ({
   }, []);
 
   const classes = useStyles();
+
+  const handleAddToCart = () => {
+    try {
+      addToUserCart(match.params.id);
+      refreshOrderItems();
+    } catch (error) {
+      setAlert("Not added");
+      refreshOrderItems();
+      <Redirect to="/products" />;
+    }
+  };
 
   return currentProduct === null ? (
     <div style={{ minHeight: "calc(100vh - 60px)" }}>
@@ -121,10 +135,10 @@ const Product = ({
             )}
             {user && isAuthenticated ? (
               <IconButton
-                disabled={orders.order_items?.some(
-                  (item) => item.product === currentProduct.id
+                disabled={orders?.some(
+                  (item) => item.product.id === currentProduct.id
                 )}
-                onClick={() => addToUserCart(match.params.id)} //? moze i currentProduct.id
+                onClick={handleAddToCart} //? moze i currentProduct.id
               >
                 <AddShoppingCartIcon />
               </IconButton>
@@ -177,6 +191,7 @@ export default connect(mapStateToProps, {
   getCurrentProduct,
   clearCurrentProduct,
   addToUserCart,
+  refreshOrderItems,
   addToGuestCart,
   addToUserWishlist,
 })(Product);

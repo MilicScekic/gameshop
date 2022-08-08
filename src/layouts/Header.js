@@ -234,9 +234,7 @@ function Header({
                     <Badge
                       color="secondary"
                       badgeContent={
-                        user !== null && orders?.order_items
-                          ? calculateSum(orders?.order_items)
-                          : null
+                        user !== null && orders ? calculateSum(orders) : null
                       }
                     >
                       <ShoppingCartTwoToneIcon color="secondaryDark" />
@@ -514,7 +512,7 @@ function Header({
             {dropdownCategories ? (
               dropdownCategories.map((cat) => {
                 return (
-                  <li>
+                  <li key={cat.name}>
                     <Link
                       to={`/products?category=${cat.name}&sortBy=price&maxPrice=1000`}
                       style={{ textDecoration: "none" }}

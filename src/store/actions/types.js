@@ -44,6 +44,7 @@ export const CLEAR_ALL_ORDERS = "CLEAR_ALL_ORDERS";
 export const REMOVE_ORDER = "REMOVE_ORDER";
 export const GET_WISHLIST = "GET_WISHLIST";
 export const ADD_TO_USER_WISHLIST = "ADD_TO_USER_WISHLIST";
+export const GET_ORDER_ID = "GET_ORDER_ID";
 
 // AUTH
 export const AUTH_SUCCESS = "AUTH_SUCCESS";

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,16 +7,15 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { connect } from "react-redux";
-import { Button, ListItemAvatar, TextField } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 import {
   getOrders,
   clearOrders,
   removeOrder,
+  refreshOrders,
 } from "../../../store/actions/user";
 import Spinner from "../../Spinner";
-import { useEffect } from "react";
-import { showSpinner } from "../../../store/actions/visual";
-import { useState } from "react";
+import { setAlert } from "../../../store/actions/visual";
 
 const OrderTable = ({
   all_orders,
@@ -24,31 +23,19 @@ const OrderTable = ({
   getOrders,
   clearOrders,
   removeOrder,
+  refreshOrders,
 }) => {
   const [edit, setEdit] = useState();
 
-  useEffect(() => {
-    clearOrders();
-
-    const timeoutId = setTimeout(() => {
-      getOrders();
-    }, 200);
-
-    return () => {
-      clearOrders();
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  const handleDelete = (id) => {
+  const handleDelete = (orderId) => {
     if (window.confirm("Are you sure you want to remove order?")) {
       try {
-        removeOrder(id);
-        alert("Order was successfully removed.");
-        clearOrders();
-        getOrders();
+        removeOrder(orderId);
+        setAlert("Order removed succesfully!", "success");
+        refreshOrders();
       } catch (error) {
-        alert("There some error in deleting...");
+        setAlert("There some error in deleting!", "error");
+        refreshOrders();
       }
     }
   };
@@ -70,97 +57,99 @@ const OrderTable = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {all_orders?.map((order) => {
-            if (edit?.id !== order.id) {
-              return (
-                <TableRow
-                  key={order.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {order.id}
-                  </TableCell>
-                  <TableCell align="left">
-                    {parseFloat(order.price.toLocaleString())} &euro;
-                  </TableCell>
-                  <TableCell align="right">{order.checkout_date}</TableCell>
-                  <TableCell align="right">{order.user}</TableCell>
-                  <TableCell align="right">
-                    <button
-                      style={{
-                        marginRight: "10px",
-                        color: "#fff",
-                        backgroundColor: "#f50057",
-                        padding: "8px 16px",
-                        fontSize: "0.875rem",
-                        minWidth: "64px",
-                        borderStyle: "none",
-                        borderRadius: "5px",
-                      }}
-                      onClick={() => handleDelete(order.id)}
-                    >
-                      Delete
-                    </button>
-                  </TableCell>
-                </TableRow>
-              );
-            } else {
-              return (
-                <TableRow
-                  key={order.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    <TextField
-                      type="text"
-                      name="id"
-                      value={edit.id || order.id}
-                      onChange={(e) => handleChange(e)} //? Pri kliku dobija objekat
-                    />
-                  </TableCell>
-                  <TableCell align="left">
-                    <TextField
-                      type="text"
-                      name="price"
-                      value={edit.price || order.price}
-                      onChange={(e) => handleChange(e)}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <TextField
-                      type="text"
-                      name="checkout_date"
-                      value={edit.checkout_date || order.checkout_date}
-                      onChange={(e) => handleChange(e)}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <TextField
-                      type="text"
-                      name="price"
-                      value={edit.user || order.user}
-                      onChange={(e) => handleChange(e)}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      style={{ marginRight: "10px" }}
-                      // onClick={handleProduct}
-                    >
-                      Confirm changes
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              );
-            }
-          })}
+          {all_orders?.length > 0 &&
+            all_orders?.map((order) => {
+              if (edit?.id !== order.id) {
+                return (
+                  <TableRow
+                    key={order.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {order.id}
+                    </TableCell>
+                    <TableCell align="left">
+                      {parseFloat(order.price.toLocaleString())} &euro;
+                    </TableCell>
+                    <TableCell align="right">{order.checkout_date}</TableCell>
+                    <TableCell align="right">{order.user}</TableCell>
+                    <TableCell align="right">
+                      <button
+                        style={{
+                          marginRight: "10px",
+                          color: "#fff",
+                          backgroundColor: "#f50057",
+                          padding: "8px 16px",
+                          fontSize: "0.875rem",
+                          minWidth: "64px",
+                          borderStyle: "none",
+                          borderRadius: "5px",
+                        }}
+                        onClick={() => handleDelete(order.id)}
+                      >
+                        Delete
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                );
+              } else {
+                return (
+                  <TableRow
+                    key={order.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      <TextField
+                        type="text"
+                        name="id"
+                        value={edit.id || order.id}
+                        onChange={(e) => handleChange(e)} //? Pri kliku dobija objekat
+                      />
+                    </TableCell>
+                    <TableCell align="left">
+                      <TextField
+                        type="text"
+                        name="price"
+                        value={edit.price || order.price}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </TableCell>
+                    <TableCell align="right">
+                      <TextField
+                        type="text"
+                        name="checkout_date"
+                        value={edit.checkout_date || order.checkout_date}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </TableCell>
+                    <TableCell align="right">
+                      <TextField
+                        type="text"
+                        name="price"
+                        value={edit.user || order.user}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ marginRight: "10px" }}
+                        // onClick={handleProduct}
+                      >
+                        Confirm changes
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              }
+            })}
         </TableBody>
       </Table>
 
       {loading && <Spinner />}
     </TableContainer>
+    // <>{console.log(all_orders)}</>
   );
 };
 
@@ -172,5 +161,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   getOrders,
   clearOrders,
+  refreshOrders,
   removeOrder,
 })(OrderTable);
