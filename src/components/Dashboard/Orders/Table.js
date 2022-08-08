@@ -27,6 +27,19 @@ const OrderTable = ({
 }) => {
   const [edit, setEdit] = useState();
 
+  useEffect(() => {
+    clearOrders();
+
+    const timeoutId = setTimeout(() => {
+      getOrders();
+    }, 200);
+
+    return () => {
+      clearOrders();
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   const handleDelete = (orderId) => {
     if (window.confirm("Are you sure you want to remove order?")) {
       try {
