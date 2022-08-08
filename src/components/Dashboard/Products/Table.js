@@ -28,6 +28,7 @@ const ProductTable = ({
   fetchProducts,
   clearProducts,
   changeProduct,
+  refreshProducts,
 }) => {
   const [edit, setEdit] = useState();
 
@@ -72,10 +73,9 @@ const ProductTable = ({
   };
   const handleProduct = () => {
     try {
-      changeProduct(edit);
+      changeProduct(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno data.id
       alert("Product was successfully edited.");
-      clearProducts();
-      fetchProducts();
+      refreshProducts();
       setEdit(null);
     } catch (error) {
       alert("There some error in changing product...");
@@ -106,7 +106,7 @@ const ProductTable = ({
                       <ListItemAvatar>
                         <img
                           alt={product.name}
-                          src={product.media.map((m) => m.media)}
+                          src={product.media[0].media}
                           style={{
                             height: 48,
                             width: 48,
@@ -160,6 +160,7 @@ const ProductTable = ({
                 </TableRow>
               );
             } else {
+              //* Dio koji se pojavljuje kad se klikne na edit
               return (
                 <TableRow
                   key={product.id}
@@ -234,8 +235,8 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   removeProduct,
-  // getProducts,
   fetchProducts,
   clearProducts,
   changeProduct,
+  refreshProducts,
 })(ProductTable);

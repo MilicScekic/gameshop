@@ -29,7 +29,7 @@ import {
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { Products as DashboardProducts } from "./pages/Dashboard/Products";
 import Sidebar from "./layouts/Sidebar";
-import Orders from "./pages/Dashboard/Orders";
+import { Orders } from "./pages/Dashboard/Orders";
 import Checkout from "./pages/Checkout";
 import { getCategories, clearCategories } from "./store/actions/products";
 import { setAlert } from "./store/actions/visual";
@@ -62,7 +62,6 @@ function App({
   useEffect(() => {
     !!localStorage.access && autoSigninUser(localStorage.access);
 
-    //? Po ure
     logoutAfterSession(60); // u minutima. Trajanje sesije
   }, []);
 
