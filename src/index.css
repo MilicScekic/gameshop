@@ -73,13 +73,15 @@
   color: black;
 }
 
-.searchBtn {
-  width: 40px;
+.searchIcon {
+  width: 2.5rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid #838383;
   background: #838383;
-  color: black;
   border-radius: 0.3rem 0 0 0.3rem;
-  cursor: pointer;
   font-size: 0.3rem;
 }
 
@@ -123,15 +125,73 @@
   width: 80%;
 }
 
-/* dropdown menu css */
-.dropdownMenu {
+/* dropdown menu and search css */
+.dropdown {
+  color: #999;
   position: absolute;
   background: black;
-  left: 1rem;
   top: 100%;
   z-index: 10;
   display: none;
   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.6);
+  width: 280px;
+}
+
+.dropdown h6 {
+  color: #999;
+  font-size: 1.5rem;
+  padding: 0.9rem;
+  border-bottom: 1px solid rgba(255, 183, 142, 1);
+}
+
+.dropdown h6:hover {
+  background: var(--clr-gradient);
+  color: black;
+}
+
+.dropdown ul li {
+  list-style: none;
+  background: black;
+  width: 100%;
+  padding: 0.9rem;
+  padding-left: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.dropdown ul a {
+  text-decoration: none;
+  color: #999;
+  display: block;
+}
+
+.dropdown ul li:hover {
+  background: var(--clr-gradient);
+}
+
+.dropdown ul li:hover {
+  color: black;
+}
+
+.dropdownMenu {
+  left: 300px;
+}
+
+.dropdownSearch {
+  font-size: 1.1rem;
+  left: 10px;
+}
+
+.dropdownSearch ul li {
+  height: 5rem;
+  padding-bottom: 0.5rem;
+}
+
+.dropdownSearch img {
+  height: 3rem;
+  width: 2rem;
 }
 
 .scale-in-ver-top {
@@ -139,36 +199,6 @@
     both;
   animation: scale-in-ver-top 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
-
-.dropdownMenu h6 {
-  color: #999;
-  font-size: 1.5rem;
-  padding: 0.9rem;
-  border-bottom: 1px solid rgba(255, 183, 142, 1);
-}
-
-.dropdownMenu ul li {
-  list-style: none;
-  background: black;
-  width: 13rem;
-  padding: 0.9rem;
-  padding-left: 1.5rem;
-}
-
-.dropdownMenu ul li a {
-  text-decoration: none;
-  color: #999;
-  display: block;
-}
-
-.dropdownMenu ul li:hover {
-  background: var(--clr-gradient);
-}
-
-.dropdownMenu ul li:hover a {
-  color: black;
-}
-
 .displayBlock {
   display: block;
 }
@@ -179,6 +209,14 @@
   }
   .searchItem {
     flex-grow: 1;
+  }
+  .dropdownMenu {
+    left: 10%;
+    width: 80%;
+  }
+  .dropdownSearch {
+    left: 10%;
+    width: 80%;
   }
 }
 
@@ -242,6 +280,7 @@ body {
 
 .bottomBar Button:hover {
   background: var(--clr-gradient);
+  cursor: default;
 }
 
 .active {

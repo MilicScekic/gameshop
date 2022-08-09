@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import Layout from "./layouts/Layout";
 import {
   BrowserRouter as Router,
