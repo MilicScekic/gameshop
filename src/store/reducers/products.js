@@ -56,15 +56,6 @@ const productsReducer = (state = initialState, { type, payload }) => {
         products: [...state.products, ...payload],
       };
 
-    case ADD_NEW_REVIEW:
-      return {
-        ...state,
-        currentProduct: {
-          ...state.currentProduct,
-          reviews: payload,
-        },
-      };
-
     case ADD_NEW_COMMENT:
       return {
         ...state,

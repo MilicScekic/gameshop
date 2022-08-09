@@ -31,7 +31,12 @@ import { Products as DashboardProducts } from "./pages/Dashboard/Products";
 import Sidebar from "./layouts/Sidebar";
 import { Orders } from "./pages/Dashboard/Orders";
 import Checkout from "./pages/Checkout";
-import { getCategories, clearCategories } from "./store/actions/products";
+import {
+  getCategories,
+  clearCategories,
+  fetchProducts,
+  clearProducts,
+} from "./store/actions/products";
 import { setAlert } from "./store/actions/visual";
 
 const theme = createTheme({
@@ -57,12 +62,14 @@ function App({
   refreshAccessToken,
   getCategories,
   clearCategories,
+  fetchProducts,
+  clearProducts,
 }) {
   //* Ovo je ako se osvjezi stranica, da odma prijavi korisnika, da ne ceka 5 minuta da to uradi useEffect dolje pri pri rifresu tokena
   useEffect(() => {
     !!localStorage.access && autoSigninUser(localStorage.access);
 
-    logoutAfterSession(60); // u minutima. Trajanje sesije
+    // logoutAfterSession(60); // u minutima. Trajanje sesije
   }, []);
 
   //! Ako bi se na server postavio trajanje za osvjezavanje tokena na 5ms, onda bi morali i interval pomjeriti spram tog kasnjenja
@@ -78,15 +85,33 @@ function App({
   }, []);
 
   useEffect(() => {
+    clearCategories();
+    clearProducts();
+
     const timeoutId = setTimeout(() => {
       getCategories(); // popunjava niz categories u reducer
+      fetchProducts();
     }, 200);
 
     return () => {
       clearTimeout(timeoutId);
-      clearCategories(); // Nece se niz praznit uopste, jer je u App.js
+      clearCategories();
+      clearProducts();
     };
-  }, []);
+  }, [clearCategories, getCategories]);
+
+  useEffect(() => {
+    clearProducts();
+
+    const timeoutId = setTimeout(() => {
+      fetchProducts();
+    }, 400);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearProducts();
+    };
+  }, [clearProducts, fetchProducts]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -95,12 +120,15 @@ function App({
           <Switch>
             <ProtectedRoute path="/admin/">
               <Sidebar>
-                <ProtectedRoute path="/admin/dashboard" component={Dashboard} />
+                <Route path="/admin/dashboard" component={Dashboard} />
+                <Route path="/admin/products" component={DashboardProducts} />
+                <Route path="/admin/orders" component={Orders} />
+                {/* <ProtectedRoute path="/admin/dashboard" component={Dashboard} />
                 <ProtectedRoute
                   path="/admin/products"
                   component={DashboardProducts}
                 />
-                <ProtectedRoute path="/admin/orders" component={Orders} />
+                <ProtectedRoute path="/admin/orders" component={Orders} /> */}
               </Sidebar>
             </ProtectedRoute>
 
@@ -131,5 +159,7 @@ export default connect(null, {
   logoutAfterSession,
   refreshAccessToken,
   getCategories,
+  fetchProducts,
   clearCategories,
+  clearProducts,
 })(App);
