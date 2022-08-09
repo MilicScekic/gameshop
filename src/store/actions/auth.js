@@ -92,6 +92,7 @@ export const autoSigninUser = (token) => async (dispatch) => {
   } catch ({ response }) {
     dispatch({ type: AUTO_SIGNIN_FAIL });
     dispatch(setAlert("Can not login!", "warning"));
+    dispatch(hideSpinner());
   }
 };
 

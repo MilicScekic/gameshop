@@ -6,8 +6,9 @@ import LocationOnTwoToneIcon from "@mui/icons-material/LocationOnTwoTone";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
+import { connect } from "react-redux";
 
-function Footer() {
+function Footer({ isAuthenticated }) {
   return (
     <>
       <Box className="ftr">
@@ -77,16 +78,20 @@ function Footer() {
                   <Typography component="span">Products</Typography>
                 </Link>
               </Box>
-              <Box>
-                <Link to="/login">
-                  <Typography component="span">Sign in</Typography>
-                </Link>
-              </Box>
-              <Box>
-                <Link to="/register">
-                  <Typography component="span">Register</Typography>
-                </Link>
-              </Box>
+              {isAuthenticated !== true && (
+                <>
+                  <Box>
+                    <Link to={"/login"}>
+                      <Typography component="span">Sign in</Typography>
+                    </Link>
+                  </Box>
+                  <Box>
+                    <Link to={"/register"}>
+                      <Typography component="span">Register</Typography>
+                    </Link>
+                  </Box>
+                </>
+              )}
             </Grid>
             <Grid item xs={12} sm={3}>
               <Box>
@@ -157,4 +162,8 @@ function Footer() {
   );
 }
 
-export default Footer;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps)(Footer);

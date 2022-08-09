@@ -100,7 +100,7 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
 
-    //! Ovo je zapravo dodaj u order
+    //! Ovo je zapravo dodaj u orders
     case ADD_TO_USER_CART:
       return {
         ...state,

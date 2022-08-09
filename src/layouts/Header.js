@@ -31,6 +31,7 @@ function Header({
   isAuthenticated,
   user,
   guest,
+  products,
   orders,
   wishlist,
   categories,
@@ -39,9 +40,26 @@ function Header({
 }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+
   const [dropdownCategories, setDropdownCategories] = useState(null);
   const [isDropdown, setIsDropdown] = useState(false);
   const dropdownRef = useRef();
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchedProducts, setSearchedProducts] = useState(null);
+  const [isSearchVisible, setIsSearchVisible] = useState(true);
+  const searchRef = useRef();
+
+  const debounce = (cbf, delay = 300) => {
+    let timeout;
+
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        cbf(...args);
+      }, delay);
+    };
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -73,6 +91,18 @@ function Header({
     };
   });
 
+  useEffect(() => {
+    const handler = (event) => {
+      if (!searchRef.current.contains(event.target)) {
+        setIsSearchVisible(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
+
   // opens dropdown menu for a specified parent category
   const handleDropdown = (cat) => {
     const cats = categories.filter((category) => {
@@ -82,6 +112,23 @@ function Header({
     setDropdownCategories(cats);
     setIsDropdown(true);
   };
+
+  // opens dropdown search for term used
+  useEffect(() => {
+    setIsSearchVisible(true);
+    const p = products.filter((product) => {
+      if (searchTerm === "") {
+        setIsSearchVisible(false);
+        return product;
+      } else if (
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ) {
+        return product;
+      }
+    });
+    setSearchedProducts(p);
+    console.log(searchTerm);
+  }, [searchTerm]);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -175,19 +222,7 @@ function Header({
                 sx={{
                   display: { xs: "block", md: "none" },
                 }}
-              >
-                {/* {settings.map((page) => (
-                  <Link
-                    to={page}
-                    style={{ color: "black", textDecoration: "none" }}
-                    key={page}
-                  >
-                    <MenuItem onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
-                    </MenuItem>
-                  </Link>
-                ))} */}
-              </Menu>
+              ></Menu>
             </Box>
             <ComputerIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
             <Typography
@@ -319,7 +354,10 @@ function Header({
             type="text"
             className="searchBar"
             placeholder="Search..."
-          ></input>
+            onChange={debounce((event) => {
+              setSearchTerm(event.target.value);
+            })}
+          />
         </div>
         <div className="scrollItem">
           <div className="categories">
@@ -527,6 +565,40 @@ function Header({
             )}
           </ul>
         </div>
+
+        <div
+          ref={searchRef}
+          className={
+            "dropdown dropdownSearch scale-in-ver-top" +
+            (isSearchVisible ? " displayBlock" : "")
+          }
+        >
+          <ul>
+            {searchedProducts ? (
+              searchedProducts.map((product) => {
+                return (
+                  <Link
+                    to={`/products/${product.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <li>
+                      {product.name}
+                      {product.media[0] ? (
+                        <span>
+                          <img src={product.media[0].media} />
+                        </span>
+                      ) : (
+                        <span></span>
+                      )}
+                    </li>
+                  </Link>
+                );
+              })
+            ) : (
+              <li>Category not selected</li>
+            )}
+          </ul>
+        </div>
       </div>
     </>
   );
@@ -535,6 +607,7 @@ function Header({
 const mapStateToProps = (state) => ({
   authUser: state.auth.user,
   user: state.user.user,
+  products: state.products.products,
   orders: state.user.orders,
   wishlist: state.user.wishlist,
   categories: state.products.categories,

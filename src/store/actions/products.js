@@ -89,7 +89,7 @@ export const postNewComment = (formData, productId) => async (dispatch) => {
 };
 
 export const removeProduct = (id) => async (dispatch) => {
-  dispatch(showSpinner());
+  // dispatch(showSpinner());
   try {
     await axios.delete(`https://gameshop-g5.com/products/${id}/`, {
       headers: {
@@ -98,7 +98,7 @@ export const removeProduct = (id) => async (dispatch) => {
     });
     dispatch({ type: REMOVE_PRODUCT, payload: id });
     dispatch(setAlert("Removed product", "success"));
-    dispatch(hideSpinner());
+    // dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch(hideSpinner());
     dispatch(setAlert("Product is not deleted. Try again!", "error"));

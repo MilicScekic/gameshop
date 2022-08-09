@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,28 +7,29 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { connect } from "react-redux";
-import { Button, ListItemAvatar, TextField } from "@material-ui/core";
+import { ListItemAvatar, TextField } from "@material-ui/core";
 import {
   clearProducts,
-  // getProducts,
   fetchProducts,
   refreshProducts,
   removeProduct,
   changeProduct,
+  getProducts,
+  addProduct,
 } from "../../../store/actions/products";
+import Button from "@mui/material/Button";
 import Spinner from "../../Spinner";
-import { useEffect } from "react";
-import { useState } from "react";
 
 const ProductTable = ({
   products,
   loading,
   removeProduct,
-  // getProducts,
+  addProduct,
   fetchProducts,
   clearProducts,
   changeProduct,
   refreshProducts,
+  getProducts,
 }) => {
   const [edit, setEdit] = useState();
 
@@ -43,7 +44,43 @@ const ProductTable = ({
       clearProducts();
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [clearProducts, fetchProducts]);
+
+  const [open, setOpen] = useState(false);
+  const [product, setProduct] = useState({
+    name: "",
+    content: "",
+    price: "",
+    files: [],
+    categories: [],
+  });
+
+  const handleCategory = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (
+      product.name !== "" &&
+      product.content !== "" &&
+      product.price !== "" &&
+      product.categories.length > 0
+    ) {
+      addProduct(product);
+      setProduct({
+        name: "",
+        files: [],
+        content: "",
+        price: "",
+        categories: [],
+      });
+      clearProducts();
+      fetchProducts();
+    } else {
+      alert("You need to fill every field to add product!");
+    }
+  };
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete product?")) {
@@ -71,9 +108,10 @@ const ProductTable = ({
   const handleChange = (e) => {
     setEdit({ ...edit, [e.target.name]: e.target.value });
   };
+
   const handleProduct = () => {
     try {
-      changeProduct(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno data.id
+      changeProduct(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno formData.id
       alert("Product was successfully edited.");
       refreshProducts();
       setEdit(null);
@@ -81,6 +119,7 @@ const ProductTable = ({
       alert("There some error in changing product...");
     }
   };
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -106,7 +145,9 @@ const ProductTable = ({
                       <ListItemAvatar>
                         <img
                           alt={product.name}
-                          src={product.media[0].media}
+                          src={
+                            product.media.length > 0 && product.media[0].media
+                          }
                           style={{
                             height: 48,
                             width: 48,
@@ -235,8 +276,10 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   removeProduct,
+  addProduct,
   fetchProducts,
   clearProducts,
   changeProduct,
   refreshProducts,
+  getProducts,
 })(ProductTable);
