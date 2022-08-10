@@ -79,15 +79,8 @@ const ProductTable = ({
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
-  const preventRerender = useCallback(
-    (item) => (
-      <img
-        src={item.media.length > 0 && item.media[0].media}
-        height="48"
-        width="48"
-      />
-    ),
-    []
+  const preventRerender = (item) => (
+    <img src={item?.media[0]?.media} height="48" width="48" />
   );
 
   const editMediaComponent = useCallback(() => {
@@ -210,20 +203,30 @@ const ProductTable = ({
       currencySetting: { currencyCode: "EUR" },
       filterPlaceholder: "Filter by price",
     },
-    //   {
-    //     title: "ACTION",
-    //     render: (item) => (
-    //       <Button
-    //         size="small"
-    //         variant="contained"
-    //         color="error"
-    //         onClick={() => handleDelete(item.id)}
-    //       >
-    //         Delete
-    //       </Button>
-    //     ),
-    //     align: "right",
-    //   },
+    {
+      title: "ACTION",
+      render: (item) => (
+        <>
+          <Button
+            size="small"
+            variant="contained"
+            color="error"
+            onClick={() => handleDelete(item.id)}
+          >
+            Delete
+          </Button>
+          <Button
+            size="small"
+            variant="contained"
+            color="primary"
+            onClick={() => handleEdit(item)}
+          >
+            Edit
+          </Button>
+        </>
+      ),
+      align: "right",
+    },
   ];
 
   const handleSubmit = (e) => {

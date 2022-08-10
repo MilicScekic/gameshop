@@ -1,10 +1,22 @@
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
 import Slider from "../components/Slider";
 import SliderCard from "../components/SliderCard";
 
 function Home() {
+  const [latestProducts, setLatestProducts] = useState();
+  useEffect(() => {
+    axios
+      .get("https://gameshop-g5.com/latest_products/?format=json")
+      .then((result) => {
+        setLatestProducts(result.data);
+      });
+  }, []);
+  console.log(latestProducts);
   const placeholderData = [
     {
       name: "Fall Guys",
@@ -69,13 +81,13 @@ function Home() {
         }}
       >
         <Grid item xs={12} md={7} gridArea={"slider"} maxWidth="100%">
-          <Slider games={placeholderData} />
+          <Slider products={latestProducts?.slice(0, 3)} />
         </Grid>
-        {placeholderData2.map((game) => {
+        {latestProducts?.slice(3, 5).map((product) => {
           return (
             <Grid
-              key={game.name}
-              gridArea={game.area}
+              key={product.id}
+              gridArea={product.id}
               item
               maxWidth="100%"
               xs={6}
@@ -88,9 +100,10 @@ function Home() {
               }}
             >
               <SliderCard
-                name={game.name}
-                description={game.description}
-                image={game.image}
+                id={product.id}
+                name={product.name}
+                description={product.description}
+                image={product.media[0]?.media}
               />
             </Grid>
           );

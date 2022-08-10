@@ -54,6 +54,7 @@ const ProductTable = ({
     files: [],
     categories: [],
   });
+  console.log(products);
 
   const handleCategory = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
@@ -145,9 +146,7 @@ const ProductTable = ({
                       <ListItemAvatar>
                         <img
                           alt={product.name}
-                          src={
-                            product.media.length > 0 && product.media[0].media
-                          }
+                          src={product.media[0].media}
                           style={{
                             height: 48,
                             width: 48,
@@ -204,7 +203,7 @@ const ProductTable = ({
               //* Dio koji se pojavljuje kad se klikne na edit
               return (
                 <TableRow
-                  key={product.id}
+                  key={product.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
