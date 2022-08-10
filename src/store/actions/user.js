@@ -103,8 +103,8 @@ export const getOrders = () => async (dispatch) => {
         Authorization: `Bearer ${localStorage.getItem("access")}`,
       },
     });
-    console.log("Get all orders");
-    console.log(res.data);
+    // console.log("Get all orders");
+    // console.log(res.data);
     dispatch({ type: GET_ALL_ORDERS, payload: res.data });
     dispatch(hideSpinner());
   } catch ({ response }) {
@@ -139,8 +139,8 @@ export const getOrderItems = () => async (dispatch) => {
       }
     );
 
-    console.log("Order items");
-    console.log(res.data);
+    // console.log("Order items");
+    // console.log(res.data);
     dispatch({ type: GET_ORDER_ITEMS, payload: res.data });
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message, "error"));
@@ -172,7 +172,7 @@ export const getWishlistItems = () => async (dispatch) => {
         Authorization: `Bearer ${localStorage.getItem("access")}`,
       },
     });
-    console.log(res.data); // niz products puni u wishlist
+    // console.log(res.data); // niz products puni u wishlist
     dispatch({ type: GET_WISHLIST, payload: res.data });
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message, "error"));
@@ -215,8 +215,8 @@ export const addToUserCart = (orderId, productId) => async (dispatch) => {
         },
       }
     );
-    console.log("Ovo ti ubacam");
-    console.log(orderItem.data);
+    // console.log("Ovo ti ubacam");
+    // console.log(orderItem.data);
     dispatch({ type: ADD_TO_USER_CART, payload: orderItem.data });
 
     dispatch(setAlert("Product added to cart", "success"));
@@ -238,7 +238,7 @@ export const addToUserWishlist = (productId) => async (dispatch) => {
       }
     );
 
-    console.log(res.data);
+    // console.log(res.data);
 
     dispatch({ type: ADD_TO_USER_WISHLIST, payload: res.data });
     dispatch(setAlert("Product added to wishlist", "success"));

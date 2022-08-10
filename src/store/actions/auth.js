@@ -24,7 +24,7 @@ export const registerUser = (formData) => async (dispatch) => {
       "https://gameshop-g5.com/auth/register/",
       formData
     );
-    console.log(res.data);
+    // console.log(res.data);
     dispatch(setAlert("Registration success. Now you can login!", "success"));
     dispatch(hideSpinner());
   } catch ({ response }) {
@@ -61,8 +61,8 @@ export const refreshAccessToken = (refreshToken) => async (dispatch) => {
         refresh: refreshToken,
       }
     );
-    console.log("New refreshed token:");
-    console.log(res.data.access);
+    // console.log("New refreshed token:");
+    // console.log(res.data.access);
     dispatch({ type: NEW_ACCESS_TOKEN, payload: res.data }); //u reducer(auth): payload.access pa ne mora res.data.access
     dispatch(autoSigninUser(res.data.access));
   } catch (err) {
@@ -79,8 +79,8 @@ export const autoSigninUser = (token) => async (dispatch) => {
     });
 
     //? Testiranje
-    console.log("Current user");
-    console.log(res.data);
+    // console.log("Current user");
+    // console.log(res.data);
 
     dispatch({ type: AUTO_SIGNIN_SUCCESS, payload: res.data });
     dispatch(getUserProfile(token)); //? Pokupi podatke prema tokenu i popuni user objekat
@@ -99,7 +99,7 @@ export const autoSigninUser = (token) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   dispatch({ type: CLEAN_USER });
   dispatch({ type: LOGOUT });
-  dispatch(setAlert("Logged out successfully", "success"));
+  dispatch(setAlert("You are offline!", "error"));
 };
 
 //? Optional feature

@@ -14,7 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import GamesIcon from "@mui/icons-material/Games";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, NavLink, useRouteMatch } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -36,6 +36,11 @@ export default function Sidebar({ children }) {
       name: "Orders",
       icon: <ShoppingCartIcon />,
       path: `${url}/orders`,
+    },
+    {
+      name: "Products Dev",
+      icon: <GamesIcon />,
+      path: `${url}/products-dev`,
     },
   ];
   return (
@@ -78,7 +83,7 @@ export default function Sidebar({ children }) {
         <List>
           {pages.map((page) => (
             <ListItem key={[page.name]} disablePadding>
-              <Link
+              <NavLink
                 to={page.path}
                 style={{ textDecoration: "none", color: "black" }}
               >
@@ -86,7 +91,7 @@ export default function Sidebar({ children }) {
                   <ListItemIcon>{page.icon}</ListItemIcon>
                   <ListItemText primary={page.name} />
                 </ListItemButton>
-              </Link>
+              </NavLink>
             </ListItem>
           ))}
         </List>
