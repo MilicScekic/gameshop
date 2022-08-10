@@ -1,6 +1,7 @@
 import { Box } from "@material-ui/core";
 import { StatsCard } from "../../components/Dashboard/StatsCard";
-import Latest from "../../components/Dashboard/Latest";
+import LatestProducts from "../../components/Dashboard/Latest";
+import LatestOrders from "../../components/Dashboard/LatestOrders";
 import { connect } from "react-redux";
 import { clearProducts, fetchProducts } from "../../store/actions/products";
 import { showSpinner } from "../../store/actions/visual";
@@ -10,7 +11,7 @@ import { getOrders, clearOrders } from "../../store/actions/user";
 function Dashboard({ fetchProducts, clearProducts, getOrders, clearOrders }) {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchProducts(); // Zamjenjuje getProducts(url), radi manje koda
+      fetchProducts();
       getOrders();
     }, 500);
 
@@ -44,8 +45,8 @@ function Dashboard({ fetchProducts, clearProducts, getOrders, clearOrders }) {
           gap: "50px",
         }}
       >
-        <Latest />
-        <Latest />
+        <LatestProducts />
+        <LatestOrders />
       </div>
     </Box>
   );

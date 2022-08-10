@@ -1,13 +1,5 @@
-import React, { useEffect, useState, forwardRef, useCallback } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import React, { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
-import { ListItemAvatar, TextField } from "@material-ui/core";
 import {
   clearProducts,
   fetchProducts,
@@ -26,9 +18,11 @@ import { DropzoneDialog } from "react-mui-dropzone";
 import CloseIcon from "@mui/icons-material/Close";
 // import axios from "axios";
 import { FormControl, IconButton, MenuItem, Select } from "@mui/material";
+import { setAlert } from "../../../store/actions/visual";
 
 const ProductTable = ({
   products,
+  categories,
   loading,
   removeProduct,
   addProduct,
@@ -71,7 +65,6 @@ const ProductTable = ({
   const [open, setOpen] = useState(false);
   //const [media, setMedia] = useState([]); //! ovdje mozda da se stavio products.media, posto je to takodje niz
   const [uploadedMedia, setUploadedMedia] = useState([]); //* Predlog za ovo iznad
-  // const [equipment, setEquipment] = useState([{ url: "", name: "Test" }]);
 
   //? Milicev hooks
   const [product, setProduct] = useState({
@@ -90,8 +83,8 @@ const ProductTable = ({
     (item) => (
       <img
         src={item.media.length > 0 && item.media[0].media}
-        height="43"
-        width="43"
+        height="48"
+        width="48"
       />
     ),
     []
@@ -122,15 +115,27 @@ const ProductTable = ({
   );
 
   const editCategoryComponent = useCallback(
-    (item) =>
-      item.categories.map((cat) => (
-        <MenuItem key={1} value={1}>
-          'Games'
-        </MenuItem>
-        // <MenuItem key={cat.id} value={cat.id}>
-        //   {cat.name}
-        // </MenuItem>
-      )),
+    () => (
+      <FormControl fullWidth>
+        <Select
+          required
+          id="category"
+          label="categories"
+          name="categories"
+          value={1}
+          onChange={(e) => handleCategory(e)}
+          multiple
+        >
+          {categories.map((category) => {
+            return (
+              <MenuItem key={category.id} value={category.id}>
+                {category.name}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
+    ),
     []
   );
 
@@ -188,21 +193,7 @@ const ProductTable = ({
       title: "CATEGORY",
       align: "left",
       filterPlaceholder: "Filter by category",
-      //! Probati da citav sadrzaj stavim u jedan callBack
-      // editComponent: () => (
-      //   <FormControl fullWidth>
-      //     <Select
-      //       required
-      //       id="category"
-      //       label="categories"
-      //       name="categories"
-      //       value={1}
-      //       multiple
-      //     >
-      //       {categoryTestComponent}
-      //     </Select>
-      //   </FormControl>
-      // ),
+      editComponent: editCategoryComponent,
       render: rerenderCategories,
     },
     {
@@ -347,11 +338,10 @@ const ProductTable = ({
                   files: [],
                   content: newRow.content,
                   price: Number(newRow.price),
-                  categories: Number(newRow.categories),
-                  categories: [...categories, Number(newRow.categories)],
+                  categories: [Number(newRow.categories)],
                 });
 
-                resolve();
+                resolve(refreshProducts());
               }, 1000);
             }),
           onRowUpdate: (newRow, oldRow) =>
@@ -364,8 +354,6 @@ const ProductTable = ({
             }),
           onRowDelete: (newRow, oldRow) =>
             new Promise((resolve, reject) => {
-              console.log(newRow);
-
               setTimeout(() => {
                 resolve();
               }, 1000);
@@ -373,154 +361,12 @@ const ProductTable = ({
         }}
       />
     </>
-    // <TableContainer component={Paper}>
-    //   <Table sx={{ minWidth: 650 }} aria-label="simple table">
-    //     <TableHead>
-    //       <TableRow>
-    //         <TableCell>Image</TableCell>
-    //         <TableCell>Name</TableCell>
-    //         <TableCell align="right">Content</TableCell>
-    //         <TableCell align="right">Price</TableCell>
-    //         <TableCell align="right">Action</TableCell>
-    //       </TableRow>
-    //     </TableHead>
-    //     <TableBody>
-    //       {products.map((product) => {
-    //         if (edit?.id !== product.id) {
-    //           return (
-    //             <TableRow
-    //               key={product.id}
-    //               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-    //             >
-    //               <TableCell component="th" scope="row">
-    //                 {product.media.length > 0 ? (
-    //                   <ListItemAvatar>
-    //                     <img
-    //                       alt={product.name}
-    //                       src={product.media[0].media}
-    //                       style={{
-    //                         height: 48,
-    //                         width: 48,
-    //                       }}
-    //                     />
-    //                   </ListItemAvatar>
-    //                 ) : (
-    //                   <></>
-    //                 )}
-    //               </TableCell>
-    //               <TableCell component="th" scope="row">
-    //                 {product.name}
-    //               </TableCell>
-    //               <TableCell align="right">{product.content}</TableCell>
-    //               <TableCell align="right">
-    //                 {" "}
-    //                 {parseFloat(product.price.toLocaleString())} &euro;
-    //               </TableCell>
-    //               <TableCell align="right">
-    //                 <button
-    //                   style={{
-    //                     marginRight: "10px",
-    //                     color: "#fff",
-    //                     backgroundColor: "#3f51b5",
-    //                     padding: "8px 16px",
-    //                     fontSize: "0.875rem",
-    //                     minWidth: "64px",
-    //                     borderStyle: "none",
-    //                     borderRadius: "5px",
-    //                   }}
-    //                   onClick={() => handleEdit(product)}
-    //                 >
-    //                   Edit
-    //                 </button>
-    //                 <button
-    //                   style={{
-    //                     marginRight: "10px",
-    //                     color: "#fff",
-    //                     backgroundColor: "#f50057",
-    //                     padding: "8px 16px",
-    //                     fontSize: "0.875rem",
-    //                     minWidth: "64px",
-    //                     borderStyle: "none",
-    //                     borderRadius: "5px",
-    //                   }}
-    //                   onClick={() => handleDelete(product.id)}
-    //                 >
-    //                   Delete
-    //                 </button>
-    //               </TableCell>
-    //             </TableRow>
-    //           );
-    //         } else {
-    //           //* Dio koji se pojavljuje kad se klikne na edit
-    //           return (
-    //             <TableRow
-    //               key={product.id}
-    //               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-    //             >
-    //               <TableCell component="th" scope="row">
-    //                 {product.media.length > 0 ? (
-    //                   <ListItemAvatar>
-    //                     <img
-    //                       alt={product.name}
-    //                       src={product.media.map((m) => m.media)}
-    //                       style={{
-    //                         height: 48,
-    //                         width: 48,
-    //                       }}
-    //                     />
-    //                   </ListItemAvatar>
-    //                 ) : (
-    //                   <></>
-    //                 )}
-    //               </TableCell>
-    //               <TableCell component="th" scope="row">
-    //                 <TextField
-    //                   type="text"
-    //                   name="name"
-    //                   value={edit.name || product.name}
-    //                   onChange={(e) => handleChange(e)}
-    //                 />
-    //               </TableCell>
-    //               <TableCell align="right">
-    //                 <TextField
-    //                   type="text"
-    //                   name="content"
-    //                   value={edit.content || product.content}
-    //                   onChange={(e) => handleChange(e)}
-    //                 />
-    //               </TableCell>
-    //               <TableCell align="right">
-    //                 <TextField
-    //                   type="text"
-    //                   name="price"
-    //                   value={edit.price || product.price}
-    //                   onChange={(e) => handleChange(e)}
-    //                 />
-    //               </TableCell>
-    //               <TableCell align="right">
-    //                 <Button
-    //                   variant="contained"
-    //                   color="primary"
-    //                   style={{ marginRight: "10px" }}
-    //                   onClick={handleProduct}
-    //                 >
-    //                   Confirm changes
-    //                 </Button>
-    //               </TableCell>
-    //             </TableRow>
-    //           );
-    //         }
-    //       })}
-    //     </TableBody>
-    //   </Table>
-
-    //   {loading && <Spinner />}
-    // </TableContainer>
   );
 };
 
 const mapStateToProps = (state) => ({
   products: state.products.products,
+  categories: state.products.categories,
   loading: state.visual.loading,
 });
 

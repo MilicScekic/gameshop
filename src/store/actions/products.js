@@ -119,7 +119,7 @@ export const addProduct = (formData) => async (dispatch) => {
     dispatch({ type: ADD_PRODUCT, payload: res.data });
     dispatch(setAlert("Product added", "success"));
   } catch ({ response }) {
-    dispatch(setAlert(response.data.message && response.data.message, "error"));
+    dispatch(setAlert("Not added!", "error"));
   }
 };
 

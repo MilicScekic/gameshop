@@ -38,6 +38,12 @@ function Header({
   logout,
   authUser,
 }) {
+  //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
+  //* Ovo mora biti najvisi nivo
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(guest.cart));
+  }, [guest.cart]);
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -133,12 +139,6 @@ function Header({
   const handleOpen = () => {
     setOpen(!open);
   };
-
-  //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
-  //* Ovo mora biti najvisi nivo
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(guest.cart));
-  }, [guest.cart]);
 
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
@@ -347,9 +347,9 @@ function Header({
 
       <div className="bottomAppBar">
         <div className="searchItem">
-          <button className="searchBtn">
+          <span className="searchIcon">
             <SearchTwoToneIcon />
-          </button>
+          </span>
           <input
             type="text"
             className="searchBar"
@@ -537,12 +537,17 @@ function Header({
         <div
           ref={dropdownRef}
           className={
-            "dropdownMenu scale-in-ver-top" +
+            "dropdown dropdownMenu scale-in-ver-top" +
             (isDropdown ? " displayBlock" : "")
           }
         >
           {dropdownCategories ? (
-            <h6>{dropdownCategories[0].parent.name}</h6>
+            <Link
+              to={`/products?category=${dropdownCategories[0].parent.name}&sortBy=price&maxPrice=1000`}
+              style={{ textDecoration: "none" }}
+            >
+              <h6>{dropdownCategories[0].parent.name}</h6>
+            </Link>
           ) : (
             <h6></h6>
           )}
@@ -550,14 +555,13 @@ function Header({
             {dropdownCategories ? (
               dropdownCategories.map((cat) => {
                 return (
-                  <li key={cat.name}>
-                    <Link
-                      to={`/products?category=${cat.name}&sortBy=price&maxPrice=1000`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      {cat.name}
-                    </Link>
-                  </li>
+                  <Link
+                    key={cat.name}
+                    to={`/products/?categories=${cat.id}&order=asc`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <li>{cat.name}</li>
+                  </Link>
                 );
               })
             ) : (

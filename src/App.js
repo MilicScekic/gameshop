@@ -28,6 +28,7 @@ import {
 } from "./store/actions/auth";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { Products as DashboardProducts } from "./pages/Dashboard/Products";
+import { ProductsDev as DashboardProductsDev } from "./pages/Dashboard/ProductsDev";
 import Sidebar from "./layouts/Sidebar";
 import { Orders } from "./pages/Dashboard/Orders";
 import Checkout from "./pages/Checkout";
@@ -79,8 +80,7 @@ function App({
       !!localStorage.refresh
         ? refreshAccessToken(localStorage.refresh)
         : delete localStorage.refresh &&
-          delete localStorage.access &&
-          setAlert("You are offline!", "error") && <Redirect to="/login" />;
+          delete localStorage.access && <Redirect to="/login" />;
     }, 5 * 60 * 1000);
   }, []);
 
@@ -118,11 +118,19 @@ function App({
       <Router>
         <LastLocationProvider>
           <Switch>
-            <ProtectedRoute path="/admin/">
+            <Route path="/admin/">
               <Sidebar>
-                <Route path="/admin/dashboard" component={Dashboard} />
-                <Route path="/admin/products" component={DashboardProducts} />
-                <Route path="/admin/orders" component={Orders} />
+                <PrivateRoute path="/admin/dashboard" component={Dashboard} />
+                <PrivateRoute
+                  path="/admin/products"
+                  component={DashboardProducts}
+                />
+                <PrivateRoute
+                  exact
+                  path="/admin/products-dev"
+                  component={DashboardProductsDev}
+                />
+                <PrivateRoute path="/admin/orders" component={Orders} />
                 {/* <ProtectedRoute path="/admin/dashboard" component={Dashboard} />
                 <ProtectedRoute
                   path="/admin/products"
@@ -130,7 +138,7 @@ function App({
                 />
                 <ProtectedRoute path="/admin/orders" component={Orders} /> */}
               </Sidebar>
-            </ProtectedRoute>
+            </Route>
 
             <Layout>
               <Route exact path="/" component={Home} />
