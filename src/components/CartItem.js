@@ -63,9 +63,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CartItem = ({
-  item: { id, quantity, price, discount },
+  item: { id, name, quantity, price, discount },
   productId,
-  name,
+  // name,
   image,
   removeFromGuestCart,
   removeFromUserCart,
