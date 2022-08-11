@@ -104,7 +104,7 @@ const ProductTable = ({
   }, []);
 
   const rerenderCategories = useCallback(
-    (item) => item.categories.map((category) => `${category.name}, `),
+    (item) => item.categories.map((category) => `${category.name}; `),
     []
   );
 
@@ -193,7 +193,7 @@ const ProductTable = ({
       title: "CATEGORY",
       align: "left",
       filterPlaceholder: "Filter by category",
-      editComponent: editCategoryComponent,
+      // editComponent: editCategoryComponent,
       render: rerenderCategories,
     },
     {

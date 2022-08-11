@@ -11,6 +11,8 @@ import {
   REMOVE_PRODUCT,
   ADD_PRODUCT,
   CHANGE_PRODUCT,
+  PREVIOUS_PAGE,
+  NEXT_PAGE,
 } from "./types";
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
@@ -26,12 +28,11 @@ export const clearProducts = () => (dispatch) => {
 
 export const fetchProducts = () => async (dispatch) => {
   dispatch(showSpinner());
-  // dispatch(clearProducts()); //? Ako bude potrebe
   try {
-    const res = await axios.get(
-      "https://gameshop-g5.com/products/?format=json"
-    );
+    const res = await axios.get("https://gameshop-g5.com/products/");
     dispatch({ type: GET_PRODUCTS, payload: res.data.results });
+    dispatch({ type: PREVIOUS_PAGE, payload: res.data.previous });
+    dispatch({ type: NEXT_PAGE, payload: res.data.next });
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch(hideSpinner());
@@ -42,10 +43,13 @@ export const fetchProducts = () => async (dispatch) => {
 export const getProducts = (targetUrl) => async (dispatch) => {
   dispatch(showSpinner());
   try {
-    const res = await axios.get(targetUrl);
+    const res = await axios.get(`https://gameshop-g5.com${targetUrl}`);
     res.data.length === 0
       ? dispatch({ type: STOP_PAGINATION })
       : dispatch({ type: GET_PRODUCTS, payload: res.data.results });
+
+    dispatch({ type: PREVIOUS_PAGE, payload: res.data.previous });
+    dispatch({ type: NEXT_PAGE, payload: res.data.next });
     dispatch(setAlert("Enjoy in shopping :)", "success"));
     dispatch(hideSpinner());
   } catch ({ response }) {
