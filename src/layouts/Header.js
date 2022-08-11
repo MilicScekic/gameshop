@@ -31,19 +31,13 @@ function Header({
   isAuthenticated,
   user,
   guest,
-  products,
   orders,
   wishlist,
   categories,
+  products,
   logout,
   authUser,
 }) {
-  //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
-  //* Ovo mora biti najvisi nivo
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(guest.cart));
-  }, [guest.cart]);
-
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -84,7 +78,7 @@ function Header({
 
   const [open, setOpen] = useState(false);
 
-  // closes the dropdown menu if clicked outside
+  // close the dropdown menu and search if clicked outside
   useEffect(() => {
     const handler = (event) => {
       if (!dropdownRef.current.contains(event.target)) {
@@ -139,6 +133,12 @@ function Header({
   const handleOpen = () => {
     setOpen(!open);
   };
+
+  //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
+  //* Ovo mora biti najvisi nivo
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(guest.cart));
+  }, [guest.cart]);
 
   const calculateSum = (arr) =>
     arr.reduce((acc, { quantity }) => acc + quantity, 0);
@@ -222,7 +222,19 @@ function Header({
                 sx={{
                   display: { xs: "block", md: "none" },
                 }}
-              ></Menu>
+              >
+                {/* {settings.map((page) => (
+                  <Link
+                    to={page}
+                    style={{ color: "black", textDecoration: "none" }}
+                    key={page}
+                  >
+                    <MenuItem onClick={handleCloseNavMenu}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </MenuItem>
+                  </Link>
+                ))} */}
+              </Menu>
             </Box>
             <ComputerIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
             <Typography
@@ -543,7 +555,7 @@ function Header({
         >
           {dropdownCategories ? (
             <Link
-              to={`/products?category=${dropdownCategories[0].parent.name}&sortBy=price&maxPrice=1000`}
+              to={`/products/?categories=${dropdownCategories[0].parent.id}&order=desc`}
               style={{ textDecoration: "none" }}
             >
               <h6>{dropdownCategories[0].parent.name}</h6>
@@ -557,7 +569,7 @@ function Header({
                 return (
                   <Link
                     key={cat.name}
-                    to={`/products/?categories=${cat.id}&order=asc`}
+                    to={`/products/?categories=${cat.id}&order=desc`}
                     style={{ textDecoration: "none" }}
                   >
                     <li>{cat.name}</li>
@@ -611,10 +623,10 @@ function Header({
 const mapStateToProps = (state) => ({
   authUser: state.auth.user,
   user: state.user.user,
-  products: state.products.products,
   orders: state.user.orders,
   wishlist: state.user.wishlist,
   categories: state.products.categories,
+  products: state.products.products,
   guest: state.user.guest,
   isAuthenticated: state.auth.isAuthenticated,
 });

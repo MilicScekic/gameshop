@@ -17,8 +17,17 @@ import { productsOptions } from "./options";
 import { DropzoneDialog } from "react-mui-dropzone";
 import CloseIcon from "@mui/icons-material/Close";
 // import axios from "axios";
-import { FormControl, IconButton, MenuItem, Select } from "@mui/material";
+import Checkbox from "@material-ui/core/Checkbox";
+import InputLabel from "@material-ui/core/InputLabel";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
 import { setAlert } from "../../../store/actions/visual";
+
+import { MenuProps, useStyles } from "./utils";
 
 const ProductTable = ({
   products,
@@ -32,8 +41,6 @@ const ProductTable = ({
   refreshProducts,
   getProducts,
 }) => {
-  const [edit, setEdit] = useState();
-
   //! Zbog testiranje apija
   useEffect(() => {
     clearProducts();
@@ -48,36 +55,47 @@ const ProductTable = ({
     };
   }, [clearProducts, fetchProducts]);
 
-  //* TESTIRANJE
-  // const [testProducts, setTestProducts] = useState([]);
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(async () => {
-  //     const res = await axios.get("https://fakestoreapi.com/products");
-  //     setTestProducts(res.data);
-  //     console.log(res);
-  //   }, 200);
-
-  //   return () => {
-  //     clearTimeout(timeoutId);
-  //   };
-  // }, []);
-
   const [open, setOpen] = useState(false);
-  //const [media, setMedia] = useState([]); //! ovdje mozda da se stavio products.media, posto je to takodje niz
-  const [uploadedMedia, setUploadedMedia] = useState([]); //* Predlog za ovo iznad
 
-  //? Milicev hooks
   const [product, setProduct] = useState({
     name: "",
     content: "",
     price: "",
-    files: [],
+    media: [],
     categories: [],
   });
+
+  const [edit, setEdit] = useState();
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setProduct({ ...product, [e.target.name]: e.target.value });
+  };
 
   const handleCategory = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
+
+  const handleMedia = (e) => {
+    setProduct({ ...product, [e.target.name]: [...e.target.files] });
+  };
+
+  const editNameComponent = useCallback(
+    () => (
+      <TextField
+        required
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        id="name"
+        label="name"
+        name="name"
+        value={product.name}
+        onChange={(e) => handleChange(e)}
+      />
+    ),
+    []
+  );
 
   const preventRerender = useCallback(
     (item) => (
@@ -90,94 +108,34 @@ const ProductTable = ({
     []
   );
 
-  const editMediaComponent = useCallback(() => {
-    return (
-      <Button
-        variant="contained"
-        size="small"
-        color="primary"
-        onClick={() => setOpen(true)}
-      >
-        {"Add image"}
-      </Button>
-    );
-  }, []);
-
   const rerenderCategories = useCallback(
     (item) => item.categories.map((category) => `${category.name}; `),
     []
   );
 
-  const categoryTestComponent = () => (
-    <MenuItem key={1} value={1}>
-      Games
-    </MenuItem>
-  );
-
-  const editCategoryComponent = useCallback(
-    () => (
-      <FormControl fullWidth>
-        <Select
-          required
-          id="category"
-          label="categories"
-          name="categories"
-          value={1}
-          onChange={(e) => handleCategory(e)}
-          multiple
-        >
-          {categories.map((category) => {
-            return (
-              <MenuItem key={category.id} value={category.id}>
-                {category.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-    ),
-    []
-  );
-
-  const dialogTitle = () => (
-    <>
-      <span>Upload image</span>
-      <IconButton
-        style={{ right: "12px", top: "8px", position: "absolute" }}
-        onClick={() => setOpen(false)}
-      >
-        <CloseIcon />
-      </IconButton>
-    </>
-  );
-
   const productColumns = [
-    // {
-    //   field: "media",
-    //   title: "Image",
-    //   align: "left",
-    //   render: (item) => (
-    //     <img
-    //       src={item.media.length > 0 && item.media[0].media}
-    //       alt={item.name}
-    //       height="43"
-    //       width="43"
-    //     />
-    //   ),
-    // editComponent,
-    // render: preventRerender,
-    //   emptyValue: "(no image)",
-    //   filtering: false,
-    // },
     {
       field: "media",
       title: "IMAGE",
       align: "left",
       width: "15%",
-      // render: (item) => (
-      //   <img src={item.image} alt={item.title} height="43" width="43" />
-      // ),
-      editComponent: editMediaComponent,
+      editComponent: () => (
+        <>
+          <input
+            style={{ display: "none" }}
+            id="contained-button-file"
+            type="file"
+            name="media"
+            multiple
+            onChange={(e) => handleMedia(e)}
+          />
+          <label htmlFor="contained-button-file">
+            <Button variant="contained" color="primary" component="span">
+              Upload
+            </Button>
+          </label>
+        </>
+      ),
       render: preventRerender,
       emptyValue: "(no image)",
       filtering: false,
@@ -187,20 +145,80 @@ const ProductTable = ({
       title: "NAME",
       align: "left",
       filterPlaceholder: "Filter by name",
+      editComponent: () => (
+        <TextField
+          required
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          id="name"
+          label="name"
+          name="name"
+          value={product.name}
+          onChange={(e) => handleChange(e)}
+        />
+      ),
     },
     {
       field: "categories",
       title: "CATEGORY",
       align: "left",
       filterPlaceholder: "Filter by category",
-      // editComponent: editCategoryComponent,
       render: rerenderCategories,
+      editComponent: () => (
+        <FormControl variant="filled" fullWidth>
+          <Select
+            required
+            variant="filled"
+            id="demo-multiple-name"
+            label="categories"
+            name="categories"
+            value={product.categories}
+            onChange={(e) => handleCategory(e)}
+            multiple
+          >
+            {categories.map((category) => (
+              <MenuItem key={category.id} value={category.id}>
+                {category.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      ),
+      // editComponent: ({ value, onChange }) => (
+      //   <select onChange={(e) => onChange(e.target.value)} multiple>
+      //     <option selected value={value}>
+      //       {value}
+      //     </option>
+      //     {categories.map(
+      //       (item) =>
+      //         item !== value && (
+      //           <option key={item.id} value={item.id}>
+      //             {item.name}
+      //           </option>
+      //         )
+      //     )}
+      //   </select>
+      // ),
     },
     {
       field: "content",
       title: "DESCRIPTION",
       align: "left",
       filterPlaceholder: "Filter by description",
+      editComponent: () => (
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="content"
+          label="content"
+          name="content"
+          value={product.content}
+          onChange={(e) => handleChange(e)}
+        />
+      ),
     },
     {
       field: "price",
@@ -209,75 +227,66 @@ const ProductTable = ({
       type: "currency",
       currencySetting: { currencyCode: "EUR" },
       filterPlaceholder: "Filter by price",
+      editComponent: () => (
+        <TextField
+          type="number"
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="price"
+          label="price"
+          name="price"
+          value={product.price}
+          onChange={(e) => handleChange(e)}
+        />
+      ),
     },
-    //   {
-    //     title: "ACTION",
-    //     render: (item) => (
-    //       <Button
-    //         size="small"
-    //         variant="contained"
-    //         color="error"
-    //         onClick={() => handleDelete(item.id)}
-    //       >
-    //         Delete
-    //       </Button>
-    //     ),
-    //     align: "right",
-    //   },
   ];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // console.log(product);
+
+  const handleSubmit = () => {
+    // e.preventDefault();
+    var formData = new FormData();
+    formData.append("name", product.name);
+    formData.append("content", product.content);
+    formData.append("price", product.price);
+
+    for (var i = 0; i < product.categories.length; i++) {
+      formData.append("categories", product.categories[i]);
+    }
+    for (var i = 0; i < product.media.length; i++) {
+      formData.append("media" + [i], product.media[i]);
+    }
+
     if (
       product.name !== "" &&
       product.content !== "" &&
       product.price !== "" &&
-      product.categories.length > 0
+      product.categories.length > 0 &&
+      product.media !== []
     ) {
-      addProduct(product);
+      addProduct(formData);
+      alert("You successfully added new product!");
       setProduct({
         name: "",
-        files: [],
+        media: [],
         content: "",
         price: "",
         categories: [],
       });
-      // clearProducts();
+      setOpen(false);
+      refreshProducts();
       // fetchProducts();
     } else {
       alert("You need to fill every field to add product!");
     }
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete product?")) {
-      try {
-        removeProduct(id);
-        alert("Product was successfully removed.");
-        refreshProducts();
-      } catch (error) {
-        alert("There some error in deleting...");
-        refreshProducts();
-      }
-    }
-  };
-
-  const handleEdit = (product) => {
-    setEdit({
-      id: product.id,
-      name: product.name,
-      content: product.content,
-      price: product.price,
-      categories: product.categories.map((category) => category.id),
-    });
-  };
-
-  const handleChange = (e) => {
-    setEdit({ ...edit, [e.target.name]: e.target.value });
-  };
   const handleProduct = () => {
     try {
-      changeProduct(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno data.id
+      changeProduct(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno formData.id
       alert("Product was successfully edited.");
       refreshProducts();
       setEdit(null);
@@ -286,81 +295,47 @@ const ProductTable = ({
     }
   };
 
-  const handleChangeMedia = (files) => {
-    setUploadedMedia(files);
-  };
   return (
-    <>
-      <DropzoneDialog
-        dialogTitle={dialogTitle()}
-        acceptedFiles={["image/*"]}
-        fileObjects={uploadedMedia}
-        cancelButtonText={"cancel"}
-        submitButtonText={"submit"}
-        maxFileSize={5000000}
-        filesLimit={1}
-        open={open}
-        // onChange={(newFileObjs) => {
-        //   setUploadedMedia([].concat([], newFileObjs)); //! ovdje ce se morati intervenisati sa media
-        //   console.log("Uploaded media:");
-        //   console.log(uploadedMedia.map((item) => item.path));
-        // }}
-        onChange={handleChangeMedia.bind(this)}
-        // onAdd={(newFileObjs) => {
-        //   setUploadedMedia([].concat([], newFileObjs)); //! ovdje ce se morati intervenisati sa media
-        //   console.log(newFileObjs);
-        // }}
-        onDelete={(deleteFileObj) => {
-          setUploadedMedia(
-            uploadedMedia.filter((item) => item !== deleteFileObj)
-          );
-        }}
-        onClose={() => setOpen(false)}
-        onSave={() => {
-          setOpen(false);
-        }}
-        showPreviews={true}
-        showFileNamesInPreview={true}
-      />
-      <MaterialTable
-        title={"Products table"}
-        icons={tableIcons}
-        data={products}
-        // data={testProducts}
-        columns={productColumns}
-        options={productsOptions}
-        editable={{
-          onRowAdd: (newRow) =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                addProduct({
-                  name: newRow.name,
-                  files: [],
-                  content: newRow.content,
-                  price: Number(newRow.price),
-                  categories: [Number(newRow.categories)],
-                });
+    <MaterialTable
+      title={"Products table"}
+      icons={tableIcons}
+      data={products}
+      // data={testProducts}
+      columns={productColumns}
+      options={productsOptions}
+      editable={{
+        onRowAdd: (newRow) =>
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              handleSubmit();
 
-                resolve(refreshProducts());
-              }, 1000);
-            }),
-          onRowUpdate: (newRow, oldRow) =>
-            new Promise((resolve, reject) => {
-              console.log(newRow);
+              resolve();
+            }, 1000);
+          }),
+        onRowUpdate: ({ newRow, oldRow }) =>
+          new Promise((resolve, reject) => {
+            setEdit({
+              id: oldRow.id,
+              name: oldRow.name,
+              content: oldRow.content,
+              price: oldRow.price,
+              categories: oldRow.categories.map((category) => category.id),
+            });
 
-              setTimeout(() => {
-                resolve();
-              }, 1000);
-            }),
-          onRowDelete: (newRow, oldRow) =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve();
-              }, 1000);
-            }),
-        }}
-      />
-    </>
+            setTimeout(() => {
+              // handleProduct();
+
+              resolve();
+            }, 1000);
+          }),
+        onRowDelete: (newRow, oldRow) =>
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve();
+            }, 1000);
+          }),
+      }}
+    />
   );
 };
 

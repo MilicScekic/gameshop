@@ -33,8 +33,6 @@ const ProductList = ({
   previous,
   next,
 }) => {
-  // const [currentPage, setCurrentPage] = useState(1);
-
   const incrementPagination = async () =>
     await setPage((prevPage) => prevPage + 1);
 

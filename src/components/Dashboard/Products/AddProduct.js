@@ -50,7 +50,7 @@ function AddProduct({ addProduct, categories, fetchProducts, clearProducts }) {
   const classes = useStyles();
   const [product, setProduct] = useState({
     name: "",
-    media: "",
+    media: [],
     content: "",
     price: "",
     categories: [],
@@ -63,20 +63,38 @@ function AddProduct({ addProduct, categories, fetchProducts, clearProducts }) {
   const handleCategory = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
-
+  const handleMedia = (e) => {
+    setProduct({ ...product, [e.target.name]: [...e.target.files] });
+  };
+  console.log(product);
   const handleSubmit = (e) => {
     e.preventDefault();
+    var formData = new FormData();
+    formData.append("name", product.name);
+    formData.append("content", product.content);
+    formData.append("price", product.price);
+    // formData.append("media1", product.media[0]);
+    // formData.append("media2", product.media[1]);
+
+    for (var i = 0; i < product.categories.length; i++) {
+      formData.append("categories", product.categories[i]);
+    }
+    for (var i = 0; i < product.media.length; i++) {
+      formData.append("media" + [i], product.media[i]);
+    }
+
     if (
       product.name !== "" &&
       product.content !== "" &&
       product.price !== "" &&
-      product.categories.length > 0
+      product.categories.length > 0 &&
+      product.media !== []
     ) {
-      addProduct(product);
+      addProduct(formData);
       alert("You successfully added new product!");
       setProduct({
         name: "",
-        media: "",
+        media: [],
         content: "",
         price: "",
         categories: [],
@@ -160,6 +178,14 @@ function AddProduct({ addProduct, categories, fetchProducts, clearProducts }) {
                   name="price"
                   value={product.price}
                   onChange={(e) => handleChange(e)}
+                />
+                <input
+                  type="file"
+                  required
+                  id="media"
+                  multiple
+                  name="media"
+                  onChange={(e) => handleMedia(e)}
                 />
 
                 <Button

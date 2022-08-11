@@ -13,7 +13,7 @@ const useStyles = makeStyles({
     background: "purple",
   },
 });
-function Slider({ games }) {
+function Slider({ products }) {
   const classes = useStyles();
   return (
     <Swiper
@@ -30,13 +30,14 @@ function Slider({ games }) {
       }}
       modules={[Autoplay, Pagination]}
     >
-      {games?.map((game) => {
+      {products?.map((product) => {
         return (
-          <SwiperSlide key={game.name}>
+          <SwiperSlide key={product.id}>
             <SliderCard
-              name={game.name}
-              description={game.description}
-              image={game.image}
+              id={product.id}
+              name={product.name}
+              description={product.content}
+              image={product?.media[0]?.media}
             />
           </SwiperSlide>
         );

@@ -117,6 +117,7 @@ export const addProduct = (formData) => async (dispatch) => {
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
+          "Content-Type": "multipart/form-data",
         },
       }
     );
