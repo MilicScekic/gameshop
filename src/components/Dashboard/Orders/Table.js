@@ -26,7 +26,7 @@ const OrderTable = ({
   refreshOrders,
 }) => {
   const [edit, setEdit] = useState();
-
+  console.log(all_orders);
   useEffect(() => {
     clearOrders();
 
@@ -38,7 +38,7 @@ const OrderTable = ({
       clearOrders();
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [clearOrders, getOrders]);
 
   const handleDelete = (orderId) => {
     if (window.confirm("Are you sure you want to remove order?")) {
@@ -162,7 +162,6 @@ const OrderTable = ({
 
       {loading && <Spinner />}
     </TableContainer>
-    // <>{console.log(all_orders)}</>
   );
 };
 

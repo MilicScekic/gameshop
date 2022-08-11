@@ -7,9 +7,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 
-export default function SliderCard({ name, description, image }) {
+export default function SliderCard({ id, name, description, image }) {
   return (
-    <Link to={`/product/${name}`}>
+    <Link to={`/products/${id}`}>
       <Card
         sx={{
           position: "relative",

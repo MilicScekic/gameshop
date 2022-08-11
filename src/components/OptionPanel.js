@@ -92,16 +92,13 @@ const OptionPanel = ({
             </div>
 
             <div className={classes.selectBox}>
-              <Typography variant="body1">Order by</Typography>
+              <Typography variant="body1">Order by date</Typography>
               <Select
                 value={queryParams.order}
                 onChange={(e) =>
                   setQueryParams({ ...queryParams, order: e.target.value })
                 }
               >
-                <MenuItem value="" disabled>
-                  Order by
-                </MenuItem>
                 <MenuItem value="asc">Ascending</MenuItem>
                 <MenuItem value="desc">Descending</MenuItem>
               </Select>

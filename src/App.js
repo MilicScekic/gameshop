@@ -73,7 +73,6 @@ function App({
     // logoutAfterSession(60); // u minutima. Trajanje sesije
   }, []);
 
-  //! Ako bi se na server postavio trajanje za osvjezavanje tokena na 5ms, onda bi morali i interval pomjeriti spram tog kasnjenja
   //* access je token za pristup koji traje 5 min. Refresh je token koji traje 24h
   useEffect(() => {
     setInterval(() => {

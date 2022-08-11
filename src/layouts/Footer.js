@@ -6,9 +6,8 @@ import LocationOnTwoToneIcon from "@mui/icons-material/LocationOnTwoTone";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { connect } from "react-redux";
 
-function Footer({ isAuthenticated }) {
+function Footer() {
   return (
     <>
       <Box className="ftr">
@@ -34,22 +33,37 @@ function Footer({ isAuthenticated }) {
                 <Typography variant="h6">Categories</Typography>
               </Box>
               <Box>
-                <Link to="/consoles">
-                  <Typography component="span">Consoles</Typography>
-                </Link>
-              </Box>
-              <Box>
-                <Link to="/headphones">
-                  <Typography component="span">Headphones</Typography>
-                </Link>
-              </Box>
-              <Box>
-                <Link to="/games">
+                <Link to={`/products/?categories=1&order=desc`}>
                   <Typography component="span">Games</Typography>
                 </Link>
               </Box>
               <Box>
-                <Link to="/lifestyle">
+                <Link to={`/products/?categories=11&order=desc`}>
+                  <Typography component="span">Consoles</Typography>
+                </Link>
+              </Box>
+              <Box>
+                <Link to={`products/?categories=3&order=desc`}>
+                  <Typography component="span">Components</Typography>
+                </Link>
+              </Box>
+              <Box>
+                <Link to={`products/?categories=35&order=desc`}>
+                  <Typography component="span">Perifery</Typography>
+                </Link>
+              </Box>
+              <Box>
+                <Link to={`/products/?categories=25&order=desc`}>
+                  <Typography component="span">Board games</Typography>
+                </Link>
+              </Box>
+              <Box>
+                <Link to={`/products/?categories=2&order=desc`}>
+                  <Typography component="span">Phones</Typography>
+                </Link>
+              </Box>
+              <Box>
+                <Link to={`/products/?categories=31&order=desc`}>
                   <Typography component="span">Lifestyle</Typography>
                 </Link>
               </Box>
@@ -78,20 +92,16 @@ function Footer({ isAuthenticated }) {
                   <Typography component="span">Products</Typography>
                 </Link>
               </Box>
-              {isAuthenticated !== true && (
-                <>
-                  <Box>
-                    <Link to={"/login"}>
-                      <Typography component="span">Sign in</Typography>
-                    </Link>
-                  </Box>
-                  <Box>
-                    <Link to={"/register"}>
-                      <Typography component="span">Register</Typography>
-                    </Link>
-                  </Box>
-                </>
-              )}
+              <Box>
+                <Link to="/login">
+                  <Typography component="span">Sign in</Typography>
+                </Link>
+              </Box>
+              <Box>
+                <Link to="/register">
+                  <Typography component="span">Register</Typography>
+                </Link>
+              </Box>
             </Grid>
             <Grid item xs={12} sm={3}>
               <Box>
@@ -105,7 +115,9 @@ function Footer({ isAuthenticated }) {
               <Box>
                 <Typography>
                   <EmailTwoToneIcon />{" "}
-                  <a href="mailto:gameshop@gmail.com">gameshop@gmail.com</a>
+                  <a href="mailto:shopgame822@gmail.com">
+                    shopgame822@gmail.com
+                  </a>
                 </Typography>
               </Box>
               <Box>
@@ -162,8 +174,4 @@ function Footer({ isAuthenticated }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-});
-
-export default connect(mapStateToProps)(Footer);
+export default Footer;

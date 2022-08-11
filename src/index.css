@@ -298,7 +298,7 @@ body {
 
 .ftr {
   padding-top: 2rem;
-  background-color: #2b2e31;
+  background-color: #000;
   color: white;
   position: absolute;
   width: 100%;
@@ -324,7 +324,9 @@ body {
   font-size: 3rem;
   font-family: var(--brand-font);
   color: white;
-  background-color: black;
+  background-color: #000;
+  border: 1px solid rgba(222, 224, 244, 1);
+  cursor: pointer;
 }
 
 #ftrLogo:hover {
@@ -352,4 +354,18 @@ body {
 
 .MuiButton-root.Mui-disabled {
   background: #ccc !important;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin: 2rem auto 2rem;
+  width: 60%;
+}
+.mapFrame {
+  flex-grow: 4;
+  border: 0;
 }
