@@ -37,8 +37,11 @@ import {
   clearCategories,
   fetchProducts,
   clearProducts,
+  clearAllProducts,
+  getAllProducts,
 } from "./store/actions/products";
 import { setAlert } from "./store/actions/visual";
+import MainSearch from "./pages/MainSearch";
 
 const theme = createTheme({
   palette: {
@@ -65,6 +68,8 @@ function App({
   clearCategories,
   fetchProducts,
   clearProducts,
+  // clearAllProducts,
+  // getAllProducts,
 }) {
   //* Ovo je ako se osvjezi stranica, da odma prijavi korisnika, da ne ceka 5 minuta da to uradi useEffect dolje pri pri rifresu tokena
   useEffect(() => {
@@ -89,26 +94,27 @@ function App({
 
     const timeoutId = setTimeout(() => {
       getCategories(); // popunjava niz categories u reducer
-      fetchProducts();
     }, 200);
 
     return () => {
       clearTimeout(timeoutId);
       clearCategories();
-      clearProducts();
     };
   }, [clearCategories, getCategories]);
 
   useEffect(() => {
     clearProducts();
+    // clearAllProducts();
 
     const timeoutId = setTimeout(() => {
       fetchProducts();
+      getAllProducts();
     }, 400);
 
     return () => {
       clearTimeout(timeoutId);
       clearProducts();
+      // clearAllProducts();
     };
   }, [clearProducts, fetchProducts]);
 
@@ -152,6 +158,7 @@ function App({
 
               <Route exact path="/products" component={Products} />
               <Route exact path="/products/:id" component={Product} />
+              <Route exact path="/search" component={MainSearch} />
               <PrivateRoute exact path="/checkout" component={Checkout} />
             </Layout>
           </Switch>
@@ -169,4 +176,6 @@ export default connect(null, {
   fetchProducts,
   clearCategories,
   clearProducts,
+  // clearAllProducts,
+  // getAllProducts,
 })(App);

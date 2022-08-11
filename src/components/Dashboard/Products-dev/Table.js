@@ -312,28 +312,6 @@ const ProductTable = ({
               resolve();
             }, 1000);
           }),
-        onRowUpdate: ({ newRow, oldRow }) =>
-          new Promise((resolve, reject) => {
-            setEdit({
-              id: oldRow.id,
-              name: oldRow.name,
-              content: oldRow.content,
-              price: oldRow.price,
-              categories: oldRow.categories.map((category) => category.id),
-            });
-
-            setTimeout(() => {
-              // handleProduct();
-
-              resolve();
-            }, 1000);
-          }),
-        onRowDelete: (newRow, oldRow) =>
-          new Promise((resolve, reject) => {
-            setTimeout(() => {
-              resolve();
-            }, 1000);
-          }),
       }}
     />
   );

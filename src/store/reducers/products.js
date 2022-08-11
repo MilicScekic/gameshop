@@ -11,6 +11,8 @@ import {
   ADD_PRODUCT,
   PREVIOUS_PAGE,
   NEXT_PAGE,
+  GET_ALL_PRODUCTS,
+  CLEAR_ALL_PRODUCTS,
 } from "../actions/types";
 
 const initialState = {
@@ -21,6 +23,7 @@ const initialState = {
   paginationable: true,
   previous: null,
   next: null,
+  all_products: [], //? Ovo mi treba da azurira bas sve proizvode. Nema paginacije ni counta. Koristice se uglavnom samo za Dashboard
 };
 
 const productsReducer = (state = initialState, { type, payload }) => {
@@ -88,6 +91,18 @@ const productsReducer = (state = initialState, { type, payload }) => {
     case NEXT_PAGE:
       return {
         ...state,
+      };
+
+    case GET_ALL_PRODUCTS:
+      return {
+        ...state,
+        all_products: [...state.all_products, ...payload],
+      };
+
+    case CLEAR_ALL_PRODUCTS:
+      return {
+        ...state,
+        all_products: [],
       };
 
     default:

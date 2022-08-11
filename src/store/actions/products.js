@@ -13,6 +13,8 @@ import {
   CHANGE_PRODUCT,
   PREVIOUS_PAGE,
   NEXT_PAGE,
+  GET_ALL_PRODUCTS,
+  CLEAR_ALL_PRODUCTS,
 } from "./types";
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
@@ -57,6 +59,26 @@ export const getProducts = (targetUrl) => async (dispatch) => {
     // dispatch(setAlert(response.data.message, "error"));
     dispatch(setAlert("Error", "error"));
   }
+};
+
+export const refreshAllProducts = () => async (dispatch) => {
+  dispatch(clearAllProducts());
+  dispatch(getAllProducts());
+};
+
+// Uglavnom za dashboard
+export const getAllProducts = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`https://gameshop-g5.com/products/?all=true`);
+
+    dispatch({ type: GET_ALL_PRODUCTS, payload: res.data });
+  } catch ({ response }) {
+    dispatch(hideSpinner());
+  }
+};
+
+export const clearAllProducts = () => async (dispatch) => {
+  dispatch({ type: CLEAR_ALL_PRODUCTS });
 };
 
 export const getCurrentProduct = (id) => async (dispatch) => {

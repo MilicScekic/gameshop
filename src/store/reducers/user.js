@@ -25,6 +25,7 @@ import {
   REMOVE_ORDER,
   GET_ORDER_ID,
   CLEAR_DELPAY,
+  GUEST_PRODUCT_QUANTITY,
 } from "../actions/types";
 
 const initialState = {
@@ -219,6 +220,21 @@ const userReducer = (state = initialState, { type, payload }) => {
         ...state,
         orders: newCart,
       };
+
+    // case GUEST_PRODUCT_QUANTITY:
+    //   const guestNewCart = [...state.guest.cart];
+    //   const index = state.guest.cart.findIndex(
+    //     (item) => item.id === payload.id
+    //   );
+    //   guestNewCart[index] = { ...payload };
+    //   return {
+    //     ...state,
+    //     guest: {
+    //       ...state.guest,
+    //       cart: newGuestDecCart,
+    //     },
+    //   };
+
     case CLEAN_USER:
       return {
         ...state,
