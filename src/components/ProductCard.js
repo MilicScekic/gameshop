@@ -73,11 +73,7 @@ const ProductCard = ({
       <Paper className={classes.paper}>
         <Link to={`/products/${id}`}>
           <div className={classes.divImg}>
-            <img
-              src={media.map((item) => item.media)}
-              alt=""
-              className={classes.img}
-            />
+            <img src={media[0]?.media} alt="" className={classes.img} />
           </div>
         </Link>
         <Link to={`/products/${id}`}>

@@ -44,7 +44,6 @@ const OptionPanel = ({
     order: "asc",
   });
 
-  const currentURL = `${location.pathname}${location.search}`;
   const prevLocation = useLastLocation();
   let prevURL;
   if (prevLocation)
@@ -60,7 +59,7 @@ const OptionPanel = ({
     }
 
     await setPage(1);
-    history.replace("/products/?" + queryArr.join("&"));
+    history.replace("/products?" + queryArr.join("&"));
   };
 
   const classes = useStyles();
