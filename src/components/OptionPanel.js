@@ -60,7 +60,7 @@ const OptionPanel = ({
     }
 
     await setPage(1);
-    history.replace("/products/?" + queryArr.join("&"));
+    history.replace("/products?" + queryArr.join("&"));
   };
 
   const classes = useStyles();
