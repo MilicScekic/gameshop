@@ -14,15 +14,28 @@ const Products = ({
   showSpinner,
 }) => {
   const [page, setPage] = useState(1);
-  // const lastLocation = useLastLocation();
+  const lastLocation = useLastLocation();
+
+  const prevLocation = useLastLocation();
+  let prevURL;
+  if (prevLocation)
+    prevURL = `${prevLocation.pathname}${prevLocation.search}` || null;
 
   useEffect(() => {
+    // clearProducts();
     // in case user was searching desktops and clicked 'products' in header again
-    // if (lastLocation && lastLocation.pathname === "/products") clearProducts();
+    if (lastLocation && lastLocation.pathname === "/products") clearProducts();
 
-    // showSpinner();
+    showSpinner();
 
-    const targetURL = `https://gameshop-g5.com/products/?format=json`;
+    if (lastLocation && location.pathname !== lastLocation.pathname) {
+      clearProducts();
+      history.replace("/products"); // go back to default settings with no filters
+    }
+
+    const targetURL = `/products${location.search ? location.search : "?"}${
+      location.search && "&"
+    }page=${page}`;
 
     const timeoutId = setTimeout(() => {
       getProducts(targetURL); // popunjava niz products u reducer
@@ -32,7 +45,7 @@ const Products = ({
       clearProducts(); // isprazni niz kad se ode sa stranice Products
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [location.search, page]);
 
   return (
     <Fragment>

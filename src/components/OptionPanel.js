@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useCallback } from "react";
 import { useLastLocation } from "react-router-last-location";
 import Slider from "@mui/material/Slider";
 import Select from "@mui/material/Select";
@@ -9,6 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { makeStyles } from "@mui/styles";
 import { ResponsiveContainer } from "../utils/Responsive";
 import { Redirect, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   select: {
@@ -24,17 +25,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const ValueLabelComponent = ({ children, open, value }) => (
+  <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
+    {children}
+  </Tooltip>
+);
+
 const OptionPanel = ({
   setPage,
   history,
   clearProducts,
   showSpinner,
   location,
+  categories,
 }) => {
   const [queryParams, setQueryParams] = useState({
-    category: "",
-    sortBy: "price", // price or rating
-    maxPrice: "1000",
+    categories: "",
+    order: "asc",
   });
 
   const currentURL = `${location.pathname}${location.search}`;
@@ -53,14 +60,8 @@ const OptionPanel = ({
     }
 
     await setPage(1);
-    history.replace("/products?" + queryArr.join("&"));
+    history.replace("/products/?" + queryArr.join("&"));
   };
-
-  const ValueLabelComponent = ({ children, open, value }) => (
-    <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
-      {children}
-    </Tooltip>
-  );
 
   const classes = useStyles();
 
@@ -73,50 +74,44 @@ const OptionPanel = ({
               <Typography variant="body1">Category</Typography>
               <Select
                 displayEmpty
-                value={queryParams.category}
+                value={queryParams.categories}
                 onChange={(e) =>
-                  setQueryParams({ ...queryParams, category: e.target.value })
+                  setQueryParams({ ...queryParams, categories: e.target.value })
                 }
               >
                 <MenuItem value="" disabled>
                   Select one
                 </MenuItem>
-                <MenuItem value="consoles">Consoles</MenuItem>
-                <MenuItem value="desktop">Desktop</MenuItem>
-                <MenuItem value="laptop">Laptop</MenuItem>
+                {categories.map((category, key) => {
+                  return (
+                    <MenuItem key={key} value={category.id}>
+                      {category.name}
+                    </MenuItem>
+                  );
+                })}
               </Select>
             </div>
 
             <div className={classes.selectBox}>
-              <Typography variant="body1">Sort by</Typography>
+              <Typography variant="body1">Order by</Typography>
               <Select
-                value={queryParams.sortBy}
+                value={queryParams.order}
                 onChange={(e) =>
-                  setQueryParams({ ...queryParams, sortBy: e.target.value })
+                  setQueryParams({ ...queryParams, order: e.target.value })
                 }
               >
-                <MenuItem value="price">Price</MenuItem>
-                <MenuItem value="rating">Rating</MenuItem>
+                <MenuItem value="" disabled>
+                  Order by
+                </MenuItem>
+                <MenuItem value="asc">Ascending</MenuItem>
+                <MenuItem value="desc">Descending</MenuItem>
               </Select>
             </div>
           </div>
 
           <div className={classes.centered}>
-            <Typography variant="body1">Max price</Typography>
-            <Slider
-              min={0}
-              max={1000}
-              step={20}
-              defaultValue={300}
-              onChange={(e, newVal) =>
-                setQueryParams({ ...queryParams, maxPrice: newVal })
-              }
-              valueLabelDisplay="auto"
-              ValueLabelComponent={ValueLabelComponent}
-              sx={{ color: "black" }}
-            />
-
             <Button
+              sx={{ margin: "2rem" }}
               variant="contained"
               onClick={submitQueryChange}
               className={classes.submitBtn}
@@ -139,4 +134,8 @@ const OptionPanel = ({
   );
 };
 
-export default withRouter(OptionPanel);
+const mapStateToProps = (state) => ({
+  categories: state.products.categories,
+});
+
+export default withRouter(connect(mapStateToProps)(OptionPanel));

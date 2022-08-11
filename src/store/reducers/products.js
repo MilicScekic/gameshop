@@ -9,6 +9,8 @@ import {
   GET_CATEGORIES,
   CLEAR_CATEGORIES,
   ADD_PRODUCT,
+  PREVIOUS_PAGE,
+  NEXT_PAGE,
 } from "../actions/types";
 
 const initialState = {
@@ -17,6 +19,8 @@ const initialState = {
   categories: [],
   currentProduct: null,
   paginationable: true,
+  previous: null,
+  next: null,
 };
 
 const productsReducer = (state = initialState, { type, payload }) => {
@@ -25,7 +29,7 @@ const productsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         products: [...state.products, ...payload],
-        productCount: payload.count,
+        productCount: payload.length,
         paginationable: true,
       };
     case CLEAR_PRODUCTS:
@@ -74,6 +78,16 @@ const productsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         categories: [],
+      };
+
+    case PREVIOUS_PAGE:
+      return {
+        ...state,
+      };
+
+    case NEXT_PAGE:
+      return {
+        ...state,
       };
 
     default:
