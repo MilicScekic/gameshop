@@ -6,15 +6,31 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Slider from "../components/Slider";
 import SliderCard from "../components/SliderCard";
+import { connect } from "react-redux";
+import ProductList from "../components/ProductList";
+import { getProducts, clearProducts } from "../store/actions/products";
 
-function Home() {
+const Home = ({
+  getProducts,
+  clearProducts,
+}) => {
   const [latestProducts, setLatestProducts] = useState();
+  const [page, setPage] = useState(1);
   useEffect(() => {
     axios
       .get("https://gameshop-g5.com/latest_products/?format=json")
       .then((result) => {
         setLatestProducts(result.data);
       });
+      
+    const timeoutId = setTimeout(() => {
+      getProducts("/products/?categories=1"); // popunjava niz products u reducer
+    }, 200);
+    
+    return () => {
+      clearProducts(); // isprazni niz kad se ode sa stranice Products
+      clearTimeout(timeoutId);
+    };
   }, []);
   console.log(latestProducts);
 
@@ -71,8 +87,14 @@ function Home() {
           );
         })}
       </Box>
+      <ProductList setPage={setPage} />
     </Container>
   );
 }
 
-export default Home;
+// export default Home;
+
+export default connect(null, {
+  getProducts,
+  clearProducts,
+})(Home);
