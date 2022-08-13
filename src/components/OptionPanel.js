@@ -72,6 +72,8 @@ const OptionPanel = ({
             <div className={classes.selectBox}>
               <Typography variant="body1">Category</Typography>
               <Select
+                sx={{ width: "20rem" }}
+                fullWidth
                 displayEmpty
                 value={queryParams.categories}
                 onChange={(e) =>
@@ -92,15 +94,15 @@ const OptionPanel = ({
             </div>
 
             <div className={classes.selectBox}>
-              <Typography variant="body1">Order by date</Typography>
+              <Typography variant="body1">Order by price</Typography>
               <Select
                 value={queryParams.order}
                 onChange={(e) =>
                   setQueryParams({ ...queryParams, order: e.target.value })
                 }
               >
-                <MenuItem value="asc">Ascending</MenuItem>
-                <MenuItem value="desc">Descending</MenuItem>
+                <MenuItem value="asc">Low to High</MenuItem>
+                <MenuItem value="desc">High to Low</MenuItem>
               </Select>
             </div>
           </div>
@@ -115,10 +117,7 @@ const OptionPanel = ({
               Submit changes
             </Button>
             <Button
-              to="/products"
-              variant="contained"
-              className={classes.submitBtn}
-              sx={{ marginLeft: "1rem" }}
+              variant="outlined"
               onClick={() => history.replace("/products")}
             >
               Clear filters

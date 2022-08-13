@@ -13,11 +13,14 @@ import {
   NEXT_PAGE,
   GET_ALL_PRODUCTS,
   CLEAR_ALL_PRODUCTS,
+  GET_LATEST_PRODUCTS,
+  CLEAR_LATEST_PRODUCTS,
 } from "../actions/types";
 
 const initialState = {
   productCount: null,
   products: [],
+  latest_products: [],
   categories: [],
   currentProduct: null,
   paginationable: true,
@@ -41,6 +44,17 @@ const productsReducer = (state = initialState, { type, payload }) => {
         products: [],
         productCount: null,
         paginationable: null,
+      };
+
+    case GET_LATEST_PRODUCTS:
+      return {
+        ...state,
+        latest_products: [...state.latest_products, ...payload],
+      };
+    case CLEAR_LATEST_PRODUCTS:
+      return {
+        ...state,
+        latest_products: [],
       };
     case STOP_PAGINATION:
       return {

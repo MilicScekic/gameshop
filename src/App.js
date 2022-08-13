@@ -29,19 +29,11 @@ import {
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { Products as DashboardProducts } from "./pages/Dashboard/Products";
 import { ProductsDev as DashboardProductsDev } from "./pages/Dashboard/ProductsDev";
+import { Categories } from "./pages/Dashboard/Categories";
 import Sidebar from "./layouts/Sidebar";
 import { Orders } from "./pages/Dashboard/Orders";
 import Checkout from "./pages/Checkout";
-import {
-  getCategories,
-  clearCategories,
-  fetchProducts,
-  clearProducts,
-  clearAllProducts,
-  getAllProducts,
-} from "./store/actions/products";
-import { setAlert } from "./store/actions/visual";
-import MainSearch from "./pages/MainSearch";
+import { getCategories, clearCategories } from "./store/actions/products";
 
 const theme = createTheme({
   palette: {
@@ -66,10 +58,6 @@ function App({
   refreshAccessToken,
   getCategories,
   clearCategories,
-  fetchProducts,
-  clearProducts,
-  // clearAllProducts,
-  // getAllProducts,
 }) {
   //* Ovo je ako se osvjezi stranica, da odma prijavi korisnika, da ne ceka 5 minuta da to uradi useEffect dolje pri pri rifresu tokena
   useEffect(() => {
@@ -90,7 +78,6 @@ function App({
 
   useEffect(() => {
     clearCategories();
-    clearProducts();
 
     const timeoutId = setTimeout(() => {
       getCategories(); // popunjava niz categories u reducer
@@ -102,48 +89,29 @@ function App({
     };
   }, [clearCategories, getCategories]);
 
-  useEffect(() => {
-    clearProducts();
-    // clearAllProducts();
-
-    const timeoutId = setTimeout(() => {
-      fetchProducts();
-      getAllProducts();
-    }, 400);
-
-    return () => {
-      clearTimeout(timeoutId);
-      clearProducts();
-      // clearAllProducts();
-    };
-  }, [clearProducts, fetchProducts]);
-
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <LastLocationProvider>
           <Switch>
-            <Route path="/admin/">
+            <ProtectedRoute path="/admin/">
               <Sidebar>
-                <PrivateRoute path="/admin/dashboard" component={Dashboard} />
-                <PrivateRoute
-                  path="/admin/products"
-                  component={DashboardProducts}
-                />
-                <PrivateRoute
-                  exact
-                  path="/admin/products-dev"
-                  component={DashboardProductsDev}
-                />
-                <PrivateRoute path="/admin/orders" component={Orders} />
-                {/* <ProtectedRoute path="/admin/dashboard" component={Dashboard} />
+                <ProtectedRoute path="/admin/dashboard" component={Dashboard} />
                 <ProtectedRoute
                   path="/admin/products"
                   component={DashboardProducts}
                 />
-                <ProtectedRoute path="/admin/orders" component={Orders} /> */}
+                <ProtectedRoute
+                  path="/admin/products-dev"
+                  component={DashboardProductsDev}
+                />
+                <ProtectedRoute
+                  path="/admin/Categories"
+                  component={Categories}
+                />
+                <ProtectedRoute path="/admin/orders" component={Orders} />
               </Sidebar>
-            </Route>
+            </ProtectedRoute>
 
             <Layout>
               <Route exact path="/" component={Home} />
@@ -158,7 +126,6 @@ function App({
 
               <Route exact path="/products" component={Products} />
               <Route exact path="/products/:id" component={Product} />
-              <Route exact path="/search" component={MainSearch} />
               <PrivateRoute exact path="/checkout" component={Checkout} />
             </Layout>
           </Switch>
@@ -173,9 +140,5 @@ export default connect(null, {
   logoutAfterSession,
   refreshAccessToken,
   getCategories,
-  fetchProducts,
   clearCategories,
-  clearProducts,
-  // clearAllProducts,
-  // getAllProducts,
 })(App);

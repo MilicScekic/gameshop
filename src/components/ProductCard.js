@@ -6,6 +6,7 @@ import {
   addToUserCart,
   addToUserFavorites,
   refreshOrderItems,
+  addToUserWishlist,
 } from "../store/actions/user";
 import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
@@ -14,6 +15,9 @@ import Grid from "@mui/material/Grid";
 import { setAlert } from "../store/actions/visual";
 import { green } from "@mui/material/colors";
 import Button from "@mui/material/Button";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import IconButton from "@mui/material/IconButton";
+import { ResponsiveContainer, LineLength } from "../utils/Responsive";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  actionButtons: {
+    display: "flex",
+  },
 }));
 
 const ProductCard = ({
@@ -52,6 +59,7 @@ const ProductCard = ({
   orders,
   orderId,
   refreshOrderItems,
+  wishlist,
 }) => {
   const classes = useStyles();
 
@@ -78,24 +86,31 @@ const ProductCard = ({
         </Link>
         <Link to={`/products/${id}`}>
           <Typography variant="body1" className={classes.name}>
-            {name}
+            {name.slice(0, 30)}
           </Typography>
         </Link>
 
         <div style={{ textAlign: "center" }}>
-          <Typography variant="body2">{content}</Typography>
+          <Typography variant="body2">{content.slice(0, 30)}</Typography>
         </div>
 
         <div className={classes.flex}>
           <Typography variant="h5">
             {parseFloat(price.toLocaleString())} &euro;
           </Typography>
+
           {user !== null && isAuthenticated ? (
             <>
+              <IconButton
+                disabled={wishlist?.some((item) => item.id === id)}
+                onClick={() => addToUserWishlist(id)}
+              >
+                <FavoriteIcon />
+              </IconButton>
+
               <Button
                 variant="contained"
-                color="success"
-                sx={{ bgColor: green[700] }}
+                color="secondary"
                 disabled={
                   orders && orders.some((order) => order.product.id === id)
                 }
@@ -108,8 +123,7 @@ const ProductCard = ({
             <>
               <Button
                 variant="contained"
-                color="success"
-                sx={{ bgColor: green[700] }}
+                color="secondary"
                 disabled={guest.cart.some((item) => item.id === id)}
                 onClick={() =>
                   addToGuestCart({ id, name, content, media, price })
@@ -127,6 +141,7 @@ const ProductCard = ({
 
 const mapStateToProps = (state) => ({
   products: state.products.products, //! Ovo mu treba da bi citao state iz reducera (products)
+  wishlist: state.products.wishlist,
   isAuthenticated: state.auth.isAuthenticated,
   user: state.user.user,
   guest: state.user.guest,
@@ -140,4 +155,5 @@ export default connect(mapStateToProps, {
   addToUserCart,
   addToUserFavorites,
   refreshOrderItems,
+  addToUserWishlist,
 })(ProductCard);

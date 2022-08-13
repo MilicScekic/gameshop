@@ -1,7 +1,7 @@
 import { Box } from "@material-ui/core";
-import ProductTable from "../../components/Dashboard/Products-dev/Table";
+import CategoryTable from "../../components/Dashboard/Categories/Table";
 
-export const ProductsDev = () => {
+export const Categories = () => {
   return (
     <>
       <Box
@@ -14,10 +14,10 @@ export const ProductsDev = () => {
           width: "80vw",
         }}
       >
-        <h1>Products</h1>
+        <h1>Categories</h1>
       </Box>
       <Box ml={3}>
-        <ProductTable />
+        <CategoryTable />
       </Box>
     </>
   );

@@ -42,6 +42,11 @@ export default function Sidebar({ children }) {
       icon: <GamesIcon />,
       path: `${url}/products-dev`,
     },
+    {
+      name: "Categories",
+      icon: <GamesIcon />,
+      path: `${url}/categories`,
+    },
   ];
   return (
     <Box sx={{ display: "flex" }}>
