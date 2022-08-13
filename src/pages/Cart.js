@@ -146,8 +146,7 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
                 name={item.product.name}
                 productId={item.product.id}
                 image={
-                  item.product.media?.length > 0 &&
-                  item.product.media.map((img) => img.media)
+                  item.product.media?.length > 0 && item.product.media[0].media
                 }
               />
             </>

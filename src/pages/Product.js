@@ -21,7 +21,6 @@ import Rating from "@mui/material/Rating";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Comments from "../components/Comments/Comments";
 import { setAlert } from "../store/actions/visual";
-import { green } from "@mui/material/colors";
 import Button from "@mui/material/Button";
 
 const useStyles = makeStyles((theme) => ({

@@ -15,6 +15,8 @@ import {
   NEXT_PAGE,
   GET_ALL_PRODUCTS,
   CLEAR_ALL_PRODUCTS,
+  GET_LATEST_PRODUCTS,
+  CLEAR_LATEST_PRODUCTS,
 } from "./types";
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
@@ -57,6 +59,22 @@ export const getProducts = (targetUrl) => async (dispatch) => {
   } catch ({ response }) {
     dispatch(hideSpinner());
     // dispatch(setAlert(response.data.message, "error"));
+    dispatch(setAlert("Error", "error"));
+  }
+};
+
+export const clearLatestProducts = () => (dispatch) => {
+  dispatch({ type: CLEAR_LATEST_PRODUCTS });
+};
+
+export const getLatestProducts = () => async (dispatch) => {
+  dispatch(showSpinner());
+  try {
+    const res = await axios.get("https://gameshop-g5.com/latest_products/");
+    dispatch({ type: GET_LATEST_PRODUCTS, payload: res.data });
+    dispatch(hideSpinner());
+  } catch ({ response }) {
+    dispatch(hideSpinner());
     dispatch(setAlert("Error", "error"));
   }
 };
@@ -161,12 +179,36 @@ export const changeProduct = (formData) => async (dispatch) => {
         },
       }
     );
-    // dispatch({ type: CHANGE_PRODUCT, payload: res.data }); //! nije dodato
+    // dispatch({ type: CHANGE_PRODUCT, payload: res.data }); //! nije dodato. Radim refresh products
     dispatch(setAlert("Product changed", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message && response.data.message, "error"));
     dispatch(setAlert("Product not changed", "error"));
   }
+};
+
+export const changeMainImage = (formData) => async (dispatch) => {
+  try {
+    await axios.patch(
+      `https://gameshop-g5.com/products/${formData.id}/media/${formData.media[0].id}/`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
+    // dispatch({ type: CHANGE_PRODUCT, payload: res.data }); //! nije dodato. Radim refresh products
+    dispatch(setAlert("Product changed", "success"));
+  } catch ({ response }) {
+    dispatch(setAlert(response.data.message && response.data.message, "error"));
+    dispatch(setAlert("Product not changed", "error"));
+  }
+};
+
+export const refreshCategories = () => (dispatch) => {
+  dispatch(clearCategories());
+  dispatch(getCategories());
 };
 
 export const getCategories = () => async (dispatch) => {

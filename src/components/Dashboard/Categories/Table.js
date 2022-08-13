@@ -1,15 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import {
-  clearProducts,
-  fetchProducts,
-  refreshProducts,
-  removeProduct,
-  changeProduct,
-  getCategories,
   clearCategories,
-  addProduct,
-  changeMainImage,
+  getCategories,
+  refreshCategories,
+  // removeCategory,
+  // changeCategory,
+  // addCategory,
 } from "../../../store/actions/products";
 import Button from "@mui/material/Button";
 import MaterialTable from "material-table";
@@ -24,33 +21,30 @@ const ProductTable = ({
   products,
   categories,
   loading,
-  removeProduct,
-  addProduct,
-  fetchProducts,
-  clearProducts,
-  changeProduct,
-  refreshProducts,
-  getCategories, // da bi se azurirao select dropdown
+  removeCategory,
+  addCategory,
   clearCategories,
+  changeCategory,
+  refreshCategories,
+  getCategories,
 }) => {
   useEffect(() => {
-    clearProducts();
     clearCategories();
 
     const timeoutId = setTimeout(() => {
-      fetchProducts();
       getCategories();
     }, 200);
 
     return () => {
-      clearProducts();
       clearCategories();
       clearTimeout(timeoutId);
     };
-  }, [clearProducts, fetchProducts]);
+  }, [clearCategories, getCategories]);
 
-  //* Dovoljno je media i categories, jer njih mijenjam na drugi nacin, ostalo ide preko ugradjenih material table funkcija
   const [product, setProduct] = useState({
+    name: "",
+    content: "",
+    price: "",
     media: [],
     categories: [],
   });
@@ -78,6 +72,11 @@ const ProductTable = ({
 
   const rerenderCategories = useCallback(
     (item) => item.categories.map((category) => `${category.name}; `),
+    []
+  );
+
+  const rerender = useCallback(
+    (item) => item.categories.map((category) => category),
     []
   );
 
@@ -152,7 +151,6 @@ const ProductTable = ({
       align: "left",
       filterPlaceholder: "Filter by description",
       validate: (rowData) => Boolean(rowData.content),
-      render: (rowData) => rowData.content.slice(0, 50),
     },
     {
       field: "price",
@@ -177,90 +175,86 @@ const ProductTable = ({
 
   const handleProduct = () => {
     try {
-      changeProduct(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno formData.id
+      // changeCategory(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno formData.id
       alert("Product was successfully edited.");
-      refreshProducts();
+      refreshCategories();
       setEdit(null);
     } catch (error) {
       alert("There some error in changing product...");
     }
   };
-  const [selectedRow, setSelectedRow] = useState(null);
+
   return (
     <MaterialTable
-      onRowClick={(evt, selectedRow) =>
-        setSelectedRow(selectedRow.tableData.id)
-      }
-      title={"Products table"}
+      title={"Categories table"}
       icons={tableIcons}
-      data={products}
+      data={categories}
       columns={productColumns}
       options={productsOptions}
-      editable={{
-        onRowAdd: (newRow) =>
-          new Promise((resolve, reject) => {
-            let newProduct = new FormData();
-            newProduct.append("name", newRow.name);
-            newProduct.append("content", newRow.content);
-            newProduct.append("price", newRow.price);
+      // editable={{
+      //   onRowAdd: (newRow) =>
+      //     new Promise((resolve, reject) => {
+      //       let newProduct = new FormData();
+      //       newProduct.append("name", newRow.name);
+      //       newProduct.append("content", newRow.content);
+      //       newProduct.append("price", newRow.price);
 
-            for (var i = 0; i < product.categories.length; i++) {
-              newProduct.append("categories", product.categories[i]);
-            }
-            for (var i = 0; i < product.media.length; i++) {
-              newProduct.append("media" + [i], product.media[i]);
-            }
-            addProduct(newProduct);
+      //       for (var i = 0; i < product.categories.length; i++) {
+      //         newProduct.append("categories", product.categories[i]);
+      //       }
+      //       for (var i = 0; i < product.media.length; i++) {
+      //         newProduct.append("media" + [i], product.media[i]);
+      //       }
+      //       addProduct(newProduct);
 
-            //Isprazni polja nakon dodavanja proizvoda
-            setProduct({
-              media: [],
-              categories: [],
-            });
+      //       //Isprazni polja nakon dodavanja proizvoda
+      //       setProduct({
+      //         media: [],
+      //         categories: [],
+      //       });
 
-            setTimeout(() => {
-              refreshProducts();
-              resolve();
-            }, 1000);
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise((resolve, reject) => {
-            let updateProduct = new FormData();
-            updateProduct.append("name", newData.name);
-            updateProduct.append("content", newData.content);
-            updateProduct.append("price", newData.price);
+      //       setTimeout(() => {
+      //         refreshProducts();
+      //         resolve();
+      //       }, 1000);
+      //     }),
+      //   onRowUpdate: (newData, oldData) =>
+      //     new Promise((resolve, reject) => {
+      //       handleEdit(oldData);
 
-            for (var i = 0; i < product.categories.length; i++) {
-              updateProduct.append("categories", product.categories[i]);
-            }
+      //       console.log(edit);
 
-            changeProduct({
-              id: newData.id,
-              name: newData.name,
-              content: newData.content,
-              price: newData.price,
-              categories: newData.categories.map((category) => category.id),
-            });
+      //       // let updatedProduct = new FormData();
+      //       // updatedProduct.append("name", newData.name);
+      //       // updatedProduct.append("content", newData.content);
+      //       // updatedProduct.append("price", newData.price);
 
-            setTimeout(() => {
-              setProduct({
-                media: [],
-                categories: [],
-              });
-              refreshProducts();
-              resolve();
-            }, 1000);
-          }),
-        onRowDelete: (oldData) =>
-          new Promise((resolve, reject) => {
-            removeProduct(oldData.id);
+      //       // console.log(updatedProduct);
 
-            setTimeout(() => {
-              refreshProducts();
-              resolve();
-            }, 1000);
-          }),
-      }}
+      //       // changeProduct(oldData);
+
+      //       // for (var i = 0; i < product.categories.length; i++) {
+      //       //   newProduct.append("categories", product.categories[i]);
+      //       // }
+      //       // for (var i = 0; i < product.media.length; i++) {
+      //       //   newProduct.append("media" + [i], product.media[i]);
+      //       // }
+
+      //       setTimeout(() => {
+      //         refreshProducts();
+      //         resolve();
+      //       }, 1000);
+      //     }),
+      //   onRowDelete: (oldData) =>
+      //     new Promise((resolve, reject) => {
+      //       removeProduct(oldData.id);
+
+      //       setTimeout(() => {
+      //         refreshProducts();
+      //         resolve();
+      //       }, 1000);
+      //     }),
+      // }}
     />
   );
 };
@@ -272,13 +266,10 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  removeProduct,
-  addProduct,
-  fetchProducts,
-  clearProducts,
-  changeProduct,
-  refreshProducts,
-  getCategories,
+  // removeCategory,
+  // addCategory,
   clearCategories,
-  changeMainImage,
+  // changeCategory,
+  refreshCategories,
+  getCategories,
 })(ProductTable);

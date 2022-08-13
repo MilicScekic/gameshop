@@ -63,9 +63,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CartItem = ({
-  item: { id, name, quantity, price, discount },
+  item: { id, quantity, price, discount },
   productId,
-  // name,
+  name,
   image,
   removeFromGuestCart,
   removeFromUserCart,
@@ -73,7 +73,6 @@ const CartItem = ({
   handleUserQuantity,
   isAuthenticated,
   user,
-  loading,
   orderId, //? smjesten u state
   refreshOrderItems,
 }) => {
@@ -116,7 +115,9 @@ const CartItem = ({
         <Grid item xs={12} md={4} className={classes.gridItem}>
           <div style={{ marginTop: 20 }}>
             <Link to={`/products/${productId}`} className={classes.link}>
-              <Subheadline center>{name}</Subheadline>
+              <Subheadline center sx={{ fontSize: "1rem" }}>
+                {name}
+              </Subheadline>
             </Link>
             <Typography variant="body1" style={{ textAlign: "center" }}>
               {calculatePrice(price, discount)} &euro;

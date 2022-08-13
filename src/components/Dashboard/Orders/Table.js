@@ -26,7 +26,7 @@ const OrderTable = ({
   refreshOrders,
 }) => {
   const [edit, setEdit] = useState();
-  console.log(all_orders);
+  // console.log(all_orders);
   useEffect(() => {
     clearOrders();
 
