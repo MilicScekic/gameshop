@@ -26,6 +26,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/auth";
+import SearchBar from "../components/Search/SearchBar";
 
 function Header({
   isAuthenticated,
@@ -79,60 +80,60 @@ function Header({
   const [open, setOpen] = useState(false);
 
   // close the dropdown menu and search if clicked outside
-  useEffect(() => {
-    const handler = (event) => {
-      if (!dropdownRef.current.contains(event.target)) {
-        setIsDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  });
+  // useEffect(() => {
+  //   const handler = (event) => {
+  //     if (!dropdownRef.current.contains(event.target)) {
+  //       setIsDropdown(false);
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handler);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handler);
+  //   };
+  // });
 
-  useEffect(() => {
-    const handler = (event) => {
-      if (!searchRef.current.contains(event.target)) {
-        setIsSearchVisible(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  });
+  // useEffect(() => {
+  //   const handler = (event) => {
+  //     if (!searchRef.current.contains(event.target)) {
+  //       setIsSearchVisible(false);
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handler);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handler);
+  //   };
+  // });
 
-  // opens dropdown menu for a specified parent category
-  const handleDropdown = (cat) => {
-    const cats = categories.filter((category) => {
-      if (category.parent !== null) return category.parent.name === cat;
-      else return false;
-    });
-    setDropdownCategories(cats);
-    setIsDropdown(true);
-  };
+  // // opens dropdown menu for a specified parent category
+  // const handleDropdown = (cat) => {
+  //   const cats = categories.filter((category) => {
+  //     if (category.parent !== null) return category.parent.name === cat;
+  //     else return false;
+  //   });
+  //   setDropdownCategories(cats);
+  //   setIsDropdown(true);
+  // };
 
-  // opens dropdown search for term used
-  useEffect(() => {
-    setIsSearchVisible(true);
-    const p = products.filter((product) => {
-      if (searchTerm === "") {
-        setIsSearchVisible(false);
-        return product;
-      } else if (
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      ) {
-        return product;
-      }
-    });
-    setSearchedProducts(p);
-    console.log(searchTerm);
-  }, [searchTerm]);
+  // // opens dropdown search for term used
+  // useEffect(() => {
+  //   setIsSearchVisible(true);
+  //   const p = products.filter((product) => {
+  //     if (searchTerm === "") {
+  //       setIsSearchVisible(false);
+  //       return product;
+  //     } else if (
+  //       product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  //     ) {
+  //       return product;
+  //     }
+  //   });
+  //   setSearchedProducts(p);
+  //   console.log(searchTerm);
+  // }, [searchTerm]);
 
-  const handleOpen = () => {
-    setOpen(!open);
-  };
+  // const handleOpen = () => {
+  //   setOpen(!open);
+  // };
 
   //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
   //* Ovo mora biti najvisi nivo
@@ -159,41 +160,33 @@ function Header({
           >
             <Typography
               variant="h6"
+              to="/"
+              component={Link}
               noWrap
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "Roboto",
-                fontSize: "15px",
-                fontWeight: 600,
-                // letterSpacing: ".3rem",
+                fontFamily: "VerminVibesV",
+                fontSize: "18px",
+                letterSpacing: ".1rem",
                 color: "black",
                 textDecoration: "none",
               }}
             >
-              <PhoneTwoToneIcon
-                sx={{ fontSize: "20px", display: { xs: "flex" }, mr: 1 }}
-              />
-              <span>+382 68 089 077</span>
-            </Typography>
-
-            <Link to="/" style={{ color: "black", textDecoration: "none" }}>
-              <Typography
-                variant="h4"
-                noWrap
-                sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "VerminVibesV",
-                  // fontWeight: 700,
-                  letterSpacing: ".3rem",
-                  color: "black",
-                  textDecoration: "none",
+              Gameshop
+              <span
+                style={{
+                  fontFamily: "Nunito",
+                  fontWeight: "700",
+                  fontSize: "20px",
                 }}
               >
-                <span>Gameshop</span>
-              </Typography>
-            </Link>
+                .me
+              </span>
+            </Typography>
+
+            <SearchBar />
+
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
@@ -246,7 +239,7 @@ function Header({
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: "monospace",
+                fontFamily: "Nunito",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
                 color: "inherit",
@@ -261,13 +254,21 @@ function Header({
                 {!isAuthenticated && (
                   <>
                     <Button
-                      sx={{ color: "black", textDecoration: "none" }}
+                      sx={{
+                        color: "black",
+                        textDecoration: "none",
+                        fontFamily: "Nunito",
+                      }}
                       to={!isAuthenticated && "/login"}
                       component={Link}
                     >
                       <h4>{"Login"}</h4>
                     </Button>
-                    <Button to={"/register"} component={Link}>
+                    <Button
+                      to={"/register"}
+                      component={Link}
+                      sx={{ fontFamily: "Nunito" }}
+                    >
                       <h4>{"Register"}</h4>
                     </Button>
                   </>
@@ -357,7 +358,15 @@ function Header({
         </Container>
       </AppBar>
 
-      <div className="bottomAppBar">
+      {/* <Box className="bottomNavBar" sx={{ flexGrow: 1 }}>
+        <AppBar className="underBar">
+          <Toolbar className="navToolbar">
+            <SearchBar />
+          </Toolbar>
+        </AppBar>
+      </Box> */}
+
+      {/* <div className="bottomAppBar">
         <div className="searchItem">
           <span className="searchIcon">
             <SearchTwoToneIcon />
@@ -615,7 +624,7 @@ function Header({
             )}
           </ul>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

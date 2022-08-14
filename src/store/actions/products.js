@@ -17,6 +17,8 @@ import {
   CLEAR_ALL_PRODUCTS,
   GET_LATEST_PRODUCTS,
   CLEAR_LATEST_PRODUCTS,
+  GET_GAMES,
+  CLEAR_GAMES,
 } from "./types";
 import { showSpinner, hideSpinner, setAlert } from "./visual";
 import axios from "axios";
@@ -79,6 +81,29 @@ export const getLatestProducts = () => async (dispatch) => {
   }
 };
 
+export const refreshGames = () => async (dispatch) => {
+  dispatch(clearGames());
+  dispatch(getGames());
+};
+
+export const clearGames = () => async (dispatch) => {
+  dispatch({ type: CLEAR_GAMES });
+};
+
+export const getGames = () => async (dispatch) => {
+  dispatch(showSpinner());
+  try {
+    const res = await axios.get(
+      "https://gameshop-g5.com/products/?categories=1&order=desc"
+    );
+    dispatch({ type: GET_GAMES, payload: res.data.results });
+    dispatch(hideSpinner());
+  } catch ({ response }) {
+    dispatch(hideSpinner());
+    dispatch(setAlert("Error", "error"));
+  }
+};
+
 export const refreshAllProducts = () => async (dispatch) => {
   dispatch(clearAllProducts());
   dispatch(getAllProducts());
@@ -87,7 +112,7 @@ export const refreshAllProducts = () => async (dispatch) => {
 // Uglavnom za dashboard
 export const getAllProducts = () => async (dispatch) => {
   try {
-    const res = await axios.get(`https://gameshop-g5.com/products/?all=true`);
+    const res = await axios.get(`https://gameshop-g5.com/products/?all=true/`);
 
     dispatch({ type: GET_ALL_PRODUCTS, payload: res.data });
   } catch ({ response }) {

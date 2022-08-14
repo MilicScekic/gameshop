@@ -33,7 +33,12 @@ import { Categories } from "./pages/Dashboard/Categories";
 import Sidebar from "./layouts/Sidebar";
 import { Orders } from "./pages/Dashboard/Orders";
 import Checkout from "./pages/Checkout";
-import { getCategories, clearCategories } from "./store/actions/products";
+import {
+  getCategories,
+  clearCategories,
+  clearAllProducts,
+  getAllProducts,
+} from "./store/actions/products";
 
 const theme = createTheme({
   palette: {
@@ -58,6 +63,8 @@ function App({
   refreshAccessToken,
   getCategories,
   clearCategories,
+  clearAllProducts,
+  getAllProducts,
 }) {
   //* Ovo je ako se osvjezi stranica, da odma prijavi korisnika, da ne ceka 5 minuta da to uradi useEffect dolje pri pri rifresu tokena
   useEffect(() => {
@@ -74,6 +81,19 @@ function App({
         : delete localStorage.refresh &&
           delete localStorage.access && <Redirect to="/login" />;
     }, 5 * 60 * 1000);
+  }, []);
+
+  useEffect(() => {
+    clearAllProducts();
+
+    const timeout = setTimeout(() => {
+      getAllProducts();
+    }, 200);
+
+    return () => {
+      clearAllProducts();
+      clearTimeout(timeout);
+    };
   }, []);
 
   useEffect(() => {
@@ -141,4 +161,6 @@ export default connect(null, {
   refreshAccessToken,
   getCategories,
   clearCategories,
+  clearAllProducts,
+  getAllProducts,
 })(App);
