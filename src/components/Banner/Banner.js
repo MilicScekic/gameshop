@@ -1,10 +1,30 @@
-import { AppBar, Button } from "@mui/material";
-// A web shop for all things gaming. Welcome!
+import { AppBar, Button, Toolbar } from "@mui/material";
+import { Container } from "@mui/system";
+import SearchBar from "../Search/SearchBar";
+
 const Banner = () => {
   return (
-    <AppBar position="static">
-      <img src="https://i.ibb.co/kHBkPVn/bannnner2.png" alt="banner" />
-    </AppBar>
+    <>
+      <Container
+        maxWidth="xxl"
+        position="static"
+        style={{
+          height: "370px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          verticalAlign: "middle",
+          textAlign: "center",
+          // background:"url(https://i.ibb.co/yN7nmVz/bannnner6.png) no-repeat center",
+          background: "#343a40",
+        }}
+      >
+        {/* <img src="https://i.ibb.co/kHBkPVn/bannnner2.png" alt="banner" /> */}
+        <Toolbar disableGutters>
+          <SearchBar />
+        </Toolbar>
+      </Container>
+    </>
   );
 };
 

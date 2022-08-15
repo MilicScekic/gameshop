@@ -281,18 +281,18 @@ body {
   padding: 0;
 }
 
+.mainBar {
+  background: var(--clr-gradient);
+}
+
 .topBar {
   background: var(--clr-gradient);
   height: 5rem;
 }
 
-.bottomBar a button:hover {
+.bottomBar {
   background: var(--clr-gradient);
-}
-
-.bottomBar Button:hover {
-  background: var(--clr-gradient);
-  cursor: default;
+  box-shadow: none !important;
 }
 
 .active {
@@ -477,6 +477,7 @@ body {
 
 .dataResult::-webkit-scrollbar {
   display: none;
+  z-index: 997;
 }
 
 .dataResult .dataItem {
@@ -485,8 +486,10 @@ body {
   display: flex;
   align-items: center;
   color: #fff;
+  z-index: 997;
 }
 
 .dataItem p {
   margin-left: 10px;
+  z-index: 997;
 }
