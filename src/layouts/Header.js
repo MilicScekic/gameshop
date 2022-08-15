@@ -26,6 +26,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/auth";
+import SearchBar from "../components/Search/SearchBar";
 
 function Header({
   isAuthenticated,
@@ -34,6 +35,7 @@ function Header({
   orders,
   wishlist,
   categories,
+  all_products,
   products,
   logout,
   authUser,
@@ -79,60 +81,60 @@ function Header({
   const [open, setOpen] = useState(false);
 
   // close the dropdown menu and search if clicked outside
-  useEffect(() => {
-    const handler = (event) => {
-      if (!dropdownRef.current.contains(event.target)) {
-        setIsDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  });
+  // useEffect(() => {
+  //   const handler = (event) => {
+  //     if (!dropdownRef.current.contains(event.target)) {
+  //       setIsDropdown(false);
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handler);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handler);
+  //   };
+  // });
 
-  useEffect(() => {
-    const handler = (event) => {
-      if (!searchRef.current.contains(event.target)) {
-        setIsSearchVisible(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  });
+  // useEffect(() => {
+  //   const handler = (event) => {
+  //     if (!searchRef.current.contains(event.target)) {
+  //       setIsSearchVisible(false);
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handler);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handler);
+  //   };
+  // });
 
-  // opens dropdown menu for a specified parent category
-  const handleDropdown = (cat) => {
-    const cats = categories.filter((category) => {
-      if (category.parent !== null) return category.parent.name === cat;
-      else return false;
-    });
-    setDropdownCategories(cats);
-    setIsDropdown(true);
-  };
+  // // opens dropdown menu for a specified parent category
+  // const handleDropdown = (cat) => {
+  //   const cats = categories.filter((category) => {
+  //     if (category.parent !== null) return category.parent.name === cat;
+  //     else return false;
+  //   });
+  //   setDropdownCategories(cats);
+  //   setIsDropdown(true);
+  // };
 
-  // opens dropdown search for term used
-  useEffect(() => {
-    setIsSearchVisible(true);
-    const p = products.filter((product) => {
-      if (searchTerm === "") {
-        setIsSearchVisible(false);
-        return product;
-      } else if (
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      ) {
-        return product;
-      }
-    });
-    setSearchedProducts(p);
-    console.log(searchTerm);
-  }, [searchTerm]);
+  // // opens dropdown search for term used
+  // useEffect(() => {
+  //   setIsSearchVisible(true);
+  //   const p = products.filter((product) => {
+  //     if (searchTerm === "") {
+  //       setIsSearchVisible(false);
+  //       return product;
+  //     } else if (
+  //       product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  //     ) {
+  //       return product;
+  //     }
+  //   });
+  //   setSearchedProducts(p);
+  //   console.log(searchTerm);
+  // }, [searchTerm]);
 
-  const handleOpen = () => {
-    setOpen(!open);
-  };
+  // const handleOpen = () => {
+  //   setOpen(!open);
+  // };
 
   //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
   //* Ovo mora biti najvisi nivo
@@ -159,41 +161,40 @@ function Header({
           >
             <Typography
               variant="h6"
+              component={Link}
               noWrap
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
-                fontFamily: "Roboto",
-                fontSize: "15px",
-                fontWeight: 600,
-                // letterSpacing: ".3rem",
+                fontFamily: "Nunito",
+                fontSize: "16px",
+                fontWeight: "700",
+                letterSpacing: "",
                 color: "black",
                 textDecoration: "none",
               }}
             >
-              <PhoneTwoToneIcon
-                sx={{ fontSize: "20px", display: { xs: "flex" }, mr: 1 }}
-              />
-              <span>+382 68 089 077</span>
+              +382 68 089 077
             </Typography>
 
-            <Link to="/" style={{ color: "black", textDecoration: "none" }}>
-              <Typography
-                variant="h4"
-                noWrap
-                sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "VerminVibesV",
-                  // fontWeight: 700,
-                  letterSpacing: ".3rem",
-                  color: "black",
-                  textDecoration: "none",
-                }}
-              >
-                <span>Gameshop</span>
-              </Typography>
-            </Link>
+            <Typography
+              to="/"
+              component={Link}
+              variant="h4"
+              noWrap
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "VerminVibesV",
+                // fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "black",
+                textDecoration: "none",
+              }}
+            >
+              <span>GAMESHOP</span>
+            </Typography>
+
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
@@ -246,7 +247,7 @@ function Header({
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: "monospace",
+                fontFamily: "Nunito",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
                 color: "inherit",
@@ -261,13 +262,21 @@ function Header({
                 {!isAuthenticated && (
                   <>
                     <Button
-                      sx={{ color: "black", textDecoration: "none" }}
+                      sx={{
+                        color: "black",
+                        textDecoration: "none",
+                        fontFamily: "Nunito",
+                      }}
                       to={!isAuthenticated && "/login"}
                       component={Link}
                     >
                       <h4>{"Login"}</h4>
                     </Button>
-                    <Button to={"/register"} component={Link}>
+                    <Button
+                      to={"/register"}
+                      component={Link}
+                      sx={{ fontFamily: "Nunito" }}
+                    >
                       <h4>{"Register"}</h4>
                     </Button>
                   </>
@@ -356,266 +365,19 @@ function Header({
           </Toolbar>
         </Container>
       </AppBar>
-
-      <div className="bottomAppBar">
-        <div className="searchItem">
-          <span className="searchIcon">
-            <SearchTwoToneIcon />
-          </span>
-          <input
-            type="text"
-            className="searchBar"
-            placeholder="Search..."
-            onChange={debounce((event) => {
-              setSearchTerm(event.target.value);
-            })}
-          />
-        </div>
-        <div className="scrollItem">
-          <div className="categories">
-            <Box
-              component="div"
-              sx={{
-                display: "inline",
-                background: "black",
-                width: "100%",
-                height: "100%",
-                padding: "0.3rem",
-              }}
-            >
-              <Link to={void 0} style={{ textDecoration: "none" }}>
-                <Button
-                  onClick={() => handleDropdown("Games")}
-                  sx={{
-                    color: "black",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <SportsEsportsTwoToneIcon />
-                  Games
-                </Button>
-              </Link>
-            </Box>
-            <Box
-              component="div"
-              sx={{
-                display: "inline",
-                background: "black",
-                width: "100%",
-                height: "100%",
-                padding: "0.3rem",
-              }}
-            >
-              <Link to={void 0} style={{ textDecoration: "none" }}>
-                <Button
-                  onClick={() => handleDropdown("Consoles")}
-                  sx={{
-                    color: "black",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <GamepadTwoToneIcon />
-                  Consoles
-                </Button>
-              </Link>
-            </Box>
-            <Box
-              component="div"
-              sx={{
-                display: "inline",
-                background: "black",
-                width: "100%",
-                height: "100%",
-                padding: "0.3rem",
-              }}
-            >
-              <Link to={void 0} style={{ textDecoration: "none" }}>
-                <Button
-                  onClick={() => handleDropdown("Components")}
-                  sx={{
-                    mr: 5,
-                    color: "black",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <MemoryTwoToneIcon />
-                  Components
-                </Button>
-              </Link>
-            </Box>
-            <Box
-              component="div"
-              sx={{
-                display: "inline",
-                background: "black",
-                width: "100%",
-                height: "100%",
-                padding: "0.3rem",
-              }}
-            >
-              <Link to={void 0} style={{ textDecoration: "none" }}>
-                <Button
-                  onClick={() => handleDropdown("Perifery")}
-                  sx={{
-                    color: "black",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <HeadsetTwoToneIcon />
-                  Perifery
-                </Button>
-              </Link>
-            </Box>
-            <Box
-              component="div"
-              sx={{
-                display: "inline",
-                background: "black",
-                width: "100%",
-                height: "100%",
-                padding: "0.3rem",
-              }}
-            >
-              <Link to={void 0} style={{ textDecoration: "none" }}>
-                <Button
-                  onClick={() => handleDropdown("Board games")}
-                  sx={{
-                    mr: 5,
-                    color: "black",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <ExtensionTwoToneIcon />
-                  Board games
-                </Button>
-              </Link>
-            </Box>
-            <Box
-              component="div"
-              sx={{
-                display: "inline",
-                background: "black",
-                width: "100%",
-                height: "100%",
-                padding: "0.3rem",
-              }}
-            >
-              <Link to={void 0} style={{ textDecoration: "none" }}>
-                <Button
-                  onClick={() => handleDropdown("Phones")}
-                  sx={{
-                    color: "black",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <PhoneAndroidTwoToneIcon />
-                  Phones
-                </Button>
-              </Link>
-            </Box>
-            <Box
-              component="div"
-              sx={{
-                display: "inline",
-                background: "black",
-                width: "100%",
-                height: "100%",
-                padding: "0.3rem",
-              }}
-            >
-              <Link to={void 0} style={{ textDecoration: "none" }}>
-                <Button
-                  onClick={() => handleDropdown("Lifestyle")}
-                  sx={{
-                    mr: 5,
-                    color: "black",
-                    background: "white",
-                    borderRadius: "1.3rem",
-                  }}
-                >
-                  <NightlifeTwoToneIcon />
-                  Lifestyle
-                </Button>
-              </Link>
-            </Box>
-          </div>
-        </div>
-        <div
-          ref={dropdownRef}
-          className={
-            "dropdown dropdownMenu scale-in-ver-top" +
-            (isDropdown ? " displayBlock" : "")
-          }
+      {/* <AppBar className="bottomBar" position="static">
+        <Toolbar
+          disableGutters
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          }}
         >
-          {dropdownCategories ? (
-            <Link
-              to={`/products/?categories=${dropdownCategories[0].parent.id}&order=desc`}
-              style={{ textDecoration: "none" }}
-            >
-              <h6>{dropdownCategories[0].parent.name}</h6>
-            </Link>
-          ) : (
-            <h6></h6>
-          )}
-          <ul>
-            {dropdownCategories ? (
-              dropdownCategories.map((cat) => {
-                return (
-                  <Link
-                    key={cat.name}
-                    to={`/products/?categories=${cat.id}&order=desc`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <li>{cat.name}</li>
-                  </Link>
-                );
-              })
-            ) : (
-              <li>Category not selected</li>
-            )}
-          </ul>
-        </div>
-
-        <div
-          ref={searchRef}
-          className={
-            "dropdown dropdownSearch scale-in-ver-top" +
-            (isSearchVisible ? " displayBlock" : "")
-          }
-        >
-          <ul>
-            {searchedProducts ? (
-              searchedProducts.map((product) => {
-                return (
-                  <Link
-                    to={`/products/${product.id}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <li>
-                      {product.name}
-                      {product.media[0] ? (
-                        <span>
-                          <img src={product.media[0].media} />
-                        </span>
-                      ) : (
-                        <span></span>
-                      )}
-                    </li>
-                  </Link>
-                );
-              })
-            ) : (
-              <li>Category not selected</li>
-            )}
-          </ul>
-        </div>
-      </div>
+          <SearchBar />
+        </Toolbar>
+      </AppBar> */}
     </>
   );
 }
@@ -626,6 +388,7 @@ const mapStateToProps = (state) => ({
   orders: state.user.orders,
   wishlist: state.user.wishlist,
   categories: state.products.categories,
+  all_products: state.products.all_products,
   products: state.products.products,
   guest: state.user.guest,
   isAuthenticated: state.auth.isAuthenticated,

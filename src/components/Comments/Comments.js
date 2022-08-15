@@ -104,7 +104,7 @@ const Comments = ({
   };
 
   return (
-    <div style={{ padding: 14, marginTop: 50, fontFamily: "Roboto" }}>
+    <div style={{ padding: 14, marginTop: 50, fontFamily: "Nunito" }}>
       <h1>Comments</h1>
 
       {/* //! Add comment */}

@@ -15,18 +15,21 @@ import {
   CLEAR_ALL_PRODUCTS,
   GET_LATEST_PRODUCTS,
   CLEAR_LATEST_PRODUCTS,
+  GET_GAMES,
+  CLEAR_GAMES,
 } from "../actions/types";
 
 const initialState = {
   productCount: null,
   products: [],
   latest_products: [],
+  games: [],
   categories: [],
   currentProduct: null,
   paginationable: true,
   previous: null,
   next: null,
-  all_products: [], //? Ovo mi treba da azurira bas sve proizvode. Nema paginacije ni counta. Koristice se uglavnom samo za Dashboard
+  all_products: [], //? Ovo mi treba da azurira bas sve proizvode. Nema paginacije ni counta. Koristice se pretragu i Dashboard
 };
 
 const productsReducer = (state = initialState, { type, payload }) => {
@@ -55,6 +58,16 @@ const productsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         latest_products: [],
+      };
+    case GET_GAMES:
+      return {
+        ...state,
+        games: [...state.games, ...payload],
+      };
+    case CLEAR_GAMES:
+      return {
+        ...state,
+        games: [],
       };
     case STOP_PAGINATION:
       return {

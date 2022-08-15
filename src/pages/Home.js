@@ -1,34 +1,13 @@
-import { Container } from "@mui/material";
-import Slider from "../components/Slider";
-import { connect } from "react-redux";
-import {
-  getLatestProducts,
-  clearLatestProducts,
-} from "../store/actions/products";
-import { useEffect } from "react";
+import Banner from "../components/Banner/Banner";
+import GamesSlider from "../components/Games/Slider";
 
-const Home = ({ getLatestProducts, clearLatestProducts }) => {
-  useEffect(() => {
-    clearLatestProducts();
-
-    const timeout = setTimeout(() => {
-      getLatestProducts();
-    }, 200);
-
-    return () => {
-      clearLatestProducts();
-      clearTimeout(timeout);
-    };
-  }, []);
-
+const Home = () => {
   return (
-    <Container maxWidth="xl" style={{ padding: 0, margin: "auto" }}>
-      <Slider />
-    </Container>
+    <>
+      <Banner />
+      <GamesSlider />
+    </>
   );
 };
 
-export default connect(null, {
-  getLatestProducts,
-  clearLatestProducts,
-})(Home);
+export default Home;

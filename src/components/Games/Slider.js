@@ -1,11 +1,9 @@
+import { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-
 import { Pagination, Navigation, EffectFade, Autoplay } from "swiper";
-import { connect } from "react-redux";
-
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -13,33 +11,75 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
+import { Headline, Subheadline } from "../../utils/Responsive";
+import { getGames, clearGames } from "../../store/actions/products";
+import { connect } from "react-redux";
+import { Paper } from "@mui/material";
 
-const Slider = ({ latest_products }) => {
+const GamesSlider = ({ games, getGames, clearGames }) => {
+  useEffect(() => {
+    clearGames();
+
+    const timeout = setTimeout(() => {
+      getGames();
+    }, 200);
+
+    return () => {
+      clearGames();
+      clearTimeout(timeout);
+    };
+  }, [clearGames, getGames]);
+
+  //? Matijin Api response vraca duple proizvode. Ovako sam se ogradio
+  const uniqueIds = [];
+  const uniqueGames = games.filter((element) => {
+    const isDuplicate = uniqueIds.includes(element.id);
+
+    if (!isDuplicate) {
+      uniqueIds.push(element.id);
+
+      return true;
+    }
+
+    return false;
+  });
+
   return (
-    <>
+    <Paper className="slider-section">
+      <div className="slider-section-headline">
+        <Headline
+          sx={{
+            fontWeight: "700",
+            // fontFamily: "VerminVibesV",
+            fontSize: "2.5rem !important",
+          }}
+        >
+          Games
+        </Headline>
+        <Subheadline sx={{ fontWeight: "500 !important", fontSize: "1rem" }}>
+          Playstation 4, Playstation 5, Xbox One, Nintendo Switch etc.
+        </Subheadline>
+      </div>
       <Swiper
+        spaceBetween={20}
         slidesPerView={4}
-        spaceBetween={100}
-        slidesPerGroup={1}
-        centeredSlides={false}
+        centeredSlides={true}
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,
         }}
         loop={true}
         loopFillGroupWithBlank={true}
-        pagination={{
-          clickable: true,
-        }}
+        pagination={false}
         navigation={true}
         scrollbar={{ draggable: true }}
-        modules={[Autoplay, Pagination, Navigation, EffectFade]}
-        effect="fade"
+        modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
+        style={{ backgroundColor: "transparent" }}
       >
-        {latest_products.map((product, key) => (
-          <SwiperSlide key={key}>
-            <Link to={`/products/${product.id}`}>
+        {uniqueGames.map((product) => (
+          <SwiperSlide key={product.id}>
+            <Link to={`/products/${product.id}`} className="hvr-grow">
               <Card
                 sx={{
                   position: "relative",
@@ -52,8 +92,8 @@ const Slider = ({ latest_products }) => {
                   src={product.media[0]?.media}
                   sx={{
                     objectFit: "center",
-                    width: "403px !important",
-                    height: "473px !important",
+                    width: "303px !important",
+                    height: "373px !important",
                   }}
                 />
 
@@ -85,7 +125,7 @@ const Slider = ({ latest_products }) => {
                     {product.name.slice(0, 30)}
                   </Typography>
                   <Typography variant="body2" color="white">
-                    {product.content.slice(0, 10)}
+                    {product.content.slice(0, 30)}
                   </Typography>
 
                   {/* <CardActions sx={{ paddingLeft: 0 }}>
@@ -99,12 +139,12 @@ const Slider = ({ latest_products }) => {
           </SwiperSlide>
         ))}
       </Swiper>
-    </>
+    </Paper>
   );
 };
 
 const mapStateToProps = (state) => ({
-  latest_products: state.products.latest_products,
+  games: state.products.games,
 });
 
-export default connect(mapStateToProps)(Slider);
+export default connect(mapStateToProps, { getGames, clearGames })(GamesSlider);

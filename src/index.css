@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -44,7 +45,7 @@
 /* BOTTOM APPBAR CSS */
 
 .bottomAppBar {
-  font-family: "Roboto", sans-serif;
+  font-family: "Nunito", sans-serif;
   display: flex;
   flex-wrap: nowrap;
   background: black;
@@ -273,11 +274,15 @@ body {
   position: relative;
   height: 100%;
   background: #eee;
-  font-family: "Roboto", sans-serif;
+  font-family: "Nunito", sans-serif;
   font-size: 14px;
   color: #000;
   margin: 0;
   padding: 0;
+}
+
+.mainBar {
+  background: var(--clr-gradient);
 }
 
 .topBar {
@@ -285,13 +290,9 @@ body {
   height: 5rem;
 }
 
-.bottomBar a button:hover {
+.bottomBar {
   background: var(--clr-gradient);
-}
-
-.bottomBar Button:hover {
-  background: var(--clr-gradient);
-  cursor: default;
+  box-shadow: none !important;
 }
 
 .active {
@@ -305,6 +306,22 @@ body {
 
 .blackBg {
   background: var(--black) !important;
+}
+
+/* .bottomNavBar .underBar {
+  background-color: var(--clr-gradient) !important;
+  z-index: 1;
+} */
+
+/* .navToolbar {
+  justify-content: center !important;
+  align-items: center;
+} */
+
+.search {
+  /* border-radius: 0.75rem !important; */
+  /* background-color: #1c1d1f !important; */
+  /* width: 20% !important; */
 }
 
 .ftr {
@@ -381,16 +398,30 @@ body {
   border: 0;
 }
 
+.banner-section {
+}
+
 /* Swiper */
 .swiper {
   width: 100%;
   height: 100%;
 }
 
+.slider-section {
+  /* margin: 3rem 0 3rem 0; */
+  padding: 3rem 0 3rem 0;
+}
+
+.slider-section-headline {
+  text-align: center;
+  margin-bottom: 1.5rem !important;
+}
+
 .swiper-slide {
   text-align: center;
   font-size: 18px;
-  background: #fff;
+  background: transparent;
+  padding: 1rem 0 2rem 0;
 
   /* Center slide text vertically */
   display: -webkit-box;
@@ -412,4 +443,53 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Grow */
+.hvr-grow {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  transition-duration: 0.3s;
+  transition-property: transform;
+}
+
+.hvr-grow:hover,
+.hvr-grow:focus,
+.hvr-grow:active {
+  transform: scale(1.1);
+}
+
+/* Search input */
+.dataResult {
+  margin-top: 5px;
+  width: 300px;
+  height: 200px;
+  background-color: black;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  overflow: hidden;
+  overflow-y: auto;
+  z-index: 997;
+}
+
+.dataResult::-webkit-scrollbar {
+  display: none;
+  z-index: 997;
+}
+
+.dataResult .dataItem {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  z-index: 997;
+}
+
+.dataItem p {
+  margin-left: 10px;
+  z-index: 997;
 }
