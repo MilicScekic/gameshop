@@ -50,13 +50,17 @@ const SearchBar = ({ all_products }) => {
     setExpanded(true);
   };
 
+  const clearResults = () => {
+    setNoProducts(false);
+    setSearchQuery("");
+    setFilteredProducts([]);
+  };
+
   // Pri zatvaranju search bara:
   const collapseContainer = () => {
     setExpanded(false);
     setLoading(false);
-    // setSearchQuery("");
-    // setFilteredProducts([]);
-    // setNoProducts(false);
+
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -73,7 +77,6 @@ const SearchBar = ({ all_products }) => {
   // };
 
   const searchProduct = async () => {
-    // if (!searchQuery || searchQuery.trim() === "") setFilteredProducts([]);
     if (!searchQuery || searchQuery.trim() === "") return;
 
     setLoading(true);
@@ -84,10 +87,7 @@ const SearchBar = ({ all_products }) => {
     const newFilter = all_products.filter((product) => {
       return (
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.categories.map((cat) =>
-          cat.name.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+        product.content.toLowerCase().includes(searchQuery.toLowerCase())
       );
     });
 
@@ -139,7 +139,7 @@ const SearchBar = ({ all_products }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={collapseContainer}
+              onClick={clearResults}
               transition={{ duration: 0.2 }}
             >
               <IoClose />
