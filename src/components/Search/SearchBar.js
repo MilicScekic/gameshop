@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { IoSearch, IoClose } from "react-icons/io5";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useClickOutside } from "react-click-outside-hook";
 import MoonLoader from "react-spinners/MoonLoader";
 import useDebounce from "../../hooks/debounceHook";
@@ -20,9 +20,8 @@ import {
   LoadingWrapper,
   WarningMessage,
   containerVariants,
+  containerTransition,
 } from "./style";
-
-const containerTransition = { type: "spring", damping: 22, stiffness: 150 };
 
 const SearchBar = ({ all_products }) => {
   const [isExpanded, setExpanded] = useState(false);
@@ -51,12 +50,13 @@ const SearchBar = ({ all_products }) => {
     setExpanded(true);
   };
 
+  // Pri zatvaranju search bara:
   const collapseContainer = () => {
     setExpanded(false);
-    setSearchQuery("");
     setLoading(false);
-    setFilteredProducts([]);
-    setNoProducts(false);
+    // setSearchQuery("");
+    // setFilteredProducts([]);
+    // setNoProducts(false);
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -79,9 +79,16 @@ const SearchBar = ({ all_products }) => {
     setLoading(true);
 
     //! Ovaj nacin je brzi
+    //* Pretrazuje se kroz naziv, kategorije i opis
     //* U slucaju da zelimo to lokalno da radimo. Ovo je drugi nacin.
     const newFilter = all_products.filter((product) => {
-      return product.name.toLowerCase().includes(searchQuery.toLowerCase());
+      return (
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.categories.map((cat) =>
+          cat.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
     });
 
     if (newFilter.length > 0) {
@@ -170,6 +177,9 @@ const SearchBar = ({ all_products }) => {
                       key={product.id}
                       productId={product.id}
                       name={product.name}
+                      categories={product.categories.map(
+                        (cat) => `${cat.name}; `
+                      )}
                       content={product.content}
                       image={
                         product.media.length !== 0 && product.media[0].media
