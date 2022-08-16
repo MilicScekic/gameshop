@@ -114,3 +114,9 @@ export const containerVariants = {
     height: "3.8em",
   },
 };
+
+export const containerTransition = {
+  type: "spring",
+  damping: 22,
+  stiffness: 150,
+};
