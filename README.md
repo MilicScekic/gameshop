@@ -2,7 +2,7 @@
 Demo: https://amazing-pika-f32adf.netlify.app/
 
 ## Heder
-![Screenshot 2022-08-17 073020](https://user-images.githubusercontent.com/18018664/185042399-10bb741c-7070-46a1-bdde-c73709fa7569.png)
+![22222222222222222222](https://user-images.githubusercontent.com/18018664/185042652-28aa7e48-b6bd-47a7-b1c0-8296bf266986.png)
 
 ## Pretraga
 ![baner-gameshop](https://user-images.githubusercontent.com/18018664/184704140-93b969a1-8707-4406-9fb5-a6daa98fba9f.png)
@@ -13,3 +13,4 @@ Demo: https://amazing-pika-f32adf.netlify.app/
 
 ## Dokumentacija
 https://documenter.getpostman.com/view/6732233/UzXPyHFm
+
