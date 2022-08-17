@@ -1,8 +1,8 @@
 # Gameshop
-Demo: https://62faa1d0b00c390401d8bb55--dainty-torte-c5a8b6.netlify.app
+Demo: https://amazing-pika-f32adf.netlify.app/
 
 ## Heder
-![readme-cover](https://user-images.githubusercontent.com/18018664/180836063-f2b9337b-e4e9-4bdb-ac11-65190401e2e4.png)
+![Screenshot 2022-08-17 073020](https://user-images.githubusercontent.com/18018664/185042399-10bb741c-7070-46a1-bdde-c73709fa7569.png)
 
 ## Pretraga
 ![baner-gameshop](https://user-images.githubusercontent.com/18018664/184704140-93b969a1-8707-4406-9fb5-a6daa98fba9f.png)
@@ -13,4 +13,3 @@ Demo: https://62faa1d0b00c390401d8bb55--dainty-torte-c5a8b6.netlify.app
 
 ## Dokumentacija
 https://documenter.getpostman.com/view/6732233/UzXPyHFm
-
