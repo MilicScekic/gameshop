@@ -13,7 +13,8 @@ Demo: https://amazing-pika-f32adf.netlify.app/
 ## Dashboard
 ### Proizvodi
 ![image](https://user-images.githubusercontent.com/18018664/185170409-0d55f7f2-dea9-40a8-9497-c821d8f66d31.png)
-
+### Porudžbine
+![image](https://user-images.githubusercontent.com/18018664/185170680-45d2dd68-8f89-4555-a5b3-0d971aea5b9a.png)
 
 ## Kredencijali (dashboard)
 Korisničko ime: admin;
