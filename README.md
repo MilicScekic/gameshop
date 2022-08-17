@@ -10,6 +10,9 @@ Demo: https://amazing-pika-f32adf.netlify.app/
 ## Igrice
 ![games-gameshop](https://user-images.githubusercontent.com/18018664/184704671-4137b6cb-6b75-44e6-ad2b-e6cf9511bfbe.png)
 
+## Kredencijali (dashboard)
+Korisničko ime: admin;
+Šifra: Group5@123!
 
 ## Dokumentacija
 https://documenter.getpostman.com/view/6732233/UzXPyHFm
