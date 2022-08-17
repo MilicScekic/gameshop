@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,11 +14,16 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import GamesIcon from "@mui/icons-material/Games";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Link, NavLink, useRouteMatch } from "react-router-dom";
+import { Link, NavLink, useRouteMatch, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import NoiseControlOffIcon from "@mui/icons-material/NoiseControlOff";
+import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { logout } from "../store/actions/auth";
 
 const drawerWidth = 240;
 
-export default function Sidebar({ children }) {
+function Sidebar({ children, isAuthenticated, authName, logout }) {
   let { url } = useRouteMatch();
 
   const pages = [
@@ -37,23 +42,22 @@ export default function Sidebar({ children }) {
       icon: <ShoppingCartIcon />,
       path: `${url}/orders`,
     },
-    {
-      name: "Products Dev",
-      icon: <GamesIcon />,
-      path: `${url}/products-dev`,
-    },
-    {
-      name: "Categories",
-      icon: <GamesIcon />,
-      path: `${url}/categories`,
-    },
+    // {
+    //   name: "Categories",
+    //   icon: <GamesIcon />,
+    //   path: `${url}/categories`,
+    // },
   ];
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+        sx={{
+          width: `calc(100% - ${drawerWidth}px)`,
+          ml: `${drawerWidth}px`,
+        }}
       ></AppBar>
       <Drawer
         sx={{
@@ -62,6 +66,8 @@ export default function Sidebar({ children }) {
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
+            backgroundColor: "#2C3639",
+            color: "#fff",
           },
         }}
         variant="permanent"
@@ -77,31 +83,62 @@ export default function Sidebar({ children }) {
               fontFamily: "VerminVibesV",
               // fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "black",
+              color: "#fff",
               textDecoration: "none",
             }}
           >
-            <span>Gameshop</span>
+            <Link to="/" style={{ textDecoration: "none", color: "#fff" }}>
+              Gameshop
+            </Link>
           </Typography>
         </Toolbar>
         <Divider />
         <List>
           {pages.map((page) => (
-            <ListItem key={[page.name]} disablePadding>
-              <NavLink
-                to={page.path}
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                <ListItemButton>
-                  <ListItemIcon>{page.icon}</ListItemIcon>
-                  <ListItemText primary={page.name} />
-                </ListItemButton>
-              </NavLink>
+            <ListItem
+              key={[page.name]}
+              to={page.path}
+              component={NavLink}
+              style={{ textDecoration: "none", color: "#fff" }}
+              disablePadding
+            >
+              <ListItemButton>
+                <ListItemIcon sx={{ color: "#fff" }}>{page.icon}</ListItemIcon>
+                <ListItemText primary={page.name} />
+              </ListItemButton>
             </ListItem>
           ))}
+          <Divider />
+          <ListItemButton>
+            <ListItemIcon>
+              <PersonIcon sx={{ color: "#fff" }} />
+            </ListItemIcon>
+            <ListItemText primary={isAuthenticated && authName} />
+          </ListItemButton>
+          <ListItemButton>
+            <ListItemIcon>
+              <NoiseControlOffIcon
+                color={isAuthenticated ? "success" : "error"}
+              />
+            </ListItemIcon>
+            <ListItemText primary={isAuthenticated ? "Online" : "Offline"} />
+          </ListItemButton>
+          {/* <ListItemButton onClick={() => logout()}>
+            <ListItemIcon>
+              <LogoutIcon sx={{ color: "#fff" }} />
+            </ListItemIcon>
+            <ListItemText primary={isAuthenticated && "Logout"} />
+          </ListItemButton> */}
         </List>
       </Drawer>
       <Box component="main">{children}</Box>
     </Box>
   );
 }
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  authName: state.auth.user.username,
+});
+
+export default connect(mapStateToProps, { logout })(Sidebar);

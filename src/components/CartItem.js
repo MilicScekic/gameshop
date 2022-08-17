@@ -63,10 +63,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CartItem = ({
-  item: { id, quantity, price, discount },
+  orderItemId,
   productId,
   name,
-  image,
+  quantity,
+  price,
+  discount,
+  media,
   removeFromGuestCart,
   removeFromUserCart,
   handleGuestQuantity,
@@ -89,12 +92,12 @@ const CartItem = ({
           <strong>{newPrice}</strong>
         </>
       );
-    else return <strong>{price}</strong>;
+    else return <strong>{parseFloat(price)}</strong>;
   };
 
   const handleSubmitQuantity = (qty) => {
     try {
-      handleUserQuantity(orderId, id, qty);
+      handleUserQuantity(orderId, orderItemId, qty);
       refreshOrderItems();
     } catch (error) {
       refreshOrderItems();
@@ -103,12 +106,16 @@ const CartItem = ({
   };
 
   return (
-    <Paper className={classes.paper} key={id}>
+    <Paper className={classes.paper}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={2} className={classes.gridItem}>
-          <Link to={`/products/${id}`}>
+          <Link to={`/products/${productId}`}>
             <div className={classes.img}>
-              <img className={classes.image} src={image} alt="" />
+              <img
+                className={classes.image}
+                src={media?.length > 0 && media[0].media}
+                alt={name}
+              />
             </div>
           </Link>
         </Grid>
@@ -141,9 +148,17 @@ const CartItem = ({
                       : handleGuestQuantity(e.target.value);
                   }}
                 >
-                  {allowedQuantity.map((qty) => (
-                    <MenuItem value={qty}>{qty}</MenuItem>
-                  ))}
+                  {isAuthenticated ? (
+                    allowedQuantity.map((qty) => (
+                      <MenuItem key={qty} value={qty}>
+                        {qty}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem key={1} value={1}>
+                      {1}
+                    </MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </div>
@@ -156,8 +171,8 @@ const CartItem = ({
               color="error"
               onClick={() =>
                 isAuthenticated
-                  ? removeFromUserCart(orderId, id)
-                  : removeFromGuestCart(id)
+                  ? removeFromUserCart(orderId, orderItemId)
+                  : removeFromGuestCart(orderItemId)
               }
             >
               <DeleteIcon />

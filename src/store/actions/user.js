@@ -19,6 +19,8 @@ import {
   GET_ALL_ORDERS, //Za admina svi orderi
   CLEAR_ALL_ORDERS,
   GET_WISHLIST,
+  GET_WISHLIST_ID,
+  CLEAR_WISHLIST,
   ADD_TO_USER_WISHLIST,
   REMOVE_ORDER,
   GET_ORDER_ID,
@@ -165,6 +167,10 @@ export const removeOrder = (orderId) => async (dispatch) => {
   }
 };
 
+export const clearWishlistItems = () => async (dispatch) => {
+  dispatch({ type: CLEAR_WISHLIST });
+};
+
 export const getWishlistItems = () => async (dispatch) => {
   try {
     const res = await axios.get("https://gameshop-g5.com/wishlist/", {
@@ -180,9 +186,10 @@ export const getWishlistItems = () => async (dispatch) => {
   }
 };
 
-export const addToGuestCart = (product) => async (dispatch) => {
+export const addToGuestCart = (id) => async (dispatch) => {
   try {
-    dispatch({ type: ADD_TO_GUEST_CART, payload: product });
+    const res = await axios.get(`https://gameshop-g5.com/products/${id}/`);
+    dispatch({ type: ADD_TO_GUEST_CART, payload: res.data });
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
     dispatch(setAlert(response.data.message, "error"));
@@ -191,18 +198,8 @@ export const addToGuestCart = (product) => async (dispatch) => {
 
 export const addToUserCart = (orderId, productId) => async (dispatch) => {
   try {
-    //! Neprakticno
-    // const order = await axios.post(
-    //   "https://gameshop-g5.com/orders/",
-    //   {},
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${localStorage.getItem("access")}`,
-    //     },
-    //   }
-    // );
-
-    const orderItem = await axios.post(
+    // const orderItem = await axios.post(
+    await axios.post(
       `https://gameshop-g5.com/orders/${orderId}/order_items/`,
       {
         product: productId,
@@ -215,9 +212,9 @@ export const addToUserCart = (orderId, productId) => async (dispatch) => {
         },
       }
     );
-    // console.log("Ovo ti ubacam");
-    // console.log(orderItem.data);
-    dispatch({ type: ADD_TO_USER_CART, payload: orderItem.data });
+
+    //* U sustini mi ovo i ne treba. Jer ce se odma pri dodavanju osvjezit orderi. OrderItem data ne sadrzi npr. ime dodatog proizvoda
+    // dispatch({ type: ADD_TO_USER_CART, payload: orderItem.data });
 
     dispatch(setAlert("Product added to cart", "success"));
   } catch ({ response }) {
@@ -225,52 +222,45 @@ export const addToUserCart = (orderId, productId) => async (dispatch) => {
   }
 };
 
-export const addToUserWishlist = (productId) => async (dispatch) => {
-  try {
-    const res = await axios.post(
-      "https://gameshop-g5.com/wishlist/",
-      { products: [productId] },
-      {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
+//! Matija treba da popravi wishlist. Nakon prvog dodavanja ne moze da se dodaje u listu zelja
+// export const addToUserWishlist = (productId) => async (dispatch) => {
+//   const data = { products: [productId] };
+
+//   try {
+//     const res = await axios.post("https://gameshop-g5.com/wishlist/", data, {
+//       headers: {
+//         Authorization: `Bearer ${localStorage.getItem("access")}`,
+//       },
+//     });
+
+//     console.log(res.data);
+//     // dispatch({ type: ADD_TO_USER_WISHLIST, payload: res.data });
+//     dispatch(setAlert("Product added to wishlist", "success"));
+//   } catch ({ response }) {
+//     dispatch(setAlert("Not added", "error"));
+//   }
+// };
+
+export const removeFromUserWishlist =
+  (productId, wishlistId) => async (dispatch) => {
+    try {
+      await axios.delete(
+        `https://gameshop-g5.com/wishlist/${wishlistId}/`,
+        {
+          products: productId,
         },
-      }
-    );
-
-    // console.log(res.data);
-
-    dispatch({ type: ADD_TO_USER_WISHLIST, payload: res.data });
-    dispatch(setAlert("Product added to wishlist", "success"));
-  } catch ({ response }) {
-    dispatch(setAlert("Not added", "error"));
-  }
-};
-
-export const removeFromUserWishlist = (id) => async (dispatch) => {
-  try {
-    const wishlist = await axios.get(`https://gameshop-g5.com/wishlist/`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access")}`,
-      },
-    });
-
-    // console.log(wishlist);
-
-    await axios.delete(
-      `https://gameshop-g5.com/wishlist/${wishlist.data[0].id}/`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access")}`,
-        },
-      }
-    );
-    dispatch({ type: REMOVE_FROM_USER_WISHLIST, payload: id });
-    dispatch(setAlert("Removed from favorites", "success"));
-  } catch ({ response }) {
-    dispatch(setAlert(response.data.message, "error"));
-  }
-};
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+        }
+      );
+      dispatch({ type: REMOVE_FROM_USER_WISHLIST, payload: productId });
+      dispatch(setAlert("Removed from favorites", "success"));
+    } catch ({ response }) {
+      dispatch(setAlert(response.data.message, "error"));
+    }
+  };
 
 export const userPurchase = (orderId, history) => async (dispatch) => {
   dispatch(showSpinner());

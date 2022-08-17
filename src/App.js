@@ -28,7 +28,6 @@ import {
 } from "./store/actions/auth";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { Products as DashboardProducts } from "./pages/Dashboard/Products";
-import { ProductsDev as DashboardProductsDev } from "./pages/Dashboard/ProductsDev";
 import { Categories } from "./pages/Dashboard/Categories";
 import Sidebar from "./layouts/Sidebar";
 import { Orders } from "./pages/Dashboard/Orders";
@@ -39,6 +38,7 @@ import {
   clearAllProducts,
   getAllProducts,
 } from "./store/actions/products";
+import { getWishlistItems, clearWishlistItems } from "./store/actions/user";
 
 const theme = createTheme({
   palette: {
@@ -65,6 +65,8 @@ function App({
   clearCategories,
   clearAllProducts,
   getAllProducts,
+  getWishlistItems,
+  clearWishlistItems,
 }) {
   //* Ovo je ako se osvjezi stranica, da odma prijavi korisnika, da ne ceka 5 minuta da to uradi useEffect dolje pri pri rifresu tokena
   useEffect(() => {
@@ -109,6 +111,19 @@ function App({
     };
   }, [clearCategories, getCategories]);
 
+  useEffect(() => {
+    clearWishlistItems();
+
+    const timeoutId = setTimeout(() => {
+      getWishlistItems(); // popunjava niz categories u reducer
+    }, 200);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearWishlistItems();
+    };
+  }, [clearWishlistItems, getWishlistItems]);
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -120,10 +135,6 @@ function App({
                 <ProtectedRoute
                   path="/admin/products"
                   component={DashboardProducts}
-                />
-                <ProtectedRoute
-                  path="/admin/products-dev"
-                  component={DashboardProductsDev}
                 />
                 <ProtectedRoute
                   path="/admin/Categories"
@@ -163,4 +174,6 @@ export default connect(null, {
   clearCategories,
   clearAllProducts,
   getAllProducts,
+  getWishlistItems,
+  clearWishlistItems,
 })(App);

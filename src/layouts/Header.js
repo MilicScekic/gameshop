@@ -306,7 +306,7 @@ function Header({
                 </IconButton>
                 {isAuthenticated && (
                   <>
-                    <IconButton
+                    {/* <IconButton
                       to="/wishlist"
                       component={Link}
                       style={{ color: "#fff" }}
@@ -321,7 +321,7 @@ function Header({
                       >
                         <FavoriteIcon color="red" />
                       </Badge>
-                    </IconButton>
+                    </IconButton> */}
 
                     <IconButton onClick={handleOpenUserMenu}>
                       <PersonTwoToneIcon color="primary" />
@@ -342,18 +342,18 @@ function Header({
                       open={Boolean(anchorElUser)}
                       onClose={handleCloseUserMenu}
                     >
-                      {isAuthenticated && (
-                        <MenuItem onClick={() => logout()}>
-                          <Typography textAlign="center" color="primary">
-                            Logout
-                          </Typography>
-                        </MenuItem>
-                      )}
-
                       {isAuthenticated && authUser.id === 1 && (
                         <MenuItem to={"/admin/dashboard"} component={Link}>
                           <Typography textAlign="center" color="primary">
                             Dashboard
+                          </Typography>
+                        </MenuItem>
+                      )}
+
+                      {isAuthenticated && (
+                        <MenuItem onClick={() => logout()}>
+                          <Typography textAlign="center" color="primary">
+                            Logout
                           </Typography>
                         </MenuItem>
                       )}

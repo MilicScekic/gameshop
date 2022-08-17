@@ -1,27 +1,30 @@
-import React, { useEffect, useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
-import { ListItemAvatar, TextField } from "@material-ui/core";
 import {
   clearProducts,
   fetchProducts,
   refreshProducts,
   removeProduct,
   changeProduct,
-  getProducts,
+  getCategories,
+  clearCategories,
   addProduct,
+  changeMainImage,
 } from "../../../store/actions/products";
+
 import Button from "@mui/material/Button";
-import Spinner from "../../Spinner";
+import MaterialTable from "material-table";
+import { tableIcons } from "./tableIcons";
+import { productsOptions } from "./options";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import { Link } from "react-router-dom";
 
 const ProductTable = ({
   products,
+  categories,
   loading,
   removeProduct,
   addProduct,
@@ -29,247 +32,257 @@ const ProductTable = ({
   clearProducts,
   changeProduct,
   refreshProducts,
-  getProducts,
+  getCategories, // da bi se azurirao select dropdown
+  clearCategories,
 }) => {
-  const [edit, setEdit] = useState();
-
   useEffect(() => {
     clearProducts();
+    clearCategories();
 
     const timeoutId = setTimeout(() => {
       fetchProducts();
+      getCategories();
     }, 200);
 
     return () => {
       clearProducts();
+      clearCategories();
       clearTimeout(timeoutId);
     };
   }, [clearProducts, fetchProducts]);
 
-  const [open, setOpen] = useState(false);
+  //* Dovoljno je media i categories, jer njih mijenjam na drugi nacin, ostalo ide preko ugradjenih material table funkcija
   const [product, setProduct] = useState({
-    name: "",
-    content: "",
-    price: "",
     media: [],
     categories: [],
   });
-  console.log(products);
+
+  const [edit, setEdit] = useState();
 
   const handleCategory = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (
-      product.name !== "" &&
-      product.content !== "" &&
-      product.price !== "" &&
-      product.categories.length > 0
-    ) {
-      addProduct(product);
-      setProduct({
-        name: "",
-        media: [],
-        content: "",
-        price: "",
-        categories: [],
-      });
-      clearProducts();
-      fetchProducts();
-    } else {
-      alert("You need to fill every field to add product!");
-    }
+  const handleMedia = (e) => {
+    setProduct({ ...product, [e.target.name]: [...e.target.files] });
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete product?")) {
-      try {
-        removeProduct(id);
-        alert("Product was successfully removed.");
-        refreshProducts();
-      } catch (error) {
-        alert("There some error in deleting...");
-        refreshProducts();
-      }
-    }
-  };
+  const renderImage = useCallback(
+    (item) => (
+      <img
+        src={item.media.length > 0 && item.media[0].media}
+        height="48"
+        width="48"
+      />
+    ),
+    []
+  );
 
-  const handleEdit = (product) => {
-    setEdit({
-      id: product.id,
-      name: product.name,
-      content: product.content,
-      price: product.price,
-      categories: product.categories.map((category) => category.id),
-    });
-  };
+  const rerenderCategories = useCallback(
+    (item) => item.categories.map((category) => `${category.name}; `),
+    []
+  );
 
-  const handleChange = (e) => {
-    setEdit({ ...edit, [e.target.name]: e.target.value });
-  };
+  const editCategoryComponent = () => (
+    <FormControl variant="outlined" fullWidth>
+      <InputLabel id="demo-multiple-name">Categories</InputLabel>
+      <Select
+        required
+        variant="outlined"
+        id="demo-multiple-name"
+        label="Categories"
+        name="categories"
+        value={product.categories}
+        onChange={handleCategory}
+        multiple
+      >
+        {categories.map((category) => (
+          <MenuItem key={category.id} value={category.id}>
+            {category.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
 
-  const handleProduct = () => {
-    try {
-      changeProduct(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno formData.id
-      alert("Product was successfully edited.");
-      refreshProducts();
-      setEdit(null);
-    } catch (error) {
-      alert("There some error in changing product...");
-    }
-  };
+  const productColumns = [
+    {
+      field: "media",
+      title: "IMAGE",
+      align: "left",
+      width: "15%",
+      editComponent: () => (
+        <>
+          <input
+            style={{ display: "none" }}
+            id="contained-button-file"
+            type="file"
+            name="media"
+            multiple
+            onChange={(e) => handleMedia(e)}
+          />
+          <label htmlFor="contained-button-file">
+            <Button variant="contained" color="primary" component="span">
+              Upload
+            </Button>
+          </label>
+        </>
+      ),
+      render: renderImage,
+      emptyValue: "(no image)",
+      filtering: false,
+    },
+    {
+      field: "name",
+      title: "NAME",
+      align: "left",
+      filterPlaceholder: "Filter by name",
+      validate: (rowData) => Boolean(rowData.name),
+      render: (rowData) => (
+        <Link
+          to={`/products/${rowData.id}`}
+          style={{
+            textDecoration: "none",
+            color: "#003865",
+            fontWeight: "600",
+          }}
+        >
+          {rowData.name}
+        </Link>
+      ),
+    },
+    {
+      field: "categories",
+      title: "CATEGORY",
+      filtering: false,
+      align: "left",
+      filterPlaceholder: "Filter by category",
+      render: rerenderCategories,
+      editComponent: editCategoryComponent,
+    },
+    {
+      field: "content",
+      title: "DESCRIPTION",
+      align: "left",
+      filterPlaceholder: "Filter by description",
+      validate: (rowData) => Boolean(rowData.content),
+      render: (rowData) => rowData.content.slice(0, 50),
+    },
+    {
+      field: "price",
+      title: "PRICE",
+      align: "right",
+      type: "currency",
+      currencySetting: { currencyCode: "EUR" },
+      filterPlaceholder: "Filter by price",
+      validate: (rowData) => Boolean(rowData.price),
+    },
+  ];
+
+  // const handleEdit = (product) => {
+  //   setEdit({
+  //     id: product.id,
+  //     name: product.name,
+  //     content: product.content,
+  //     price: product.price,
+  //     categories: product.categories.map((category) => category.id),
+  //   });
+  // };
+
+  // const handleProduct = () => {
+  //   try {
+  //     changeProduct(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno formData.id
+  //     alert("Product was successfully edited.");
+  //     refreshProducts();
+  //     setEdit(null);
+  //   } catch (error) {
+  //     alert("There some error in changing product...");
+  //   }
+  // };
+  const [selectedRow, setSelectedRow] = useState(null);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Image</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Content</TableCell>
-            <TableCell align="right">Price</TableCell>
-            <TableCell align="right">Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.map((product) => {
-            if (edit?.id !== product.id) {
-              return (
-                <TableRow
-                  key={product.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {product.media.length > 0 ? (
-                      <ListItemAvatar>
-                        <img
-                          alt={product.name}
-                          src={product.media[0].media}
-                          style={{
-                            height: 48,
-                            width: 48,
-                          }}
-                        />
-                      </ListItemAvatar>
-                    ) : (
-                      <></>
-                    )}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {product.name}
-                  </TableCell>
-                  <TableCell align="right">{product.content}</TableCell>
-                  <TableCell align="right">
-                    {" "}
-                    {parseFloat(product.price.toLocaleString())} &euro;
-                  </TableCell>
-                  <TableCell align="right">
-                    <button
-                      style={{
-                        marginRight: "10px",
-                        color: "#fff",
-                        backgroundColor: "#3f51b5",
-                        padding: "8px 16px",
-                        fontSize: "0.875rem",
-                        minWidth: "64px",
-                        borderStyle: "none",
-                        borderRadius: "5px",
-                      }}
-                      onClick={() => handleEdit(product)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      style={{
-                        marginRight: "10px",
-                        color: "#fff",
-                        backgroundColor: "#f50057",
-                        padding: "8px 16px",
-                        fontSize: "0.875rem",
-                        minWidth: "64px",
-                        borderStyle: "none",
-                        borderRadius: "5px",
-                      }}
-                      onClick={() => handleDelete(product.id)}
-                    >
-                      Delete
-                    </button>
-                  </TableCell>
-                </TableRow>
-              );
-            } else {
-              //* Dio koji se pojavljuje kad se klikne na edit
-              return (
-                <TableRow
-                  key={product.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {product.media.length > 0 ? (
-                      <ListItemAvatar>
-                        <img
-                          alt={product.name}
-                          src={product.media.map((m) => m.media)}
-                          style={{
-                            height: 48,
-                            width: 48,
-                          }}
-                        />
-                      </ListItemAvatar>
-                    ) : (
-                      <></>
-                    )}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    <TextField
-                      type="text"
-                      name="name"
-                      value={edit.name || product.name}
-                      onChange={(e) => handleChange(e)}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <TextField
-                      type="text"
-                      name="content"
-                      value={edit.content || product.content}
-                      onChange={(e) => handleChange(e)}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <TextField
-                      type="text"
-                      name="price"
-                      value={edit.price || product.price}
-                      onChange={(e) => handleChange(e)}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      style={{ marginRight: "10px" }}
-                      onClick={handleProduct}
-                    >
-                      Confirm changes
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              );
-            }
-          })}
-        </TableBody>
-      </Table>
+    <MaterialTable
+      onRowClick={(evt, selectedRow) =>
+        setSelectedRow(selectedRow.tableData.id)
+      }
+      title={"Products table"}
+      icons={tableIcons}
+      data={products}
+      columns={productColumns}
+      options={productsOptions}
+      editable={{
+        onRowAdd: (newRow) =>
+          new Promise((resolve, reject) => {
+            let newProduct = new FormData();
+            newProduct.append("name", newRow.name);
+            newProduct.append("content", newRow.content);
+            newProduct.append("price", newRow.price);
 
-      {loading && <Spinner />}
-    </TableContainer>
+            for (var i = 0; i < product.categories.length; i++) {
+              newProduct.append("categories", product.categories[i]);
+            }
+            for (var i = 0; i < product.media.length; i++) {
+              newProduct.append("media" + [i], product.media[i]);
+            }
+            addProduct(newProduct);
+
+            //Isprazni polja nakon dodavanja proizvoda
+            setProduct({
+              media: [],
+              categories: [],
+            });
+
+            setTimeout(() => {
+              refreshProducts();
+              resolve();
+            }, 1000);
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise((resolve, reject) => {
+            let updateProduct = new FormData();
+            updateProduct.append("name", newData.name);
+            updateProduct.append("content", newData.content);
+            updateProduct.append("price", newData.price);
+
+            for (var i = 0; i < product.categories.length; i++) {
+              updateProduct.append("categories", product.categories[i]);
+            }
+
+            changeProduct({
+              id: newData.id,
+              name: newData.name,
+              content: newData.content,
+              price: newData.price,
+              categories: newData.categories.map((category) => category.id),
+            });
+
+            setTimeout(() => {
+              setProduct({
+                media: [],
+                categories: [],
+              });
+              refreshProducts();
+              resolve();
+            }, 1000);
+          }),
+        onRowDelete: (oldData) =>
+          new Promise((resolve, reject) => {
+            removeProduct(oldData.id);
+
+            setTimeout(() => {
+              refreshProducts();
+              resolve();
+            }, 1000);
+          }),
+      }}
+    />
   );
 };
 
 const mapStateToProps = (state) => ({
   products: state.products.products,
+  categories: state.products.categories,
   loading: state.visual.loading,
 });
 
@@ -280,5 +293,7 @@ export default connect(mapStateToProps, {
   clearProducts,
   changeProduct,
   refreshProducts,
-  getProducts,
+  getCategories,
+  clearCategories,
+  changeMainImage,
 })(ProductTable);
