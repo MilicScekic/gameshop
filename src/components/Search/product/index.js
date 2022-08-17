@@ -26,7 +26,7 @@ const Thumbnail = styled.div`
 `;
 
 const Name = styled.h3`
-  font-size: 15px;
+  font-size: 0.8rem;
   text-align: left;
   color: #000;
   margin-left: 10px;
@@ -37,6 +37,16 @@ const Name = styled.h3`
 const Description = styled.span`
   font-size: 0.7rem;
   text-align: left;
+  color: #000;
+  margin-left: 10px;
+  flex: 3;
+  display: flex;
+`;
+
+const Categories = styled.span`
+  font-size: 0.7rem;
+  text-align: left;
+  font-weight: 600;
   color: #000;
   margin-left: 10px;
   flex: 2;
@@ -51,13 +61,14 @@ const Price = styled.span`
   flex: 0.2;
 `;
 
-const ProductItem = ({ name, content, image, price }) => {
+const ProductItem = ({ name, content, image, price, categories }) => {
   return (
     <ProductContainer>
       <Thumbnail>
         <img src={image} />
       </Thumbnail>
       <Name>{name.slice(0, 30)}</Name>
+      <Categories>{categories.slice(0, 5)}</Categories>
       <Description>{content.slice(0, 30)}</Description>
       <Price>{parseFloat(price)}&euro;</Price>
     </ProductContainer>

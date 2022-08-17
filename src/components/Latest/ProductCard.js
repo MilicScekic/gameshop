@@ -7,12 +7,12 @@ import {
   addToUserFavorites,
   refreshOrderItems,
   // addToUserWishlist,
-} from "../store/actions/user";
+} from "../../store/actions/user";
 import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { setAlert } from "../store/actions/visual";
+import { setAlert } from "../../store/actions/visual";
 import Button from "@mui/material/Button";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import IconButton from "@mui/material/IconButton";
@@ -57,13 +57,13 @@ const ProductCard = ({
   product: { id, name, content, media, price },
   addToGuestCart,
   addToUserCart,
+  // addToUserWishlist,
   isAuthenticated,
   user,
   guest,
   orders,
   orderId,
   refreshOrderItems,
-  // addToUserWishlist
   // wishlist,
 }) => {
   const classes = useStyles();
@@ -97,7 +97,7 @@ const ProductCard = ({
 
         <div style={{ textAlign: "center" }}>
           <Typography variant="body2">{content.slice(0, 30)}</Typography>
-          <Typography variant="h5" sx={{ marginTop: "1rem" }}>
+          <Typography variant="h5">
             {parseFloat(price.toLocaleString())} &euro;
           </Typography>
         </div>
@@ -150,7 +150,7 @@ const ProductCard = ({
 };
 
 const mapStateToProps = (state) => ({
-  products: state.products.products,
+  latest_products: state.products.latest_products,
   wishlist: state.products.wishlist,
   isAuthenticated: state.auth.isAuthenticated,
   user: state.user.user,

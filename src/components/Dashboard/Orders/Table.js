@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
-import { Button, TextField } from "@material-ui/core";
 import {
   getOrders,
   clearOrders,
   removeOrder,
   refreshOrders,
 } from "../../../store/actions/user";
-import Spinner from "../../Spinner";
+import Button from "@mui/material/Button";
+import MaterialTable from "material-table";
+import { tableIcons } from "./tableIcons";
+import { ordersOptions } from "./options";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
 import { setAlert } from "../../../store/actions/visual";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 
 const OrderTable = ({
   all_orders,
@@ -25,8 +26,6 @@ const OrderTable = ({
   removeOrder,
   refreshOrders,
 }) => {
-  const [edit, setEdit] = useState();
-  // console.log(all_orders);
   useEffect(() => {
     clearOrders();
 
@@ -39,6 +38,41 @@ const OrderTable = ({
       clearTimeout(timeoutId);
     };
   }, [clearOrders, getOrders]);
+
+  const ordersColumns = [
+    {
+      field: "id",
+      title: "ORDER ID",
+      align: "left",
+      filterPlaceholder: "Search by id",
+    },
+    {
+      field: "price",
+      title: "PRICE",
+      align: "left",
+      type: "currency",
+      currencySetting: { currencyCode: "EUR" },
+      filterPlaceholder: "Search by price",
+      width: "20%",
+    },
+    {
+      field: "checkout_date",
+      title: "CHECKOUT DATE",
+      align: "left",
+      filterPlaceholder: "Search by date",
+    },
+    {
+      title: "CHECKOUT STATUS",
+      align: "left",
+      filterPlaceholder: "Search by status",
+      render: (rowData) =>
+        rowData.checkout_date ? (
+          <Alert severity="success">Delivered</Alert>
+        ) : (
+          <Alert severity="warning">On waiting</Alert>
+        ),
+    },
+  ];
 
   const handleDelete = (orderId) => {
     if (window.confirm("Are you sure you want to remove order?")) {
@@ -53,115 +87,19 @@ const OrderTable = ({
     }
   };
 
-  const handleChange = (e) => {
-    setEdit({ ...edit, [e.target.name]: e.target.value });
-  };
+  const [selectedRow, setSelectedRow] = useState(null);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Order ID</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell align="right">Checkout date</TableCell>
-            <TableCell align="right">User</TableCell>
-            <TableCell align="right">Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {all_orders?.length > 0 &&
-            all_orders?.map((order) => {
-              if (edit?.id !== order.id) {
-                return (
-                  <TableRow
-                    key={order.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {order.id}
-                    </TableCell>
-                    <TableCell align="left">
-                      {parseFloat(order.price.toLocaleString())} &euro;
-                    </TableCell>
-                    <TableCell align="right">{order.checkout_date}</TableCell>
-                    <TableCell align="right">{order.user}</TableCell>
-                    <TableCell align="right">
-                      <button
-                        style={{
-                          marginRight: "10px",
-                          color: "#fff",
-                          backgroundColor: "#f50057",
-                          padding: "8px 16px",
-                          fontSize: "0.875rem",
-                          minWidth: "64px",
-                          borderStyle: "none",
-                          borderRadius: "5px",
-                        }}
-                        onClick={() => handleDelete(order.id)}
-                      >
-                        Delete
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                );
-              } else {
-                return (
-                  <TableRow
-                    key={order.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      <TextField
-                        type="text"
-                        name="id"
-                        value={edit.id || order.id}
-                        onChange={(e) => handleChange(e)} //? Pri kliku dobija objekat
-                      />
-                    </TableCell>
-                    <TableCell align="left">
-                      <TextField
-                        type="text"
-                        name="price"
-                        value={edit.price || order.price}
-                        onChange={(e) => handleChange(e)}
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      <TextField
-                        type="text"
-                        name="checkout_date"
-                        value={edit.checkout_date || order.checkout_date}
-                        onChange={(e) => handleChange(e)}
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      <TextField
-                        type="text"
-                        name="price"
-                        value={edit.user || order.user}
-                        onChange={(e) => handleChange(e)}
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ marginRight: "10px" }}
-                        // onClick={handleProduct}
-                      >
-                        Confirm changes
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              }
-            })}
-        </TableBody>
-      </Table>
-
-      {loading && <Spinner />}
-    </TableContainer>
+    <MaterialTable
+      onRowClick={(evt, selectedRow) =>
+        setSelectedRow(selectedRow.tableData.id)
+      }
+      title={"Orders table"}
+      icons={tableIcons}
+      data={all_orders}
+      columns={ordersColumns}
+      options={ordersOptions}
+    />
   );
 };
 
@@ -174,5 +112,4 @@ export default connect(mapStateToProps, {
   getOrders,
   clearOrders,
   refreshOrders,
-  removeOrder,
 })(OrderTable);

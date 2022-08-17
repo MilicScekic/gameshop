@@ -14,6 +14,7 @@ import {
   getUserProfile,
   getWishlistItems,
   getOrders,
+  openWishlist,
 } from "./user";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 
@@ -66,7 +67,7 @@ export const refreshAccessToken = (refreshToken) => async (dispatch) => {
     dispatch({ type: NEW_ACCESS_TOKEN, payload: res.data }); //u reducer(auth): payload.access pa ne mora res.data.access
     dispatch(autoSigninUser(res.data.access));
   } catch (err) {
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 
@@ -78,16 +79,12 @@ export const autoSigninUser = (token) => async (dispatch) => {
       },
     });
 
-    //? Testiranje
-    // console.log("Current user");
-    // console.log(res.data);
-
     dispatch({ type: AUTO_SIGNIN_SUCCESS, payload: res.data });
     dispatch(getUserProfile(token)); //? Pokupi podatke prema tokenu i popuni user objekat
     dispatch(openOrder()); //? Otvori orders/order.
     dispatch(getOrders()); //? Napuni all_orders niz
     dispatch(getOrderItems()); //? Napuni orders niz
-    dispatch(getWishlistItems()); //? Napuni wishlist niz
+    // dispatch(getWishlistItems()); //? Napuni wishlist niz
     dispatch(setAlert("Logged in successfully", "success"));
   } catch ({ response }) {
     dispatch({ type: AUTO_SIGNIN_FAIL });
@@ -109,13 +106,13 @@ export const logoutAfterSession = (timer) => (dispatch) => {
   }, timer * 60000);
 };
 
-export const deleteAccount = (history) => async (dispatch) => {
-  try {
-    await axios.delete("https://gameshop-g5.com/auth/delete");
-    history.push("/");
-    dispatch(setAlert("Account deleted", "success"));
-    dispatch({ type: CLEAN_USER });
-  } catch ({ response }) {
-    dispatch(setAlert(response.data.message, "error"));
-  }
-};
+// export const deleteAccount = (history) => async (dispatch) => {
+//   try {
+//     await axios.delete("https://gameshop-g5.com/auth/delete");
+//     history.push("/");
+//     dispatch(setAlert("Account deleted", "success"));
+//     dispatch({ type: CLEAN_USER });
+//   } catch ({ response }) {
+//     dispatch(setAlert(response.data.message, "error"));
+//   }
+// };

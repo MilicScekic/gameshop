@@ -19,18 +19,20 @@ import {
   GET_ORDER_ITEMS,
   GET_ALL_ORDERS,
   GET_WISHLIST,
+  GET_WISHLIST_ID,
+  CLEAR_WISHLIST,
   ADD_TO_USER_WISHLIST,
   CLEAR_ALL_ORDERS,
   CLEAR_ORDERS,
   REMOVE_ORDER,
   GET_ORDER_ID,
   CLEAR_DELPAY,
-  GUEST_PRODUCT_QUANTITY,
 } from "../actions/types";
 
 const initialState = {
   user: null,
   orderId: null,
+  wishlistId: null,
   orders: null,
   all_orders: [],
   wishlist: null,
@@ -62,6 +64,12 @@ const userReducer = (state = initialState, { type, payload }) => {
         orderId: payload,
       };
 
+    case GET_WISHLIST_ID:
+      return {
+        ...state,
+        wishlistId: payload,
+      };
+
     case GET_ORDER_ITEMS:
       return {
         ...state,
@@ -89,7 +97,13 @@ const userReducer = (state = initialState, { type, payload }) => {
     case GET_WISHLIST:
       return {
         ...state,
-        wishlist: payload, //? moze i: [...state.wishlist, ...payload]. Ali mora ici -> wishlist: []
+        wishlist: payload,
+      };
+
+    case CLEAR_WISHLIST:
+      return {
+        ...state,
+        wishlist: [],
       };
 
     case ADD_TO_GUEST_CART:
@@ -101,16 +115,17 @@ const userReducer = (state = initialState, { type, payload }) => {
         },
       };
 
-    //! Ovo je zapravo dodaj u orders
-    case ADD_TO_USER_CART:
-      return {
-        ...state,
-        orders: [...state.orders, { ...payload }],
-        // orders: {
-        //   ...state.orders,
-        //   order_items: [...state.orders.order_items, { ...payload }],
-        // },
-      };
+    //* Ovo mi i ne treba. Jer ce svakako pri dodavanju refreshOrders da pokupi sa servera sve ordere tj. order iteme
+    //! Ovo je zapravo dodaj u orders.
+    // case ADD_TO_USER_CART:
+    //   return {
+    //     ...state,
+    //     orders: [...state.orders, { ...payload }],
+    //     // orders: {
+    //     //   ...state.orders,
+    //     //   order_items: [...state.orders.order_items, { ...payload }],
+    //     // },
+    //   };
 
     case REMOVE_ORDER:
       const newAllOrders = state.all_orders.filter(
@@ -141,12 +156,14 @@ const userReducer = (state = initialState, { type, payload }) => {
 
     case ADD_TO_USER_WISHLIST:
       return {
-        ...state,
+        ...state, // [...state.wishlist, { ...payload }]
         wishlist: [...state.wishlist, { ...payload }],
       };
 
     case REMOVE_FROM_USER_WISHLIST:
-      const newFavs = state.wishlist.filter((fav) => fav.id !== payload);
+      const newFavs = state.wishlist.products.filter(
+        (product) => product.id !== payload
+      );
       return {
         ...state,
         user: {

@@ -126,7 +126,7 @@ export const clearAllProducts = () => async (dispatch) => {
 
 export const getCurrentProduct = (id) => async (dispatch) => {
   try {
-    const res = await axios.get(`https://gameshop-g5.com/products/${id}`);
+    const res = await axios.get(`https://gameshop-g5.com/products/${id}/`);
 
     dispatch({ type: GET_CURRENT_PRODUCT, payload: res.data });
   } catch ({ response }) {

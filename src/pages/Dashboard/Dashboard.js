@@ -34,10 +34,10 @@ function Dashboard({ fetchProducts, clearProducts, getOrders, clearOrders }) {
           marginBottom: "40px",
         }}
       >
-        <StatsCard title={"Products"} />
+        {/* <StatsCard title={"Products"} />
         <StatsCard title={"Products"} />
         <StatsCard title={"Orders"} />
-        <StatsCard title={"Wishlist"} />
+        <StatsCard title={"Wishlist"} /> */}
       </div>
       <div
         style={{

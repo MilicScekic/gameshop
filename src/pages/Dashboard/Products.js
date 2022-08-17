@@ -1,5 +1,4 @@
 import { Box } from "@material-ui/core";
-import AddProduct from "../../components/Dashboard/Products/AddProduct";
 import ProductTable from "../../components/Dashboard/Products/Table";
 
 export const Products = () => {
@@ -16,7 +15,6 @@ export const Products = () => {
         }}
       >
         <h1>Products</h1>
-        <AddProduct />
       </Box>
       <Box ml={3}>
         <ProductTable />

@@ -8,7 +8,7 @@ import {
 import {
   addToUserCart,
   addToGuestCart,
-  addToUserWishlist,
+  // addToUserWishlist,
   refreshOrderItems,
 } from "../store/actions/user";
 import Spinner from "../components/Spinner";
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   img: {
-    maxWidth: "100%",
+    maxWidth: "40%",
     height: "auto",
     marginTop: 40,
   },
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
   actionButtons: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "center",
     margin: "32px 0",
   },
 }));
@@ -51,26 +51,26 @@ const Product = ({
   guest,
   orders,
   orderId,
-  wishlist,
+  // wishlist,
   isAuthenticated,
   getCurrentProduct,
   clearCurrentProduct,
   currentProduct,
   addToUserCart,
   addToGuestCart,
-  addToUserWishlist,
+  // addToUserWishlist,
   refreshOrderItems,
 }) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       getCurrentProduct(match.params.id);
-    }, 200);
+    }, 0);
 
     return () => {
       clearCurrentProduct();
       clearTimeout(timeout);
     };
-  }, []);
+  }, [clearCurrentProduct, getCurrentProduct]);
 
   const classes = useStyles();
 
@@ -128,23 +128,23 @@ const Product = ({
             stock
           </Typography> */}
           <div>
-            {isAuthenticated && (
+            {/* {isAuthenticated && (
               <IconButton
                 disabled={wishlist?.some((item) => item.id === match.params.id)}
                 onClick={() => addToUserWishlist(match.params.id)}
               >
                 <FavoriteIcon />
               </IconButton>
-            )}
+            )} */}
             {user !== null && isAuthenticated ? (
               <>
                 <Button
                   variant="contained"
-                  color="success"
+                  color="secondary"
                   disabled={
                     orders &&
-                    orders.some(
-                      (order) => order.product.id === currentProduct.id
+                    orders?.some(
+                      (order) => order.product.id === match.params.id
                     )
                   }
                   onClick={handleAddToCart}
@@ -156,9 +156,9 @@ const Product = ({
               <>
                 <Button
                   variant="contained"
-                  color="success"
-                  disabled={guest.cart.some(
-                    (item) => item.id === match.params.id
+                  color="secondary"
+                  disabled={guest?.cart.some(
+                    (item) => item.id === currentProduct.id
                   )}
                   onClick={() => addToGuestCart(match.params.id)}
                 >
@@ -196,7 +196,7 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   currentProduct: state.products.currentProduct,
   user: state.user.user,
-  wishlist: state.user.wishlist,
+  // wishlist: state.user.wishlist,
   orders: state.user.orders,
   orderId: state.user.orderId,
   guest: state.user.guest,
@@ -208,5 +208,5 @@ export default connect(mapStateToProps, {
   addToUserCart,
   refreshOrderItems,
   addToGuestCart,
-  addToUserWishlist,
+  // addToUserWishlist,
 })(Product);

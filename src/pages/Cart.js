@@ -129,7 +129,16 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
           </div>
         )}
         {!isAuthenticated &&
-          guest.cart.map((item) => <CartItem key={item.id} item={item} />)}
+          guest.cart.map((item, key) => (
+            <CartItem
+              key={key}
+              orderItemId={item.id}
+              name={item.name}
+              price={item.price}
+              quantity={item.quantity}
+              media={item.media}
+            />
+          ))}
 
         {isAuthenticated && user !== null && orders?.length === 0 && (
           <div className={classes.centered}>
@@ -139,17 +148,16 @@ const Cart = ({ user, guest, orders, isAuthenticated }) => {
         )}
         {isAuthenticated &&
           user !== null &&
-          orders?.map((item) => (
-            <>
-              <CartItem
-                item={item}
-                name={item.product.name}
-                productId={item.product.id}
-                image={
-                  item.product.media?.length > 0 && item.product.media[0].media
-                }
-              />
-            </>
+          orders?.map((item, key) => (
+            <CartItem
+              key={key}
+              orderItemId={item.id}
+              productId={item.product.id}
+              name={item.product.name}
+              price={item.product.price}
+              quantity={item.quantity}
+              media={item.product.media}
+            />
           ))}
 
         {(userCartPresent || guestCartPresent) && orders?.length !== 0 && (

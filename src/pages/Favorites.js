@@ -1,7 +1,10 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { removeFromUserWishlist } from "../store/actions/user";
+import {
+  refreshOrderItems,
+  removeFromUserWishlist,
+} from "../store/actions/user";
 import { ResponsiveContainer } from "../utils/Responsive";
 import { makeStyles } from "@mui/styles";
 import Paper from "@mui/material/Paper";
@@ -138,4 +141,7 @@ const mapStateToProps = (state) => ({
   wishlist: state.user.wishlist,
 });
 
-export default connect(mapStateToProps, { removeFromUserWishlist })(Favorites);
+export default connect(mapStateToProps, {
+  removeFromUserWishlist,
+  refreshOrderItems,
+})(Favorites);
