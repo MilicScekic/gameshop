@@ -40,6 +40,8 @@ import {
   getAllProducts,
 } from "./store/actions/products";
 import { getWishlistItems, clearWishlistItems } from "./store/actions/user";
+// import Profile from "./pages/User/Profile";
+// import UpdateProfile from "./pages/User/UpdateProfile";
 
 const theme = createTheme({
   palette: {
@@ -156,6 +158,12 @@ function App({
               <Route exact path="/register" component={Register} />
 
               <PrivateRoute exact path="/wishlist" component={Favorites} />
+              {/* <PrivateRoute exact path="/profile" component={Profile} />
+              <PrivateRoute
+                exact
+                path="/profile/edit-profile"
+                component={UpdateProfile}
+              /> */}
 
               <Route exact path="/products" component={Products} />
               <Route exact path="/products/:id" component={Product} />

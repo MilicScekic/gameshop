@@ -27,6 +27,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/auth";
 import SearchBar from "../components/Search/SearchBar";
+import MenuBar from "../components/MenuBar";
 
 function Header({
   isAuthenticated,
@@ -43,26 +44,6 @@ function Header({
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const [dropdownCategories, setDropdownCategories] = useState(null);
-  const [isDropdown, setIsDropdown] = useState(false);
-  const dropdownRef = useRef();
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchedProducts, setSearchedProducts] = useState(null);
-  const [isSearchVisible, setIsSearchVisible] = useState(true);
-  const searchRef = useRef();
-
-  const debounce = (cbf, delay = 300) => {
-    let timeout;
-
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        cbf(...args);
-      }, delay);
-    };
-  };
-
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -77,64 +58,6 @@ function Header({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const [open, setOpen] = useState(false);
-
-  // close the dropdown menu and search if clicked outside
-  // useEffect(() => {
-  //   const handler = (event) => {
-  //     if (!dropdownRef.current.contains(event.target)) {
-  //       setIsDropdown(false);
-  //     }
-  //   };
-  //   document.addEventListener("mousedown", handler);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handler);
-  //   };
-  // });
-
-  // useEffect(() => {
-  //   const handler = (event) => {
-  //     if (!searchRef.current.contains(event.target)) {
-  //       setIsSearchVisible(false);
-  //     }
-  //   };
-  //   document.addEventListener("mousedown", handler);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handler);
-  //   };
-  // });
-
-  // // opens dropdown menu for a specified parent category
-  // const handleDropdown = (cat) => {
-  //   const cats = categories.filter((category) => {
-  //     if (category.parent !== null) return category.parent.name === cat;
-  //     else return false;
-  //   });
-  //   setDropdownCategories(cats);
-  //   setIsDropdown(true);
-  // };
-
-  // // opens dropdown search for term used
-  // useEffect(() => {
-  //   setIsSearchVisible(true);
-  //   const p = products.filter((product) => {
-  //     if (searchTerm === "") {
-  //       setIsSearchVisible(false);
-  //       return product;
-  //     } else if (
-  //       product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  //     ) {
-  //       return product;
-  //     }
-  //   });
-  //   setSearchedProducts(p);
-  //   console.log(searchTerm);
-  // }, [searchTerm]);
-
-  // const handleOpen = () => {
-  //   setOpen(!open);
-  // };
 
   //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
   //* Ovo mora biti najvisi nivo
@@ -377,19 +300,7 @@ function Header({
           </Toolbar>
         </Container>
       </AppBar>
-      {/* <AppBar className="bottomBar" position="static">
-        <Toolbar
-          disableGutters
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-          }}
-        >
-          <SearchBar />
-        </Toolbar>
-      </AppBar> */}
+      <MenuBar />
     </>
   );
 }
