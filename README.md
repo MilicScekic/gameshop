@@ -1,6 +1,6 @@
 # Gameshop (not mobile responsive)
 
-Demo: https://amazing-pika-f32adf.netlify.app/
+Demo: https://teal-macaron-7b02b7.netlify.app/
 
 ## Heder
 
