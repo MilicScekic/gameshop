@@ -1,11 +1,6 @@
 # Gameshop (not mobile responsive)
 
-<<<<<<< HEAD
-
-=======
-
-> > > > > > > e377fd2702fbd085b44efb2b5c3f73592498adf0
-> > > > > > > Demo: https://teal-macaron-7b02b7.netlify.app/
+Demo: https://earnest-pixie-17ca5d.netlify.app/
 
 ## Heder
 
