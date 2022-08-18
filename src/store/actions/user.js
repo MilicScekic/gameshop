@@ -25,6 +25,8 @@ import {
   REMOVE_ORDER,
   GET_ORDER_ID,
   CLEAR_DELPAY,
+  GET_USERS,
+  CLEAR_USERS,
 } from "./types";
 import { setAlert, showSpinner, hideSpinner } from "./visual";
 import axios from "axios";
@@ -356,3 +358,22 @@ export const handleUserQuantity =
   };
 
 export const clearDelpay = () => (dispatch) => dispatch({ type: CLEAR_DELPAY });
+
+//! Samo za admina
+export const refreshUsers = () => (dispatch) => {
+  dispatch(clearUsers());
+  dispatch(getUsers());
+};
+export const clearUsers = () => (dispatch) => dispatch({ type: CLEAR_USERS });
+export const getUsers = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`https://gameshop-g5.com/auth/users/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    });
+    dispatch({ type: GET_USERS, payload: res.data });
+  } catch ({ response }) {
+    // dispatch(setAlert(response.data.message, "error"));
+  }
+};

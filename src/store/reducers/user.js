@@ -27,10 +27,13 @@ import {
   REMOVE_ORDER,
   GET_ORDER_ID,
   CLEAR_DELPAY,
+  GET_USERS,
+  CLEAR_USERS,
 } from "../actions/types";
 
 const initialState = {
   user: null,
+  users: [],
   orderId: null,
   wishlistId: null,
   orders: null,
@@ -57,6 +60,18 @@ const userReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         user: null,
+      };
+
+    case GET_USERS:
+      return {
+        ...state,
+        users: [...state.users, ...payload],
+      };
+
+    case CLEAR_USERS:
+      return {
+        ...state,
+        users: [],
       };
 
     case GET_ORDER_ID:
