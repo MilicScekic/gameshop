@@ -1,4 +1,4 @@
-# Gameshop
+# Gameshop (not mobile responsive)
 Demo: https://amazing-pika-f32adf.netlify.app/
 
 ## Heder
