@@ -143,7 +143,7 @@ export const postNewComment = (formData, productId) => async (dispatch) => {
   try {
     const res = await axios.post(
       `https://gameshop-g5.com/products/${productId}/comments/`,
-      formData, //? moze i na drugi nacin. Tako sto cu u funkciji handleSubmit: postNewComment({ content: comment }, currentProduct.id)
+      formData,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -153,7 +153,7 @@ export const postNewComment = (formData, productId) => async (dispatch) => {
     dispatch({ type: ADD_NEW_COMMENT, payload: res.data });
     dispatch(setAlert("Comment posted", "success"));
   } catch ({ response }) {
-    dispatch(setAlert(response.data.message && response.data.message, "error"));
+    dispatch(setAlert("Comment not posted", "error"));
   }
 };
 
