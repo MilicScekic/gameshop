@@ -1,4 +1,4 @@
-# Gameshop
+# Gameshop (not mobile responsive)
 Demo: https://amazing-pika-f32adf.netlify.app/
 
 ## Heder
@@ -10,15 +10,6 @@ Demo: https://amazing-pika-f32adf.netlify.app/
 ## Igrice
 ![games-gameshop](https://user-images.githubusercontent.com/18018664/184704671-4137b6cb-6b75-44e6-ad2b-e6cf9511bfbe.png)
 
-## Dashboard
-### Proizvodi
-![image](https://user-images.githubusercontent.com/18018664/185170409-0d55f7f2-dea9-40a8-9497-c821d8f66d31.png)
-### Porudžbine
-![image](https://user-images.githubusercontent.com/18018664/185170680-45d2dd68-8f89-4555-a5b3-0d971aea5b9a.png)
-
-## Kredencijali (dashboard)
-Korisničko ime: admin;
-Šifra: Group5@123!
 
 ## Dokumentacija
 https://documenter.getpostman.com/view/6732233/UzXPyHFm

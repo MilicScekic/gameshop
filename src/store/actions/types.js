@@ -57,6 +57,8 @@ export const ADD_TO_USER_WISHLIST = "ADD_TO_USER_WISHLIST";
 export const GET_ORDER_ID = "GET_ORDER_ID";
 export const CLEAR_DELPAY = "CLEAR_DELPAY";
 export const GUEST_PRODUCT_QUANTITY = "GUEST_PRODUCT_QUANTITY";
+export const GET_USERS = "GET_USERS";
+export const CLEAR_USERS = "CLEAR_USERS";
 
 // AUTH
 export const AUTH_SUCCESS = "AUTH_SUCCESS";

@@ -85,7 +85,7 @@ export const autoSigninUser = (token) => async (dispatch) => {
     dispatch(getOrders()); //? Napuni all_orders niz
     dispatch(getOrderItems()); //? Napuni orders niz
     // dispatch(getWishlistItems()); //? Napuni wishlist niz
-    dispatch(setAlert("Logged in successfully", "success"));
+    dispatch(setAlert("Online", "success"));
   } catch ({ response }) {
     dispatch({ type: AUTO_SIGNIN_FAIL });
     dispatch(setAlert("Can not login!", "warning"));

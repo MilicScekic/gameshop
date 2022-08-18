@@ -1,74 +1,72 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import {
-  getOrders,
-  clearOrders,
-  refreshOrders,
+  clearUsers,
+  getUsers,
+  refreshUsers,
 } from "../../../store/actions/user";
 import MaterialTable from "material-table";
 import { tableIcons } from "./tableIcons";
-import { ordersOptions } from "./options";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import { usersOptions } from "./options";
 
-const OrderTable = ({
-  all_orders,
-  loading,
-  getOrders,
-  clearOrders,
-  removeOrder,
-  refreshOrders,
-}) => {
+const UserTable = ({ users, clearUsers, getUsers, refreshUsers, loading }) => {
   useEffect(() => {
-    clearOrders();
+    clearUsers();
 
     const timeoutId = setTimeout(() => {
-      getOrders();
+      getUsers();
+      clearUsers();
     }, 200);
 
     return () => {
-      clearOrders();
       clearTimeout(timeoutId);
+      clearUsers();
     };
-  }, [clearOrders, getOrders]);
+  }, [clearUsers, getUsers]);
 
-  const ordersColumns = [
+  const usersColumns = [
     {
       field: "id",
-      title: "ORDER ID",
-      align: "left",
-      filterPlaceholder: "Search by id",
-      width: "15%",
-    },
-    {
-      field: "user",
       title: "USER ID",
       align: "left",
+      filterPlaceholder: "Search by id",
+      width: "5%",
+    },
+    {
+      field: "username",
+      title: "USERNAME",
+      align: "left",
       filterPlaceholder: "Search by user",
-      width: "15%",
+      render: (rowData) => (
+        <div style={{ color: "#000", fontWeight: "600" }}>
+          {rowData.username}
+        </div>
+      ),
     },
     {
-      field: "price",
-      title: "PRICE",
+      field: "email",
+      title: "EMAIL",
       align: "left",
-      type: "currency",
-      currencySetting: { currencyCode: "EUR" },
-      filterPlaceholder: "Search by price",
-      width: "20%",
+      filterPlaceholder: "Search by email",
+      render: (rowData) => (
+        <a href={`mailto:${rowData.email}`}>{rowData.email}</a>
+      ),
     },
     {
-      field: "checkout_date",
-      title: "CHECKOUT DATE",
+      field: "first_name",
+      title: "FULL NAME",
       align: "left",
-      filterPlaceholder: "Search by date",
-      width: "40%",
+      filterPlaceholder: "Search by name",
+      render: (rowData) => rowData.first_name + " " + rowData.last_name,
     },
     {
-      title: "STATUS",
+      field: "is_staff",
+      title: "ROLE",
       align: "left",
-      filterPlaceholder: "Search by status",
+      filterPlaceholder: "Filter by role",
+      lookup: { true: "Admin", false: "User" },
       render: (rowData) =>
-        rowData.checkout_date ? (
+        rowData.is_staff == true ? (
           <div
             style={{
               display: "flex",
@@ -79,8 +77,7 @@ const OrderTable = ({
               color: "#fff",
             }}
           >
-            <DoneAllIcon sx={{ marginRight: "5px" }} />
-            Delivered
+            Admin
           </div>
         ) : (
           <div
@@ -88,13 +85,12 @@ const OrderTable = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "#ED6C02",
+              background: "#B09B71",
               borderRadius: "3rem",
               color: "#fff",
             }}
           >
-            <WarningAmberIcon sx={{ marginRight: "5px" }} />
-            On waiting
+            User
           </div>
         ),
       width: "5%",
@@ -108,22 +104,22 @@ const OrderTable = ({
       onRowClick={(evt, selectedRow) =>
         setSelectedRow(selectedRow.tableData.id)
       }
-      title={"Orders table"}
+      title={"Users table"}
       icons={tableIcons}
-      data={all_orders}
-      columns={ordersColumns}
-      options={ordersOptions}
+      data={users}
+      columns={usersColumns}
+      options={usersOptions}
     />
   );
 };
 
 const mapStateToProps = (state) => ({
-  all_orders: state.user.all_orders,
+  users: state.user.users,
   loading: state.visual.loading,
 });
 
 export default connect(mapStateToProps, {
-  getOrders,
-  clearOrders,
-  refreshOrders,
-})(OrderTable);
+  clearUsers,
+  getUsers,
+  refreshUsers,
+})(UserTable);

@@ -18,7 +18,7 @@ export const StatsCard = (props) => (
             {props.title}
           </Typography>
           <Typography color="textPrimary" variant="h4">
-            $24k
+            {props.count}
           </Typography>
         </Grid>
         <Grid item>
@@ -39,21 +39,7 @@ export const StatsCard = (props) => (
           display: "flex",
           alignItems: "center",
         }}
-      >
-        <ArrowUpward color="success" />
-        <Typography
-          color="success"
-          sx={{
-            mr: 1,
-          }}
-          variant="body2"
-        >
-          12%
-        </Typography>
-        <Typography color="textSecondary" variant="caption">
-          Since last month
-        </Typography>
-      </Box>
+      ></Box>
     </CardContent>
   </Card>
 );

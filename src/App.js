@@ -31,6 +31,7 @@ import { Products as DashboardProducts } from "./pages/Dashboard/Products";
 import { Categories } from "./pages/Dashboard/Categories";
 import Sidebar from "./layouts/Sidebar";
 import { Orders } from "./pages/Dashboard/Orders";
+import { Users } from "./pages/Dashboard/Users";
 import Checkout from "./pages/Checkout";
 import {
   getCategories,
@@ -141,6 +142,7 @@ function App({
                   component={Categories}
                 />
                 <ProtectedRoute path="/admin/orders" component={Orders} />
+                <ProtectedRoute path="/admin/users" component={Users} />
               </Sidebar>
             </ProtectedRoute>
 

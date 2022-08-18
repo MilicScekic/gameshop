@@ -40,9 +40,7 @@ const Comments = ({
   }));
   const classes = useStyles();
 
-  const [comment, setComment] = useState({
-    content: "",
-  });
+  const [comment, setComment] = useState("");
   const [commentErrMsg, setCommentErrMsg] = useState("");
   const [commentSuccessMsg, setCommentSuccessMsg] = useState("");
   const [submitDisabled, setSubmitDisabled] = useState(false);
@@ -75,15 +73,11 @@ const Comments = ({
     };
   };
 
-  const handleChange = (e) =>
-    setComment({ ...comment, [e.target.name]: e.target.value });
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     try {
-      const formData = { ...comment };
-      postNewComment(formData, currentProduct.id);
+      postNewComment({ content: comment }, currentProduct.id);
       setSubmitDisabled(true);
       setComment("");
       refreshComments();
@@ -126,10 +120,8 @@ const Comments = ({
               variant="standard"
               margin="normal"
               name="comment"
-              value={comment.content}
-              onChange={handleChange}
-              // value={comment}
-              // onChange={(e) => setComment(e.target.value)}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
             />
             <Button
               type="submit"

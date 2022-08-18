@@ -297,6 +297,7 @@ body {
 
 .active {
   background: var(--clr-gradient);
+  color: #000 !important;
 }
 
 .black {

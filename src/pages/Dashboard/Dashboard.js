@@ -8,8 +8,20 @@ import { showSpinner } from "../../store/actions/visual";
 import { useEffect } from "react";
 import { getOrders, clearOrders } from "../../store/actions/user";
 
-function Dashboard({ fetchProducts, clearProducts, getOrders, clearOrders }) {
+function Dashboard({
+  fetchProducts,
+  clearProducts,
+  getOrders,
+  clearOrders,
+  loading,
+  // productCount,
+  allProductsCount,
+  allOrdersCount,
+}) {
   useEffect(() => {
+    clearProducts();
+    clearOrders();
+
     const timeoutId = setTimeout(() => {
       fetchProducts();
       getOrders();
@@ -20,7 +32,7 @@ function Dashboard({ fetchProducts, clearProducts, getOrders, clearOrders }) {
       clearProducts();
       clearOrders();
     };
-  }, []);
+  }, [clearOrders, getOrders]);
 
   return (
     <Box mt={1} ml={3}>
@@ -34,9 +46,9 @@ function Dashboard({ fetchProducts, clearProducts, getOrders, clearOrders }) {
           marginBottom: "40px",
         }}
       >
+        <StatsCard title={"Products"} count={allProductsCount} />
+        <StatsCard title={"Orders"} count={allOrdersCount} />
         {/* <StatsCard title={"Products"} />
-        <StatsCard title={"Products"} />
-        <StatsCard title={"Orders"} />
         <StatsCard title={"Wishlist"} /> */}
       </div>
       <div
@@ -52,7 +64,13 @@ function Dashboard({ fetchProducts, clearProducts, getOrders, clearOrders }) {
   );
 }
 
-export default connect(null, {
+const mapStateToProps = (state) => ({
+  // productCount: state.products.productCount,
+  allProductsCount: state.products.allProductsCount,
+  allOrdersCount: state.user.allOrdersCount,
+});
+
+export default connect(mapStateToProps, {
   fetchProducts,
   clearProducts,
   getOrders,
