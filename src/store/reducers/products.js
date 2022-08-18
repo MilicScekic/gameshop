@@ -114,11 +114,13 @@ const productsReducer = (state = initialState, { type, payload }) => {
     case PREVIOUS_PAGE:
       return {
         ...state,
+        previous: payload,
       };
 
     case NEXT_PAGE:
       return {
         ...state,
+        next: payload,
       };
 
     case GET_ALL_PRODUCTS:

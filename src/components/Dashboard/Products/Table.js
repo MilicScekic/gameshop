@@ -1,8 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import {
-  clearProducts,
-  fetchProducts,
   refreshProducts,
   removeProduct,
   changeProduct,
@@ -10,6 +8,8 @@ import {
   clearCategories,
   addProduct,
   changeMainImage,
+  getAllProducts,
+  clearAllProducts,
 } from "../../../store/actions/products";
 
 import Button from "@mui/material/Button";
@@ -21,35 +21,34 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import { Link } from "react-router-dom";
-
 const ProductTable = ({
-  products,
+  all_products,
   categories,
   loading,
   removeProduct,
   addProduct,
-  fetchProducts,
-  clearProducts,
+  getAllProducts,
+  clearAllProducts,
   changeProduct,
   refreshProducts,
   getCategories, // da bi se azurirao select dropdown
   clearCategories,
 }) => {
   useEffect(() => {
-    clearProducts();
+    clearAllProducts();
     clearCategories();
 
     const timeoutId = setTimeout(() => {
-      fetchProducts();
+      getAllProducts();
       getCategories();
     }, 200);
 
     return () => {
-      clearProducts();
+      clearAllProducts();
       clearCategories();
       clearTimeout(timeoutId);
     };
-  }, [clearProducts, fetchProducts]);
+  }, [clearAllProducts, getAllProducts]);
 
   //* Dovoljno je media i categories, jer njih mijenjam na drugi nacin, ostalo ide preko ugradjenih material table funkcija
   const [product, setProduct] = useState({
@@ -208,7 +207,7 @@ const ProductTable = ({
       }
       title={"Products table"}
       icons={tableIcons}
-      data={products}
+      data={all_products}
       columns={productColumns}
       options={productsOptions}
       editable={{
@@ -281,7 +280,7 @@ const ProductTable = ({
 };
 
 const mapStateToProps = (state) => ({
-  products: state.products.products,
+  all_products: state.products.all_products,
   categories: state.products.categories,
   loading: state.visual.loading,
 });
@@ -289,8 +288,8 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   removeProduct,
   addProduct,
-  fetchProducts,
-  clearProducts,
+  getAllProducts,
+  clearAllProducts,
   changeProduct,
   refreshProducts,
   getCategories,
