@@ -1,5 +1,4 @@
 # Gameshop (not mobile responsive)
-
 Demo: https://earnest-pixie-17ca5d.netlify.app/
 
 ## Heder
