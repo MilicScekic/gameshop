@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import {
-  refreshProducts,
+  refreshAllProducts,
   removeProduct,
   changeProduct,
   getCategories,
@@ -30,7 +30,7 @@ const ProductTable = ({
   getAllProducts,
   clearAllProducts,
   changeProduct,
-  refreshProducts,
+  refreshAllProducts,
   getCategories, // da bi se azurirao select dropdown
   clearCategories,
 }) => {
@@ -192,7 +192,7 @@ const ProductTable = ({
   //   try {
   //     changeProduct(edit); // edit je objekat koji ima svoj id. U actions/products u rutu je stavljeno formData.id
   //     alert("Product was successfully edited.");
-  //     refreshProducts();
+  //     refreshAllProducts();
   //     setEdit(null);
   //   } catch (error) {
   //     alert("There some error in changing product...");
@@ -233,7 +233,7 @@ const ProductTable = ({
             });
 
             setTimeout(() => {
-              refreshProducts();
+              refreshAllProducts();
               resolve();
             }, 1000);
           }),
@@ -261,7 +261,7 @@ const ProductTable = ({
                 media: [],
                 categories: [],
               });
-              refreshProducts();
+              refreshAllProducts();
               resolve();
             }, 1000);
           }),
@@ -270,7 +270,7 @@ const ProductTable = ({
             removeProduct(oldData.id);
 
             setTimeout(() => {
-              refreshProducts();
+              refreshAllProducts();
               resolve();
             }, 1000);
           }),
@@ -291,7 +291,7 @@ export default connect(mapStateToProps, {
   getAllProducts,
   clearAllProducts,
   changeProduct,
-  refreshProducts,
+  refreshAllProducts,
   getCategories,
   clearCategories,
   changeMainImage,
