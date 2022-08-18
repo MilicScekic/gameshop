@@ -15,7 +15,7 @@ import {
   CLEAN_USER,
   CLEAN_GUEST,
   USER_PURCHASE,
-  GUEST_PURCHASE,
+  // GUEST_PURCHASE,
   GET_ORDER_ITEMS,
   GET_ALL_ORDERS,
   GET_WISHLIST,
@@ -282,14 +282,14 @@ const userReducer = (state = initialState, { type, payload }) => {
         //   checkout_date: Date.now(),
         // },
       };
-    case GUEST_PURCHASE:
-      return {
-        ...state,
-        guest: {
-          ...state.guest,
-          cart: [],
-        },
-      };
+    // case GUEST_PURCHASE:
+    //   return {
+    //     ...state,
+    //     guest: {
+    //       ...state.guest,
+    //       cart: [],
+    //     },
+    //   };
     default:
       return state;
   }

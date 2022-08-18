@@ -41,6 +41,13 @@ const OrderTable = ({
       width: "15%",
     },
     {
+      field: "user",
+      title: "USER ID",
+      align: "left",
+      filterPlaceholder: "Search by user",
+      width: "15%",
+    },
+    {
       field: "price",
       title: "PRICE",
       align: "left",
