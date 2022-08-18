@@ -43,6 +43,11 @@ function Header({
 }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  
+  const [dropdownCategories, setDropdownCategories] = useState(null);
+  const [isDropdown, setIsDropdown] = useState(false);
+  const dropdownRef = useRef();
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -58,6 +63,27 @@ function Header({
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  // opens dropdown menu for a specified parent category
+  const handleDropdown = (cat) => {
+    const cats = categories.filter((category) => {
+      if (category.parent !== null) return category.parent.name === cat;
+      else return false;
+    });
+    setDropdownCategories(cats);
+    setIsDropdown(true);
+  };
+  // close the dropdown menu and search if clicked outside
+  useEffect(() => {
+    const handler = (event) => {
+      if (!dropdownRef.current.contains(event.target)) {
+        setIsDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
 
   //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
   //* Ovo mora biti najvisi nivo
@@ -367,7 +393,221 @@ function Header({
           </Toolbar>
         </Container>
       </AppBar>
-      <MenuBar />
+      {/* <MenuBar /> */}
+      <div className="bottomAppBar">
+        <div className="scrollItem">
+          <div className="categories">
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
+                <Button
+                  onClick={() => handleDropdown("Games")}
+                  sx={{
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <SportsEsportsTwoToneIcon />
+                  Games
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
+                <Button
+                  onClick={() => handleDropdown("Consoles")}
+                  sx={{
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <GamepadTwoToneIcon />
+                  Consoles
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
+                <Button
+                  onClick={() => handleDropdown("Components")}
+                  sx={{
+                    mr: 5,
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <MemoryTwoToneIcon />
+                  Components
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
+                <Button
+                  onClick={() => handleDropdown("Perifery")}
+                  sx={{
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <HeadsetTwoToneIcon />
+                  Perifery
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
+                <Button
+                  onClick={() => handleDropdown("Board games")}
+                  sx={{
+                    mr: 5,
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <ExtensionTwoToneIcon />
+                  Board games
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
+                <Button
+                  onClick={() => handleDropdown("Phones")}
+                  sx={{
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <PhoneAndroidTwoToneIcon />
+                  Phones
+                </Button>
+              </Link>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Link to={void 0} style={{ textDecoration: "none" }}>
+                <Button
+                  onClick={() => handleDropdown("Lifestyle")}
+                  sx={{
+                    mr: 5,
+                    color: "black",
+                    background: "white",
+                    borderRadius: "1.3rem",
+                  }}
+                >
+                  <NightlifeTwoToneIcon />
+                  Lifestyle
+                </Button>
+              </Link>
+            </Box>
+          </div>
+        </div>
+        <div
+          ref={dropdownRef}
+          className={
+            "dropdown dropdownMenu scale-in-ver-top" +
+            (isDropdown ? " displayBlock" : "")
+          }
+        >
+          {dropdownCategories ? (
+            <Link
+              to={`/products/?categories=${dropdownCategories[0].parent.id}&order=desc`}
+              style={{ textDecoration: "none" }}
+            >
+              <h6>{dropdownCategories[0].parent.name}</h6>
+            </Link>
+          ) : (
+            <h6></h6>
+          )}
+          <ul>
+            {dropdownCategories ? (
+              dropdownCategories.map((cat) => {
+                return (
+                  <Link
+                    key={cat.name}
+                    to={`/products/?categories=${cat.id}&order=desc`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <li>{cat.name}</li>
+                  </Link>
+                );
+              })
+            ) : (
+              <li>Category not selected</li>
+            )}
+          </ul>
+        </div>
+
+        
+      </div>
     </>
   );
 }
