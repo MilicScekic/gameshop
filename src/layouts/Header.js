@@ -99,25 +99,6 @@ function Header({
             >
               +382 68 089 077
             </Typography>
-
-            <Typography
-              to="/"
-              component={Link}
-              variant="h4"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "VerminVibesV",
-                // fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "black",
-                textDecoration: "none",
-              }}
-            >
-              <span>GAMESHOP</span>
-            </Typography>
-
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
@@ -147,40 +128,126 @@ function Header({
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {/* {settings.map((page) => (
-                  <Link
-                    to={page}
-                    style={{ color: "black", textDecoration: "none" }}
-                    key={page}
+                <Box sx={{ flexGrow: 0 }}>
+                {!isAuthenticated ? (
+                  <>
+                    <Button
+                      sx={{
+                        color: "black",
+                        textDecoration: "none",
+                        fontFamily: "Nunito",
+                      }}
+                      to={!isAuthenticated && "/login"}
+                      component={Link}
+                    >
+                      <h4>{"Login"}</h4>
+                    </Button>
+                    <Button
+                      to={"/register"}
+                      component={Link}
+                      sx={{ fontFamily: "Nunito" }}
+                    >
+                      <h4>{"Register"}</h4>
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    sx={{
+                      color: "black",
+                      textDecoration: "none",
+                      fontFamily: "Nunito",
+                    }}
+                    to={isAuthenticated && "/profile"}
+                    component={Link}
                   >
-                    <MenuItem onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
-                    </MenuItem>
-                  </Link>
-                ))} */}
+                    <h4>{authUser.username}</h4>
+                  </Button>
+                )}
+                <IconButton
+                  style={{ color: "#fff" }}
+                  component={Link}
+                  to="/cart"
+                >
+                  {user !== null ? (
+                    <Badge
+                      color="secondary"
+                      badgeContent={
+                        user !== null && orders ? calculateSum(orders) : null
+                      }
+                    >
+                      <ShoppingCartTwoToneIcon color="secondaryDark" />
+                    </Badge>
+                  ) : (
+                    <Badge
+                      color="secondary"
+                      badgeContent={calculateSum(guest.cart)}
+                    >
+                      <ShoppingCartTwoToneIcon color="secondaryDark" />
+                    </Badge>
+                  )}
+                </IconButton>
+                {isAuthenticated && (
+                  <>
+                    <IconButton onClick={handleOpenUserMenu}>
+                      <PersonTwoToneIcon color="primary" />
+                    </IconButton>
+                    <Menu
+                      sx={{ mt: "45px" }}
+                      id="menu-appbar"
+                      anchorEl={anchorElUser}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={Boolean(anchorElUser)}
+                      onClose={handleCloseUserMenu}
+                    >
+                      {isAuthenticated && authUser.id === 1 && (
+                        <MenuItem to={"/admin/dashboard"} component={Link}>
+                          <Typography textAlign="center" color="primary">
+                            Dashboard
+                          </Typography>
+                        </MenuItem>
+                      )}
+
+                      {isAuthenticated && (
+                        <MenuItem onClick={() => logout()}>
+                          <Typography textAlign="center" color="primary">
+                            Logout
+                          </Typography>
+                        </MenuItem>
+                      )}
+                    </Menu>
+                  </>
+                )}
+              </Box>
               </Menu>
             </Box>
-            <ComputerIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            
             <Typography
-              variant="h5"
+              to="/"
+              component={Link}
+              variant="h4"
               noWrap
-              component="a"
-              href=""
               sx={{
                 mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexGrow: 1,
-                fontFamily: "Nunito",
-                fontWeight: 700,
+                display: { md: "flex" },
+                fontFamily: "VerminVibesV",
+                // fontWeight: 700,
                 letterSpacing: ".3rem",
-                color: "inherit",
+                color: "black",
                 textDecoration: "none",
               }}
             >
-              <Link to="/products">Gameshop</Link>
+              <span>GAMESHOP</span>
             </Typography>
 
-            <div>
+            <div className="headerUser">
               <Box sx={{ flexGrow: 0 }}>
                 {!isAuthenticated ? (
                   <>
