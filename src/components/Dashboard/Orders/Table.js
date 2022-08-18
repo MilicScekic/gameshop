@@ -3,20 +3,13 @@ import { connect } from "react-redux";
 import {
   getOrders,
   clearOrders,
-  removeOrder,
   refreshOrders,
 } from "../../../store/actions/user";
-import Button from "@mui/material/Button";
 import MaterialTable from "material-table";
 import { tableIcons } from "./tableIcons";
 import { ordersOptions } from "./options";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import { setAlert } from "../../../store/actions/visual";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 const OrderTable = ({
   all_orders,
@@ -45,6 +38,7 @@ const OrderTable = ({
       title: "ORDER ID",
       align: "left",
       filterPlaceholder: "Search by id",
+      width: "15%",
     },
     {
       field: "price",
@@ -60,32 +54,45 @@ const OrderTable = ({
       title: "CHECKOUT DATE",
       align: "left",
       filterPlaceholder: "Search by date",
+      width: "40%",
     },
     {
-      title: "CHECKOUT STATUS",
+      title: "STATUS",
       align: "left",
       filterPlaceholder: "Search by status",
       render: (rowData) =>
         rowData.checkout_date ? (
-          <Alert severity="success">Delivered</Alert>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#2E7C33",
+              borderRadius: "3rem",
+              color: "#fff",
+            }}
+          >
+            <DoneAllIcon sx={{ marginRight: "5px" }} />
+            Delivered
+          </div>
         ) : (
-          <Alert severity="warning">On waiting</Alert>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#ED6C02",
+              borderRadius: "3rem",
+              color: "#fff",
+            }}
+          >
+            <WarningAmberIcon sx={{ marginRight: "5px" }} />
+            On waiting
+          </div>
         ),
+      width: "5%",
     },
   ];
-
-  const handleDelete = (orderId) => {
-    if (window.confirm("Are you sure you want to remove order?")) {
-      try {
-        removeOrder(orderId);
-        setAlert("Order removed succesfully!", "success");
-        refreshOrders();
-      } catch (error) {
-        setAlert("There some error in deleting!", "error");
-        refreshOrders();
-      }
-    }
-  };
 
   const [selectedRow, setSelectedRow] = useState(null);
 

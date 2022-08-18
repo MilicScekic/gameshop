@@ -35,6 +35,7 @@ const initialState = {
   wishlistId: null,
   orders: null,
   all_orders: [],
+  allOrdersCount: null,
   wishlist: null,
   guest: {
     cart: localStorage.getItem("cart")
@@ -86,6 +87,7 @@ const userReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         all_orders: [...state.all_orders, ...payload],
+        allOrdersCount: payload.length,
       };
 
     case CLEAR_ALL_ORDERS:

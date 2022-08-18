@@ -42,7 +42,7 @@ export const fetchProducts = () => async (dispatch) => {
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch(hideSpinner());
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 
@@ -61,7 +61,7 @@ export const getProducts = (targetUrl) => async (dispatch) => {
   } catch ({ response }) {
     dispatch(hideSpinner());
     // dispatch(setAlert(response.data.message, "error"));
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 
@@ -77,7 +77,7 @@ export const getLatestProducts = () => async (dispatch) => {
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch(hideSpinner());
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 
@@ -100,7 +100,7 @@ export const getGames = () => async (dispatch) => {
     dispatch(hideSpinner());
   } catch ({ response }) {
     dispatch(hideSpinner());
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 
@@ -131,7 +131,7 @@ export const getCurrentProduct = (id) => async (dispatch) => {
     dispatch({ type: GET_CURRENT_PRODUCT, payload: res.data });
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message && response.data.message, "error"));
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 
@@ -241,7 +241,7 @@ export const getCategories = () => async (dispatch) => {
     const res = await axios.get("https://gameshop-g5.com/categories/");
     dispatch({ type: GET_CATEGORIES, payload: res.data });
   } catch ({ response }) {
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 

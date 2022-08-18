@@ -96,6 +96,7 @@ export const clearOrders = () => async (dispatch) => {
   dispatch({ type: CLEAR_ALL_ORDERS });
 };
 
+//! state: all_orders
 //* Vraca sve ordere (admin). A za obicnog korisnika vraca samo njegove ordere. Popunjava niz takodje
 export const getOrders = () => async (dispatch) => {
   dispatch(showSpinner());
@@ -111,7 +112,7 @@ export const getOrders = () => async (dispatch) => {
     dispatch(hideSpinner());
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message, "error"));
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 
@@ -146,7 +147,7 @@ export const getOrderItems = () => async (dispatch) => {
     dispatch({ type: GET_ORDER_ITEMS, payload: res.data });
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message, "error"));
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 
@@ -182,7 +183,7 @@ export const getWishlistItems = () => async (dispatch) => {
     dispatch({ type: GET_WISHLIST, payload: res.data });
   } catch ({ response }) {
     // dispatch(setAlert(response.data.message, "error"));
-    dispatch(setAlert("Error", "error"));
+    // dispatch(setAlert("Error", "error"));
   }
 };
 
