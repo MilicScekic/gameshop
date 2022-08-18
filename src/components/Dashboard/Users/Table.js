@@ -48,8 +48,12 @@ const UserTable = ({ users, clearUsers, getUsers, refreshUsers, loading }) => {
       title: "EMAIL",
       align: "left",
       filterPlaceholder: "Search by email",
+      render: (rowData) => (
+        <a href={`mailto:${rowData.email}`}>{rowData.email}</a>
+      ),
     },
     {
+      field: "first_name",
       title: "FULL NAME",
       align: "left",
       filterPlaceholder: "Search by name",

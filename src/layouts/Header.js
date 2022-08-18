@@ -259,7 +259,7 @@ function Header({
 
             <div>
               <Box sx={{ flexGrow: 0 }}>
-                {!isAuthenticated && (
+                {!isAuthenticated ? (
                   <>
                     <Button
                       sx={{
@@ -280,6 +280,18 @@ function Header({
                       <h4>{"Register"}</h4>
                     </Button>
                   </>
+                ) : (
+                  <Button
+                    sx={{
+                      color: "black",
+                      textDecoration: "none",
+                      fontFamily: "Nunito",
+                    }}
+                    to={isAuthenticated && "/profile"}
+                    component={Link}
+                  >
+                    <h4>{authUser.username}</h4>
+                  </Button>
                 )}
                 <IconButton
                   style={{ color: "#fff" }}
