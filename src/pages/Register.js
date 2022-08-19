@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -76,6 +76,8 @@ const Register = ({ isAuthenticated, registerUser }) => {
   const [pwdErrMsg, setPwdErrMsg] = useState("");
 
   const [submitDisabled, setSubmitDisabled] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const classes = useStyles();
 
@@ -141,6 +143,24 @@ const Register = ({ isAuthenticated, registerUser }) => {
     }
   }, [password, confirmPassword]);
 
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      return !!successMsg && setSuccessMsg("");
+    }, 3000);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [successMsg]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      return !!errorMsg && setErrorMsg("");
+    }, 3000);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [errorMsg]);
+
   const disabledCondition =
     !validUsername ||
     !validEmail ||
@@ -170,16 +190,21 @@ const Register = ({ isAuthenticated, registerUser }) => {
     setPwdErrMsg("");
     setUsernameErrMsg("");
 
-    registerUser({
-      username: username,
-      first_name: firstName,
-      last_name: lastName,
-      email: email,
-      password: password,
-      password2: confirmPassword,
-    });
+    try {
+      registerUser({
+        username: username,
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        password: password,
+        password2: confirmPassword,
+      });
 
-    setSubmitDisabled(false);
+      setSubmitDisabled(false);
+      setSuccessMsg("Registration success! You can login.");
+    } catch (error) {
+      setErrorMsg("Try again!");
+    }
   };
 
   if (isAuthenticated) {
@@ -201,6 +226,8 @@ const Register = ({ isAuthenticated, registerUser }) => {
             {usernameErrMsg && <Alert severity="error">{usernameErrMsg}</Alert>}
             {emailErrMsg && <Alert severity="error">{emailErrMsg}</Alert>}
             {pwdErrMsg && <Alert severity="error">{pwdErrMsg}</Alert>}
+            {successMsg && <Alert severity="success">{successMsg}</Alert>}
+            {errorMsg && <Alert severity="warning">{errorMsg}</Alert>}
           </Stack>
 
           <TextField

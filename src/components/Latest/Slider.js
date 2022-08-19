@@ -59,7 +59,6 @@ const Latest = ({
         <Headline
           sx={{
             fontWeight: "700",
-            // fontFamily: "VerminVibesV",
             fontSize: "2.5rem !important",
           }}
         >
@@ -72,85 +71,6 @@ const Latest = ({
       <Fragment>
         <ProductList product={latest_products} />
       </Fragment>
-      {/* <Swiper
-        spaceBetween={20}
-        slidesPerView={4}
-        centeredSlides={true}
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
-        loop={true}
-        loopFillGroupWithBlank={true}
-        pagination={false}
-        navigation={true}
-        scrollbar={{ draggable: true }}
-        modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper"
-        style={{ backgroundColor: "transparent" }}
-      >
-        {uniqueGames.map((product) => (
-          <SwiperSlide key={product.id}>
-            <Link to={`/products/${product.id}`} className="hvr-grow">
-              <Card
-                sx={{
-                  position: "relative",
-                  borderRadius: 0,
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  alt={product.name}
-                  src={product.media[0]?.media}
-                  sx={{
-                    objectFit: "center",
-                    width: "303px !important",
-                    height: "373px !important",
-                  }}
-                />
-
-                <CardContent
-                  sx={{
-                    display: {
-                      xs: "none",
-                      md: "block",
-                    },
-                    position: {
-                      xs: "absolute",
-                    },
-                    width: "100%",
-                    bottom: 0,
-                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                    color: {
-                      xs: "white",
-                      md: "red",
-                    },
-                  }}
-                >
-                  <Typography
-                    gutterBottom
-                    variant="h5"
-                    component="div"
-                    color="info"
-                    sx={{ fontSize: "1.2rem!important" }}
-                  >
-                    {product.name.slice(0, 30)}
-                  </Typography>
-                  <Typography variant="body2" color="white">
-                    {product.content.slice(0, 30)}
-                  </Typography>
-
-                  {/* <CardActions sx={{ paddingLeft: 0 }}>
-                    <Button size="small" color="success" variant="contained">
-                      Buy Now
-                    </Button>
-                  </CardActions> */}
-      {/* </CardContent>
-              </Card>
-            </Link>
-          </SwiperSlide>
-        ))}
-      </Swiper> */}{" "}
     </Paper>
   );
 };

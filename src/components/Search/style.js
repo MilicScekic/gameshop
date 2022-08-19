@@ -10,6 +10,21 @@ export const SearchBarContainer = styled(motion.div)`
   border-radius: 6px;
   box-shadow: 0px 2px 12px 3px rgba(0, 0, 0, 0.14);
   overflow: hidden;
+
+  @media (max-width: 475px) {
+    width: 25em;
+  }
+
+  @media (min-width: 476px) {
+    width: 30em;
+  }
+  @media (min-width: 560px) {
+    width: 35em;
+  }
+
+  @media (min-width: 720px) {
+    width: 45em;
+  }
 `;
 
 export const SearchInputContainer = styled.div`
