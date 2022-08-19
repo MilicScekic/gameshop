@@ -1,12 +1,13 @@
 import { AppBar, Button, Toolbar } from "@mui/material";
 import { Container } from "@mui/system";
 import SearchBar from "../Search/SearchBar";
+import "./banner.css";
 
 const Banner = () => {
   return (
     <>
       <Container
-        maxWidth="xxl"
+        maxWidth="100%"
         position="static"
         style={{
           height: "370px",
@@ -20,7 +21,7 @@ const Banner = () => {
         }}
       >
         {/* <img src="https://i.ibb.co/kHBkPVn/bannnner2.png" alt="banner" /> */}
-        <Toolbar disableGutters>
+        <Toolbar className="searchToolbar" disableGutters>
           <SearchBar />
         </Toolbar>
       </Container>

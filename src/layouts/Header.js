@@ -270,7 +270,7 @@ function Header({
                 textDecoration: "none",
               }}
             >
-              <span>GAMESHOP</span>
+              <span className="title">GAMESHOP</span>
             </Typography>
 
             <div className="headerUser">

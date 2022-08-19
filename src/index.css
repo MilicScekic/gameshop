@@ -230,7 +230,7 @@
   .headerUser {
     display: none;
   }
-  span {
+  .title {
     padding-right: 200px;
   }
 }

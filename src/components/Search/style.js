@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 export const SearchBarContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
-  width: 45em;
+  // width: 45em;
+  width: 90%;
+  margin: 0 auto;
   height: 3.8em;
   background-color: #fff;
   border-radius: 6px;

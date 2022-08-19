@@ -1,0 +1,16 @@
+
+.searchToolbar {
+    width: 60%;
+}
+
+@media (max-width: 900px) {
+    .searchToolbar {
+        width: 80%;
+    }
+}
+
+@media (max-width: 600px) {
+    .searchToolbar {
+        width: 100%;
+    }
+}
