@@ -1,28 +1,7 @@
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Badge from "@mui/material/Badge";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import FavoriteIcon from "@mui/icons-material/FavoriteTwoTone";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import ComputerIcon from "@mui/icons-material/Computer";
-import PhoneTwoToneIcon from "@mui/icons-material/PhoneTwoTone";
-import ShoppingCartTwoToneIcon from "@mui/icons-material/ShoppingCartTwoTone";
-import PersonTwoToneIcon from "@mui/icons-material/PersonTwoTone";
-import GamepadTwoToneIcon from "@mui/icons-material/GamepadTwoTone";
-import HeadsetTwoToneIcon from "@mui/icons-material/HeadsetTwoTone";
-import SportsEsportsTwoToneIcon from "@mui/icons-material/SportsEsportsTwoTone";
-import NightlifeTwoToneIcon from "@mui/icons-material/NightlifeTwoTone";
-import SearchTwoToneIcon from "@mui/icons-material/SearchTwoTone";
-import PhoneAndroidTwoToneIcon from "@mui/icons-material/PhoneAndroidTwoTone";
-import MemoryTwoToneIcon from "@mui/icons-material/MemoryTwoTone";
-import ExtensionTwoToneIcon from "@mui/icons-material/ExtensionTwoTone";
-import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const MenuBar = () => {

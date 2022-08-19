@@ -1,6 +1,5 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useLastLocation } from "react-router-last-location";
-import Slider from "@mui/material/Slider";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
@@ -8,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import { makeStyles } from "@mui/styles";
 import { ResponsiveContainer } from "../utils/Responsive";
-import { Redirect, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({

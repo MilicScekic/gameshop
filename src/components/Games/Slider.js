@@ -3,12 +3,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { Pagination, Navigation, EffectFade, Autoplay } from "swiper";
+import { Pagination, Navigation, Autoplay } from "swiper";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import { Headline, Subheadline } from "../../utils/Responsive";
@@ -30,27 +28,12 @@ const GamesSlider = ({ games, getGames, clearGames }) => {
     };
   }, [clearGames, getGames]);
 
-  //? Matijin Api response vraca duple proizvode. Ovako sam se ogradio
-  const uniqueIds = [];
-  const uniqueGames = games.filter((element) => {
-    const isDuplicate = uniqueIds.includes(element.id);
-
-    if (!isDuplicate) {
-      uniqueIds.push(element.id);
-
-      return true;
-    }
-
-    return false;
-  });
-
   return (
     <Paper className="slider-section">
       <div className="slider-section-headline">
         <Headline
           sx={{
             fontWeight: "700",
-            // fontFamily: "VerminVibesV",
             fontSize: "2.5rem !important",
           }}
         >
@@ -76,8 +59,25 @@ const GamesSlider = ({ games, getGames, clearGames }) => {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
         style={{ backgroundColor: "transparent" }}
+        breakpoints={{
+          // od 330 do 640...
+          300: {
+            idth: 300,
+            slidesPerView: 1,
+            loop: true,
+          },
+          640: {
+            width: 640,
+            slidesPerView: 1,
+          },
+          // when window width is >= 768px
+          768: {
+            width: 768,
+            slidesPerView: 2,
+          },
+        }}
       >
-        {uniqueGames.map((product) => (
+        {games.map((product) => (
           <SwiperSlide key={product.id}>
             <Link to={`/products/${product.id}`} className="hvr-grow">
               <Card
@@ -100,7 +100,7 @@ const GamesSlider = ({ games, getGames, clearGames }) => {
                 <CardContent
                   sx={{
                     display: {
-                      xs: "none",
+                      // xs: "none",
                       md: "block",
                     },
                     position: {
