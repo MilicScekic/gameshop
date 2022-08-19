@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export const SearchBarContainer = styled(motion.div)`
   display: flex;
@@ -10,6 +10,18 @@ export const SearchBarContainer = styled(motion.div)`
   border-radius: 6px;
   box-shadow: 0px 2px 12px 3px rgba(0, 0, 0, 0.14);
   overflow: hidden;
+
+  @media (max-width: 330px) {
+    max-width: 20em;
+  }
+
+  @media (max-width: 350px) {
+    width: 23em !important;
+  }
+
+  @media (min-width: 420px) {
+    width: 25em;
+  }
 
   @media (max-width: 475px) {
     width: 25em;
