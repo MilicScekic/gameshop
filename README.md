@@ -1,6 +1,6 @@
 # Gameshop
 
-Demo: https://62ff2a1719923a49f2ec43e5--meek-dragon-90b7f2.netlify.app/
+Demo: https://62ff83f65abd2c0095e63617--superlative-beignet-98137f.netlify.app/
 
 ## Heder
 
