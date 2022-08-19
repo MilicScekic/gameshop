@@ -136,12 +136,11 @@ function Header({
                 display: { xs: "none", md: "flex" },
                 fontFamily: "VerminVibesV",
                 // fontWeight: 700,
-                letterSpacing: ".3rem",
                 color: "black",
                 textDecoration: "none",
               }}
             >
-              <span>GAMESHOP</span>
+              <span>Gameshop</span>
             </Typography>
 
             {/*    <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -191,7 +190,7 @@ function Header({
                 fontSize: "1.45rem",
               }}
             >
-              Gameshop
+              GS
             </Typography>
 
             <div>
