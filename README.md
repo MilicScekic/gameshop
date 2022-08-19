@@ -1,5 +1,6 @@
-# Gameshop (not mobile responsive)
-Demo: https://earnest-pixie-17ca5d.netlify.app/
+# Gameshop
+
+Demo: https://62ff2a1719923a49f2ec43e5--meek-dragon-90b7f2.netlify.app/
 
 ## Heder
 
