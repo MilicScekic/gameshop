@@ -30,6 +30,7 @@ const initialState = {
   previous: null,
   next: null,
   all_products: [], //? Ovo mi treba da azurira bas sve proizvode. Nema paginacije ni counta. Koristice se pretragu i Dashboard
+  allProductsCount: null, //! Za svaki slucaj. Ovo mi treba za dashboard da znam koliko je stvarno ukupno proizvoda
 };
 
 const productsReducer = (state = initialState, { type, payload }) => {
@@ -113,17 +114,20 @@ const productsReducer = (state = initialState, { type, payload }) => {
     case PREVIOUS_PAGE:
       return {
         ...state,
+        previous: payload,
       };
 
     case NEXT_PAGE:
       return {
         ...state,
+        next: payload,
       };
 
     case GET_ALL_PRODUCTS:
       return {
         ...state,
         all_products: [...state.all_products, ...payload],
+        allProductsCount: payload.length,
       };
 
     case CLEAR_ALL_PRODUCTS:

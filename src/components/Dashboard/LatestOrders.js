@@ -27,8 +27,8 @@ const LatestOrders = ({ all_orders, loading }) => {
       />
       <Divider />
       <List>
-        {all_orders?.slice(0, 2).map((item) =>
-          item.order_items.slice(0, 4).map((order, i) => (
+        {all_orders?.map((item) =>
+          item.order_items.slice(0, 5).map((order, i) => (
             <ListItem divider={i < item.length - 1} key={order.product.id}>
               {order.product.media.length > 0 ? (
                 <ListItemAvatar>

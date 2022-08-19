@@ -31,6 +31,7 @@ import { Products as DashboardProducts } from "./pages/Dashboard/Products";
 import { Categories } from "./pages/Dashboard/Categories";
 import Sidebar from "./layouts/Sidebar";
 import { Orders } from "./pages/Dashboard/Orders";
+import { Users } from "./pages/Dashboard/Users";
 import Checkout from "./pages/Checkout";
 import {
   getCategories,
@@ -39,6 +40,8 @@ import {
   getAllProducts,
 } from "./store/actions/products";
 import { getWishlistItems, clearWishlistItems } from "./store/actions/user";
+// import Profile from "./pages/User/Profile";
+// import UpdateProfile from "./pages/User/UpdateProfile";
 
 const theme = createTheme({
   palette: {
@@ -141,6 +144,7 @@ function App({
                   component={Categories}
                 />
                 <ProtectedRoute path="/admin/orders" component={Orders} />
+                <ProtectedRoute path="/admin/users" component={Users} />
               </Sidebar>
             </ProtectedRoute>
 
@@ -154,6 +158,12 @@ function App({
               <Route exact path="/register" component={Register} />
 
               <PrivateRoute exact path="/wishlist" component={Favorites} />
+              {/* <PrivateRoute exact path="/profile" component={Profile} />
+              <PrivateRoute
+                exact
+                path="/profile/edit-profile"
+                component={UpdateProfile}
+              /> */}
 
               <Route exact path="/products" component={Products} />
               <Route exact path="/products/:id" component={Product} />

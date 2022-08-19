@@ -48,8 +48,11 @@
   font-family: "Nunito", sans-serif;
   display: flex;
   flex-wrap: nowrap;
-  background: black;
+  background: var(--clr-gradient);
   position: relative;
+  justify-items: center;
+  align-self: center;
+  align-items: center;
 }
 
 .bottomAppBar button {
@@ -72,7 +75,7 @@
   height: 2rem;
   border-radius: 0 0.3rem 0.3rem 0;
   outline: none;
-  color: black;
+  color: rgb(52, 58, 64);
 }
 
 .searchIcon {
@@ -97,9 +100,15 @@
 .scrollItem::-webkit-scrollbar {
   width: 2em;
 }
+@media (max-width: 900px) {
+  .scrollItem::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 .scrollItem::-webkit-scrollbar-track {
-  background: #838383;
+  /* background: rgb(52, 58, 64); */
+  background: var(--clr-gradient);
   border-radius: 50px;
   margin-left: 1rem;
   margin-right: 1rem;
@@ -107,8 +116,8 @@
 
 .scrollItem::-webkit-scrollbar-thumb {
   margin: 2px 2px 2px 2px;
-  background: var(--clr-gradient);
-  border: 0.25rem solid #838383;
+  /* background: var(--clr-gradient); */
+  border: 0.1rem solid #fff;
   border-radius: 50px;
 }
 
@@ -131,7 +140,7 @@
 .dropdown {
   color: #999;
   position: absolute;
-  background: black;
+  background: rgb(52, 58, 64);
   top: 100%;
   z-index: 10;
   display: none;
@@ -148,12 +157,12 @@
 
 .dropdown h6:hover {
   background: var(--clr-gradient);
-  color: black;
+  color: rgb(52, 58, 64);
 }
 
 .dropdown ul li {
   list-style: none;
-  background: black;
+  color: #fff;
   width: 100%;
   padding: 0.9rem;
   padding-left: 1.5rem;
@@ -174,16 +183,27 @@
 }
 
 .dropdown ul li:hover {
-  color: black;
+  background: rgb(52, 58, 64);
 }
 
 .dropdownMenu {
   left: 300px;
+  left: 0;
+  min-height: 370px;
+  width: 100%;
 }
 
 .dropdownSearch {
   font-size: 1.1rem;
   left: 10px;
+
+  .headerUser {
+    display: none;
+  }
+
+  span {
+    padding-right: 200px;
+  }
 }
 
 .dropdownSearch ul li {
@@ -297,6 +317,7 @@ body {
 
 .active {
   background: var(--clr-gradient);
+  color: #000 !important;
 }
 
 .black {
@@ -497,4 +518,21 @@ body {
 .dataItem p {
   margin-left: 10px;
   z-index: 997;
+}
+
+/* Swiper Slider */
+.swiper-container {
+  width: 480px;
+}
+
+@media screen and (min-width: 640px) {
+  .swiper-container {
+    width: 640px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .swiper-container {
+    width: 768px;
+  }
 }

@@ -15,7 +15,7 @@ import {
   CLEAN_USER,
   CLEAN_GUEST,
   USER_PURCHASE,
-  GUEST_PURCHASE,
+  // GUEST_PURCHASE,
   GET_ORDER_ITEMS,
   GET_ALL_ORDERS,
   GET_WISHLIST,
@@ -27,14 +27,18 @@ import {
   REMOVE_ORDER,
   GET_ORDER_ID,
   CLEAR_DELPAY,
+  GET_USERS,
+  CLEAR_USERS,
 } from "../actions/types";
 
 const initialState = {
   user: null,
+  users: [],
   orderId: null,
   wishlistId: null,
   orders: null,
   all_orders: [],
+  allOrdersCount: null,
   wishlist: null,
   guest: {
     cart: localStorage.getItem("cart")
@@ -56,6 +60,18 @@ const userReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         user: null,
+      };
+
+    case GET_USERS:
+      return {
+        ...state,
+        users: [...state.users, ...payload],
+      };
+
+    case CLEAR_USERS:
+      return {
+        ...state,
+        users: [],
       };
 
     case GET_ORDER_ID:
@@ -86,6 +102,7 @@ const userReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         all_orders: [...state.all_orders, ...payload],
+        allOrdersCount: payload.length,
       };
 
     case CLEAR_ALL_ORDERS:
@@ -280,14 +297,14 @@ const userReducer = (state = initialState, { type, payload }) => {
         //   checkout_date: Date.now(),
         // },
       };
-    case GUEST_PURCHASE:
-      return {
-        ...state,
-        guest: {
-          ...state.guest,
-          cart: [],
-        },
-      };
+    // case GUEST_PURCHASE:
+    //   return {
+    //     ...state,
+    //     guest: {
+    //       ...state.guest,
+    //       cart: [],
+    //     },
+    //   };
     default:
       return state;
   }

@@ -27,6 +27,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/auth";
 import SearchBar from "../components/Search/SearchBar";
+import MenuBar from "../components/MenuBar";
+import { makeStyles } from "@mui/styles";
 
 function Header({
   isAuthenticated,
@@ -47,22 +49,6 @@ function Header({
   const [isDropdown, setIsDropdown] = useState(false);
   const dropdownRef = useRef();
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchedProducts, setSearchedProducts] = useState(null);
-  const [isSearchVisible, setIsSearchVisible] = useState(true);
-  const searchRef = useRef();
-
-  const debounce = (cbf, delay = 300) => {
-    let timeout;
-
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        cbf(...args);
-      }, delay);
-    };
-  };
-
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -78,63 +64,26 @@ function Header({
     setAnchorElUser(null);
   };
 
-  const [open, setOpen] = useState(false);
-
+  const handleDropdown = (cat) => {
+    const cats = categories.filter((category) => {
+      if (category.parent !== null) return category.parent.name === cat;
+      else return false;
+    });
+    setDropdownCategories(cats);
+    setIsDropdown(true);
+  };
   // close the dropdown menu and search if clicked outside
-  // useEffect(() => {
-  //   const handler = (event) => {
-  //     if (!dropdownRef.current.contains(event.target)) {
-  //       setIsDropdown(false);
-  //     }
-  //   };
-  //   document.addEventListener("mousedown", handler);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handler);
-  //   };
-  // });
-
-  // useEffect(() => {
-  //   const handler = (event) => {
-  //     if (!searchRef.current.contains(event.target)) {
-  //       setIsSearchVisible(false);
-  //     }
-  //   };
-  //   document.addEventListener("mousedown", handler);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handler);
-  //   };
-  // });
-
-  // // opens dropdown menu for a specified parent category
-  // const handleDropdown = (cat) => {
-  //   const cats = categories.filter((category) => {
-  //     if (category.parent !== null) return category.parent.name === cat;
-  //     else return false;
-  //   });
-  //   setDropdownCategories(cats);
-  //   setIsDropdown(true);
-  // };
-
-  // // opens dropdown search for term used
-  // useEffect(() => {
-  //   setIsSearchVisible(true);
-  //   const p = products.filter((product) => {
-  //     if (searchTerm === "") {
-  //       setIsSearchVisible(false);
-  //       return product;
-  //     } else if (
-  //       product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  //     ) {
-  //       return product;
-  //     }
-  //   });
-  //   setSearchedProducts(p);
-  //   console.log(searchTerm);
-  // }, [searchTerm]);
-
-  // const handleOpen = () => {
-  //   setOpen(!open);
-  // };
+  useEffect(() => {
+    const handler = (event) => {
+      if (!dropdownRef.current.contains(event.target)) {
+        setIsDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
 
   //! Jako bitan segment, jer bez ovoga nece dodati proizvod u korpu, tj. nece ga dodat u local storage
   //* Ovo mora biti najvisi nivo
@@ -187,15 +136,14 @@ function Header({
                 display: { xs: "none", md: "flex" },
                 fontFamily: "VerminVibesV",
                 // fontWeight: 700,
-                letterSpacing: ".3rem",
                 color: "black",
                 textDecoration: "none",
               }}
             >
-              <span>GAMESHOP</span>
+              <span>Gameshop</span>
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            {/*    <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -206,7 +154,7 @@ function Header({
               >
                 <MenuIcon />
               </IconButton>
-              <Menu
+               <Menu
                 id="menu-appbar"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
@@ -224,42 +172,30 @@ function Header({
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {/* {settings.map((page) => (
-                  <Link
-                    to={page}
-                    style={{ color: "black", textDecoration: "none" }}
-                    key={page}
-                  >
-                    <MenuItem onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
-                    </MenuItem>
-                  </Link>
-                ))} */}
-              </Menu>
-            </Box>
-            <ComputerIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            
+              </Menu> 
+            </Box>*/}
             <Typography
-              variant="h5"
+              variant="a"
+              component={Link}
+              to="/"
               noWrap
-              component="a"
-              href=""
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: "Nunito",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
+                fontFamily: "VerminVibesV",
+                color: "#000",
+                textDecorationLine: "none",
+                fontSize: "1.45rem",
               }}
             >
-              <Link to="/products">Gameshop</Link>
+              GS
             </Typography>
 
             <div>
               <Box sx={{ flexGrow: 0 }}>
-                {!isAuthenticated && (
+                {!isAuthenticated ? (
                   <>
                     <Button
                       sx={{
@@ -280,6 +216,18 @@ function Header({
                       <h4>{"Register"}</h4>
                     </Button>
                   </>
+                ) : (
+                  <Button
+                    sx={{
+                      color: "black",
+                      textDecoration: "none",
+                      fontFamily: "Nunito",
+                    }}
+                    to={isAuthenticated && "/profile"}
+                    component={Link}
+                  >
+                    <h4>{authUser.username}</h4>
+                  </Button>
                 )}
                 <IconButton
                   style={{ color: "#fff" }}
@@ -365,19 +313,205 @@ function Header({
           </Toolbar>
         </Container>
       </AppBar>
-      {/* <AppBar className="bottomBar" position="static">
-        <Toolbar
-          disableGutters
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-          }}
+      {/* <MenuBar /> */}
+      <div className="bottomAppBar">
+        <div className="scrollItem">
+          <div className="categories">
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Button
+                onClick={() => handleDropdown("Games")}
+                sx={{
+                  color: "black",
+                  background: "white",
+                  borderRadius: "1.3rem",
+                }}
+              >
+                <SportsEsportsTwoToneIcon />
+                Games
+              </Button>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Button
+                onClick={() => handleDropdown("Consoles")}
+                sx={{
+                  color: "black",
+                  background: "white",
+                  borderRadius: "1.3rem",
+                }}
+              >
+                <GamepadTwoToneIcon />
+                Consoles
+              </Button>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Button
+                onClick={() => handleDropdown("Components")}
+                sx={{
+                  mr: 5,
+                  color: "black",
+                  background: "white",
+                  borderRadius: "1.3rem",
+                }}
+              >
+                <MemoryTwoToneIcon />
+                Components
+              </Button>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Button
+                onClick={() => handleDropdown("Perifery")}
+                sx={{
+                  color: "black",
+                  background: "white",
+                  borderRadius: "1.3rem",
+                }}
+              >
+                <HeadsetTwoToneIcon />
+                Perifery
+              </Button>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Button
+                onClick={() => handleDropdown("Board games")}
+                sx={{
+                  mr: 5,
+                  color: "black",
+                  background: "white",
+                  borderRadius: "1.3rem",
+                }}
+              >
+                <ExtensionTwoToneIcon />
+                Board games
+              </Button>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Button
+                onClick={() => handleDropdown("Phones")}
+                sx={{
+                  color: "black",
+                  background: "white",
+                  borderRadius: "1.3rem",
+                }}
+              >
+                <PhoneAndroidTwoToneIcon />
+                Phones
+              </Button>
+            </Box>
+            <Box
+              component="div"
+              sx={{
+                display: "inline",
+                // background: "black",
+                width: "100%",
+                height: "100%",
+                padding: "0.3rem",
+              }}
+            >
+              <Button
+                onClick={() => handleDropdown("Lifestyle")}
+                sx={{
+                  mr: 5,
+                  color: "black",
+                  background: "white",
+                  borderRadius: "1.3rem",
+                }}
+              >
+                <NightlifeTwoToneIcon />
+                Lifestyle
+              </Button>
+            </Box>
+          </div>
+        </div>
+        <div
+          ref={dropdownRef}
+          className={
+            "dropdown dropdownMenu scale-in-ver-top" +
+            (isDropdown ? " displayBlock" : "")
+          }
         >
-          <SearchBar />
-        </Toolbar>
-      </AppBar> */}
+          {dropdownCategories ? (
+            <a
+              href={`/products/?categories=${dropdownCategories[0].parent.id}&order=asc`}
+              style={{ textDecoration: "none" }}
+            >
+              <h6>{dropdownCategories[0].parent.name}</h6>
+            </a>
+          ) : (
+            <h6></h6>
+          )}
+          <ul>
+            {dropdownCategories ? (
+              dropdownCategories.map((cat) => {
+                return (
+                  <a
+                    key={cat.name}
+                    href={`/products/?categories=${cat.id}&order=asc`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <li>{cat.name}</li>
+                  </a>
+                );
+              })
+            ) : (
+              <li>Category not selected</li>
+            )}
+          </ul>
+        </div>
+      </div>
     </>
   );
 }

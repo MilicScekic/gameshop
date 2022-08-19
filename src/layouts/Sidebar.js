@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,16 +13,16 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import GamesIcon from "@mui/icons-material/Games";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Link, NavLink, useRouteMatch, Redirect } from "react-router-dom";
+import { Link, NavLink, useRouteMatch } from "react-router-dom";
 import { connect } from "react-redux";
 import NoiseControlOffIcon from "@mui/icons-material/NoiseControlOff";
 import PersonIcon from "@mui/icons-material/Person";
-import LogoutIcon from "@mui/icons-material/Logout";
 import { logout } from "../store/actions/auth";
+import GroupIcon from "@mui/icons-material/Group";
 
 const drawerWidth = 240;
 
-function Sidebar({ children, isAuthenticated, authName, logout }) {
+function Sidebar({ children, isAuthenticated, authName }) {
   let { url } = useRouteMatch();
 
   const pages = [
@@ -42,11 +41,11 @@ function Sidebar({ children, isAuthenticated, authName, logout }) {
       icon: <ShoppingCartIcon />,
       path: `${url}/orders`,
     },
-    // {
-    //   name: "Categories",
-    //   icon: <GamesIcon />,
-    //   path: `${url}/categories`,
-    // },
+    {
+      name: "Users",
+      icon: <GroupIcon />,
+      path: `${url}/users`,
+    },
   ];
 
   return (

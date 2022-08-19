@@ -33,11 +33,9 @@ const ProductList = ({ latest_products, loading }) => {
       <ResponsiveContainer>
         <Grid container spacing={4}>
           {latest_products &&
-            latest_products
-              .slice(0, 12)
-              .map((product, key) => (
-                <ProductCard key={key} product={product} />
-              ))}
+            latest_products.map((product, key) => (
+              <ProductCard key={key} product={product} />
+            ))}
         </Grid>
       </ResponsiveContainer>
     </section>
